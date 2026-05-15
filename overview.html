@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overview - Backupro</title>
+
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --sidebar-width: 240px;
+            --header-height: 60px;
+            --bg-color: #f5f6f8;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #6c757d;
+            --border-color: #e2e8f0;
+            --primary-color: #4a5568;
+            --accent-blue: #4285f4;
+            --success-green: #10b981;
+            --warning-orange: #f59e0b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #1e293b;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            border-bottom: 1px solid #334155;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 24px 0;
+            margin: 0;
+        }
+
+        .sidebar-item a {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .sidebar-item a:hover {
+            background-color: #334155;
+            color: #ffffff;
+        }
+
+        .sidebar-item.active a {
+            background-color: #334155;
+            color: #ffffff;
+            border-left: 3px solid var(--accent-blue);
+            padding-left: 21px;
+        }
+
+        .sidebar-section-label {
+            padding: 16px 24px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        /* --- HEADER & LAYOUT --- */
+        .app-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            height: var(--header-height);
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            flex-shrink: 0;
+        }
+
+        .breadcrumbs {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .breadcrumbs span {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #cbd5e1;
+        }
+
+        .main-content {
+            padding: 32px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .page-title {
+            margin: 0 0 24px 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* --- OVERVIEW WIDGETS --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 600;
+            margin: 12px 0 8px 0;
+            color: var(--text-main);
+        }
+
+        .stat-desc {
+            font-size: 13px;
+            color: var(--success-green);
+            font-weight: 500;
+        }
+
+        .stat-desc.warning {
+            color: var(--warning-orange);
+        }
+
+        /* --- CHARTS & ACTIVITY --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .chart-title {
+            margin: 0 0 20px 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .activity-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .activity-table th,
+        .activity-table td {
+            text-align: left;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .activity-table th {
+            color: var(--text-muted);
+            font-weight: 600;
+            background: #f8fafc;
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-failed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-running {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand">Backupro</div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item active"><a href="overview.html">Overview</a></li>
+
+            <!-- <div class="sidebar-section-label">Security</div> -->
+            <!-- <li class="sidebar-item"><a href="#">Cloud Monitor</a></li> -->
+
+            <div class="sidebar-section-label">Backup</div>
+            <!-- <li class="sidebar-item"><a href="#">Users</a></li> -->
+            <li class="sidebar-item"><a href="dashboard.html">Data Sources</a></li>
+            <li class="sidebar-item"><a href="activity.html">Activity Logs</a></li>
+            <!-- <li class="sidebar-item"><a href="#">Recovery</a></li> -->
+            <!-- <li class="sidebar-item"><a href="#">Settings</a></li> -->
+        </ul>
+    </aside>
+
+    <div class="app-container">
+        <header class="header">
+            <div class="breadcrumbs">
+                System / <span id="breadcrumb-current">Overview</span>
+            </div>
+            <div class="user-profile">
+                <div class="avatar"></div>
+                <span>Admin User</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <h1 class="page-title">System Overview</h1>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Cloud Storage Used</div>
+                    <div class="stat-value">1.4 TB</div>
+                    <div class="stat-desc">42% of 3.0 TB Quota</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Connected Data Sources</div>
+                    <div class="stat-value" id="source-count">--</div>
+                    <div class="stat-desc" id="source-status">Loading...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Protected Items</div>
+                    <div class="stat-value">24,892</div>
+                    <div class="stat-desc">+340 in the last 24 hours</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">System Health</div>
+                    <div class="stat-value" style="color: var(--success-green);">Healthy</div>
+                    <div class="stat-desc">Last autobackup: 10 mins ago</div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="dashboard-grid">
+                <div class="chart-card">
+                    <h3 class="chart-title">7-Day Backup Activity (GB)</h3>
+                    <div style="height: 250px;">
+                        <canvas id="backupSizeChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Protection Status</h3>
+                    <div style="height: 250px; display: flex; justify-content: center;">
+                        <canvas id="protectionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity Section -->
+            <div class="chart-card">
+                <h3 class="chart-title">Recent Activity</h3>
+                <table class="activity-table">
+                    <thead>
+                        <tr>
+                            <th>Data Source</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Size</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Google Drive</strong><br><span
+                                    style="color:#6c757d;font-size:12px;">admin@company.com</span></td>
+                            <td>Auto Backup</td>
+                            <td><span class="status-pill status-success">Success</span></td>
+                            <td>4.2 GB</td>
+                            <td>10 mins ago</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Microsoft Outlook</strong><br><span
+                                    style="color:#6c757d;font-size:12px;">it-admin@company.com</span></td>
+                            <td>Manual Backup</td>
+                            <td><span class="status-pill status-running">Running</span></td>
+                            <td>--</td>
+                            <td>25 mins ago</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Google Photos</strong><br><span
+                                    style="color:#6c757d;font-size:12px;">admin@company.com</span></td>
+                            <td>Auto Backup</td>
+                            <td><span class="status-pill status-failed">Failed</span></td>
+                            <td>0 Bytes</td>
+                            <td>2 hours ago</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Make it somewhat dynamic by reading from the same localStorage we set up earlier!
+            const connectedAccounts = JSON.parse(localStorage.getItem('storx_accounts')) || [];
+
+            const countEl = document.getElementById('source-count');
+            const statusEl = document.getElementById('source-status');
+
+            countEl.innerText = connectedAccounts.length;
+
+            if (connectedAccounts.length > 0) {
+                statusEl.innerText = 'All sources actively syncing';
+                statusEl.className = 'stat-desc';
+            } else {
+                statusEl.innerText = 'No sources connected yet';
+                statusEl.className = 'stat-desc warning';
+            }
+
+            // --- CHART.JS INITIALIZATION ---
+            Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif';
+            Chart.defaults.color = '#6c757d';
+
+            // 1. Backup Size Chart (Bar)
+            const ctxSize = document.getElementById('backupSizeChart').getContext('2d');
+            new Chart(ctxSize, {
+                type: 'bar',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Data Backed Up (GB)',
+                        data: [42, 58, 35, 75, 48, 62, 55],
+                        backgroundColor: '#4285f4',
+                        borderRadius: 4,
+                        barThickness: 24
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // 2. Protection Status Chart (Doughnut)
+            const ctxProt = document.getElementById('protectionChart').getContext('2d');
+            new Chart(ctxProt, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Protected', 'Unprotected', 'Failed'],
+                    datasets: [{
+                        data: [85, 10, 5],
+                        backgroundColor: ['#10b981', '#cbd5e1', '#ef4444'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

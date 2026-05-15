@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Backups - Backupro</title>
+    <style>
+        :root {
+            --sidebar-width: 240px;
+            --header-height: 60px;
+            --bg-color: #f5f6f8;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #6c757d;
+            --border-color: #e2e8f0;
+            --primary-color: #4a5568;
+            --accent-blue: #4285f4;
+            --success-green: #10b981;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #1e293b;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            border-bottom: 1px solid #334155;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 24px 0;
+            margin: 0;
+        }
+
+        .sidebar-item a {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .sidebar-item.active a {
+            background-color: #334155;
+            color: #ffffff;
+        }
+
+        .sidebar-section-label {
+            padding: 16px 24px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        /* --- HEADER & LAYOUT --- */
+        .app-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            height: var(--header-height);
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            flex-shrink: 0;
+        }
+
+        .breadcrumbs {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .breadcrumbs span {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .main-content {
+            padding: 32px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        /* --- PAGE SPECIFIC STYLES --- */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 24px;
+        }
+
+        .page-title {
+            margin: 0 0 8px 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .page-subtitle {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        button.primary {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* --- SERVICE WORKSPACE LAYOUT --- */
+        .service-workspace {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .service-nav {
+            width: 220px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .service-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            border-radius: 20px;
+            /* Pill shape like Google */
+            cursor: pointer;
+            color: var(--text-main);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .service-nav-item:hover {
+            background: #f1f5f9;
+        }
+
+        .service-nav-item.active {
+            background: #d3e3fd;
+            /* Google active blue */
+            color: #041e49;
+        }
+
+        .service-content {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        /* --- DATA TABLE --- */
+        .data-table {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table-row {
+            display: grid;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .table-head {
+            background: #f8fafc;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .table-body .table-row:hover {
+            background: #f8fafc;
+        }
+
+        .table-body .table-row:last-child {
+            border-bottom: none;
+        }
+
+        /* Grid Layouts for specific types */
+        .grid-email {
+            grid-template-columns: 3fr 2fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        .grid-file {
+            grid-template-columns: 3fr 1.5fr 1.5fr 1fr;
+            gap: 16px;
+        }
+
+        .grid-general {
+            grid-template-columns: 2fr 2fr 1fr;
+            gap: 16px;
+        }
+
+        .icon-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .icon {
+            font-size: 18px;
+        }
+
+        /* --- ACTION BUTTONS --- */
+        .action-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        button.btn-secondary {
+            background: white;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        button.btn-secondary:hover {
+            background: #f8fafc;
+        }
+
+        /* --- UTILITIES --- */
+        .hidden {
+            display: none !important;
+        }
+
+        /* --- DETAIL VIEW --- */
+        .detail-container {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 32px;
+        }
+
+        .detail-header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+        }
+
+        .detail-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+            color: var(--text-main);
+        }
+
+        .detail-meta {
+            color: var(--text-muted);
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .detail-body {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-main);
+            white-space: pre-wrap;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .clickable-row {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand">Backupro</div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><a href="overview.html">Overview</a></li>
+
+            <!-- <div class="sidebar-section-label">Security</div> -->
+            <!-- <li class="sidebar-item"><a href="#">Cloud Monitor</a></li> -->
+            <div class="sidebar-section-label">Backup</div>
+            <li class="sidebar-item active"><a href="dashboard.html">Data Sources</a></li>
+            <li class="sidebar-item"><a href="activity.html">Activity Logs</a></li>
+            <!-- <li class="sidebar-item"><a href="#">Recovery</a></li> -->
+            <!-- <li class="sidebar-item"><a href="#">Settings</a></li> -->
+        </ul>
+    </aside>
+
+    <div class="app-container">
+        <header class="header">
+            <div class="breadcrumbs">
+                Data Sources / <span id="breadcrumb-current">Service List</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <a href="dashboard.html" class="back-link" id="back-link">&larr; Back to Data Sources</a>
+
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title" id="page-title">Service Backups</h1>
+                    <p class="page-subtitle" id="page-subtitle">Account: loading...</p>
+                </div>
+                <div class="action-group">
+                    <button class="btn-secondary">Download</button>
+                    <button class="btn-secondary">Version</button>
+                    <button class="btn-secondary">Restore</button>
+                    <button class="primary" id="btn-manual-backup">Backup Now</button>
+                </div>
+            </div>
+
+            <div class="service-workspace">
+                <div class="service-nav" id="nav-container">
+                    <!-- Nav content generated via JS -->
+                </div>
+                <div class="service-content">
+                    <div class="data-table" id="table-container">
+                        <!-- Table content generated via JS -->
+                    </div>
+                    <div id="detail-container" class="detail-container hidden">
+                        <!-- Detail view content generated via JS -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Get URL Parameters
+            const params = new URLSearchParams(window.location.search);
+            const serviceName = params.get('service') || 'Unknown Service';
+            const accountEmail = params.get('account') || 'Unknown Account';
+
+            // 2. Update UI texts
+            document.getElementById('page-title').innerText = `${serviceName} Backups`;
+            document.getElementById('page-subtitle').innerText = `Account: ${accountEmail}`;
+            document.getElementById('breadcrumb-current').innerText = serviceName;
+
+            // 3. Configurations for different service types
+            const serviceConfigs = {
+                email: {
+                    navItems: [
+                        { id: 'inbox', label: 'Inbox', icon: '📥' },
+                        { id: 'starred', label: 'Starred', icon: '⭐' },
+                        { id: 'sent', label: 'Sent', icon: '📤' },
+                        { id: 'spam', label: 'Spam', icon: '🛑' },
+                        { id: 'trash', label: 'Trash', icon: '🗑️' }
+                    ],
+                    gridClass: 'grid-email',
+                    headers: ['Subject', 'Sender', 'Date', 'Size'],
+                    generator: generateEmailRows
+                },
+                drive: {
+                    navItems: [
+                        { id: 'my-drive', label: 'My Drive', icon: '📁' },
+                        { id: 'shared', label: 'Shared Drives', icon: '👥' },
+                        { id: 'starred', label: 'Starred', icon: '⭐' },
+                        { id: 'trash', label: 'Trash', icon: '🗑️' }
+                    ],
+                    gridClass: 'grid-file',
+                    headers: ['File Name', 'Type', 'Last Modified', 'Size'],
+                    generator: generateFileRows
+                },
+                photos: {
+                    navItems: [
+                        { id: 'photos', label: 'Photos', icon: '🖼️' },
+                        { id: 'albums', label: 'Albums', icon: '📚' },
+                        { id: 'favorites', label: 'Favorites', icon: '❤️' },
+                        { id: 'trash', label: 'Trash', icon: '🗑️' }
+                    ],
+                    gridClass: 'grid-file',
+                    headers: ['Photo Name', 'Album', 'Date Taken', 'Size'],
+                    generator: generatePhotoRows
+                },
+                local: {
+                    navItems: [
+                        { id: 'local-files', label: 'Local Files', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12H2"></path><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path><line x1="6" y1="16" x2="6.01" y2="16"></line><line x1="10" y1="16" x2="10.01" y2="16"></line></svg>' },
+                        { id: 'recent', label: 'Recent', icon: '🕒' },
+                        { id: 'trash', label: 'Trash', icon: '🗑️' }
+                    ],
+                    gridClass: 'grid-file',
+                    headers: ['File Name', 'Type', 'Last Modified', 'Size'],
+                    generator: generateFileRows
+                },
+                general: {
+                    navItems: [
+                        { id: 'all', label: 'All Items', icon: '📦' },
+                        { id: 'trash', label: 'Trash', icon: '🗑️' }
+                    ],
+                    gridClass: 'grid-general',
+                    headers: ['Item Name', 'Details', 'Date'],
+                    generator: generateGeneralRows
+                }
+            };
+
+            // 4. Determine service type
+            let sType = 'general';
+            const nameLower = serviceName.toLowerCase();
+            if (nameLower.includes('mail') || nameLower.includes('outlook')) sType = 'email';
+            else if (nameLower.includes('drive') || nameLower.includes('sharepoint') || nameLower.includes('onedrive')) sType = 'drive';
+            else if (nameLower.includes('document') || nameLower.includes('desktop') || nameLower.includes('download')) sType = 'local';
+            else if (nameLower.includes('photo') || nameLower.includes('picture')) sType = 'photos';
+
+            const config = serviceConfigs[sType];
+            let currentCategory = config.navItems[0].id;
+
+            // 5. Render Workspace
+            const navContainer = document.getElementById('nav-container');
+            const tableContainer = document.getElementById('table-container');
+            const detailContainer = document.getElementById('detail-container');
+            const backLink = document.getElementById('back-link');
+
+            function renderWorkspace() {
+                // Render Left Navigation
+                navContainer.innerHTML = config.navItems.map(item => `
+                    <div class="service-nav-item ${item.id === currentCategory ? 'active' : ''}" 
+                         data-id="${item.id}">
+                        <span class="icon">${item.icon}</span> ${item.label}
+                    </div>
+                `).join('');
+
+                // Render Table Header
+                const headersHTML = config.headers.map(h => `<div>${h}</div>`).join('');
+                tableContainer.innerHTML = `
+                    <div class="table-row table-head ${config.gridClass}">
+                        ${headersHTML}
+                    </div>
+                    <div class="table-body">
+                        ${config.generator(currentCategory)}
+                    </div>
+                `;
+
+                // Ensure table is visible and detail is hidden when category changes
+                tableContainer.classList.remove('hidden');
+                detailContainer.classList.add('hidden');
+
+                // Reset back link
+                backLink.innerHTML = '&larr; Back to Data Sources';
+                backLink.setAttribute('href', 'dashboard.html');
+                backLink.onclick = null;
+
+                // Attach click events to nav items
+                document.querySelectorAll('.service-nav-item').forEach(el => {
+                    el.addEventListener('click', (e) => {
+                        currentCategory = e.currentTarget.getAttribute('data-id');
+                        renderWorkspace(); // Re-render table on click
+                    });
+                });
+            }
+
+            // Initial render
+            renderWorkspace();
+
+            // Mock Data Generators
+            function generateEmailRows(category) {
+                let emails = [];
+                if (category === 'spam') {
+                    emails = [
+                        { sub: 'WIN A FREE GIFT CARD NOW!', sender: 'spammer@scam.com', date: 'Oct 25, 2023', size: '12 KB', icon: '🛑' },
+                        { sub: 'Your account will be suspended', sender: 'fake-support@alert.com', date: 'Oct 24, 2023', size: '18 KB', icon: '🛑' }
+                    ];
+                } else if (category === 'starred') {
+                    emails = [
+                        { sub: 'Important: Q4 Budget Approval', sender: 'director@company.com', date: 'Oct 24, 2023', size: '3.1 MB', icon: '⭐' }
+                    ];
+                } else {
+                    emails = [
+                        { sub: 'Q3 Financial Report & Analysis', sender: 'finance@company.com', date: 'Oct 24, 2023', size: '2.4 MB', icon: '✉️' },
+                        { sub: 'Project Kickoff Meeting Notes', sender: 'pm@company.com', date: 'Oct 23, 2023', size: '154 KB', icon: '✉️' },
+                        { sub: 'Security Alert: New Sign-in', sender: 'security@alerts.com', date: 'Oct 21, 2023', size: '45 KB', icon: '✉️' },
+                        { sub: 'Invoice #4492 - Services Rendered', sender: 'billing@vendor.com', date: 'Oct 19, 2023', size: '1.1 MB', icon: '✉️' }
+                    ];
+                }
+
+                if (emails.length === 0) return `<div style="padding: 24px; text-align: center; color: #6c757d;">No emails in ${category}.</div>`;
+
+                return emails.map(e => `
+                    <div class="table-row grid-email clickable-row" onclick="showEmailDetail('${e.sub.replace(/'/g, "\\'")}', '${e.sender.replace(/'/g, "\\'")}', '${e.date}')">
+                        <div class="icon-text"><span class="icon">${e.icon}</span> ${e.sub}</div>
+                        <div style="color: #64748b;">${e.sender}</div>
+                        <div>${e.date}</div>
+                        <div>${e.size}</div>
+                    </div>
+                `).join('');
+            }
+
+            function generateFileRows(category) {
+                let files = [];
+                if (category === 'shared') {
+                    files = [
+                        { name: 'Marketing_Assets_Final.zip', type: 'Archive', date: 'Oct 15, 2023', size: '142 MB', icon: '🗂️' },
+                        { name: 'Team_Contact_List.xlsx', type: 'Spreadsheet', date: 'Oct 12, 2023', size: '45 KB', icon: '👥' }
+                    ];
+                } else {
+                    files = [
+                        { name: '2023_Company_Overview.pdf', type: 'PDF Document', date: 'Oct 24, 2023', size: '4.8 MB', icon: '📄' },
+                        { name: 'Q4_Budget_Draft.xlsx', type: 'Spreadsheet', date: 'Oct 22, 2023', size: '840 KB', icon: '📊' },
+                        { name: 'Employee_Handbook_v2.docx', type: 'Word Document', date: 'Sep 30, 2023', size: '2.1 MB', icon: '📝' },
+                        { name: 'Team_Offsite_2023.jpg', type: 'Image', date: 'Sep 28, 2023', size: '3.4 MB', icon: '🖼️', url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80' }
+                    ];
+                }
+                return files.map(f => `
+                    <div class="table-row grid-file clickable-row" onclick="showFileDetail('${f.name.replace(/'/g, "\\'")}', '${f.type}', '${f.date}', '${f.size}', '${f.url || ''}')">
+                        <div class="icon-text"><span class="icon">${f.icon}</span> ${f.name}</div>
+                        <div style="color: #64748b;">${f.type}</div>
+                        <div>${f.date}</div>
+                        <div>${f.size}</div>
+                    </div>
+                `).join('');
+            }
+
+            function generatePhotoRows(category) {
+                const photos = [
+                    { name: 'IMG_8492.JPG', album: 'Company Retreat 2023', date: 'Sep 14, 2023', size: '4.2 MB', icon: '🖼️', url: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=800&q=80' },
+                    { name: 'HQ_Front_Entrance.PNG', album: 'Office Assets', date: 'Aug 02, 2023', size: '1.8 MB', icon: '🖼️', url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80' }
+                ];
+                return photos.map(p => `
+                    <div class="table-row grid-file clickable-row" onclick="showFileDetail('${p.name.replace(/'/g, "\\'")}', '${p.album}', '${p.date}', '${p.size}', '${p.url || ''}')">
+                        <div class="icon-text"><span class="icon">${p.icon}</span> ${p.name}</div>
+                        <div style="color: #64748b;">${p.album}</div>
+                        <div>${p.date}</div>
+                        <div>${p.size}</div>
+                    </div>
+                `).join('');
+            }
+
+            function generateGeneralRows(category) {
+                return `<div style="padding: 24px; text-align: center; color: #6c757d;">Data synchronized and backed up securely.</div>`;
+            }
+
+            // Detail View Logic
+            window.showEmailDetail = function (subject, sender, date) {
+                const bodyContent = `Hi Team,\n\nThis is a mock backup of the requested email content for "${subject}".\n\nAll attachments and historical data have been securely synchronized.\n\nBest regards,\n${sender}`;
+
+                detailContainer.innerHTML = `
+                    <div class="detail-header">
+                        <h2 class="detail-title">${subject}</h2>
+                        <div class="detail-meta">
+                            <span><strong>From:</strong> ${sender}</span>
+                            <span>${date}</span>
+                        </div>
+                    </div>
+                    <div class="detail-body">${bodyContent}</div>
+                `;
+
+                tableContainer.classList.add('hidden');
+                detailContainer.classList.remove('hidden');
+
+                backLink.innerHTML = '&larr; Back to Listing';
+                backLink.removeAttribute('href');
+                backLink.onclick = function (e) {
+                    e.preventDefault();
+                    tableContainer.classList.remove('hidden');
+                    detailContainer.classList.add('hidden');
+
+                    backLink.innerHTML = '&larr; Back to Data Sources';
+                    backLink.setAttribute('href', 'dashboard.html');
+                    backLink.onclick = null;
+                };
+            };
+
+            window.showFileDetail = function (name, info, date, size, imageUrl) {
+                let mediaContent = '';
+
+                if (imageUrl && imageUrl !== 'undefined' && imageUrl !== '') {
+                    // Show image preview
+                    mediaContent = `<img src="${imageUrl}" alt="${name}" class="preview-image">`;
+                } else {
+                    // Fallback for non-image files (PDFs, Docs, Zips)
+                    mediaContent = `<div style="padding: 48px; text-align: center; background: #f8fafc; border-radius: 8px; margin-top: 16px; border: 1px dashed #cbd5e1; color: #64748b;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">📄</div>
+                        <div>Preview not available for this file type.</div>
+                    </div>`;
+                }
+
+                detailContainer.innerHTML = `
+                    <div class="detail-header">
+                        <h2 class="detail-title">${name}</h2>
+                        <div class="detail-meta">
+                            <span><strong>Info:</strong> ${info}</span>
+                            <span>${date} • ${size}</span>
+                        </div>
+                    </div>
+                    <div class="detail-body">
+                        ${mediaContent}
+                    </div>
+                `;
+
+                tableContainer.classList.add('hidden');
+                detailContainer.classList.remove('hidden');
+
+                backLink.innerHTML = '&larr; Back to Listing';
+                backLink.removeAttribute('href');
+                backLink.onclick = function (e) {
+                    e.preventDefault();
+                    tableContainer.classList.remove('hidden');
+                    detailContainer.classList.add('hidden');
+
+                    backLink.innerHTML = '&larr; Back to Data Sources';
+                    backLink.setAttribute('href', 'dashboard.html');
+                    backLink.onclick = null;
+                };
+            };
+
+            // --- MANUAL BACKUP LOGIC ---
+            const btnManualBackup = document.getElementById('btn-manual-backup');
+            if (btnManualBackup) {
+                btnManualBackup.addEventListener('click', function () {
+                    const originalText = this.innerText;
+                    this.innerText = 'Backing up...';
+                    this.style.opacity = '0.7';
+                    this.style.pointerEvents = 'none';
+
+                    setTimeout(() => {
+                        this.innerText = '✔ Backup Complete';
+                        this.style.backgroundColor = '#10b981'; // Success green
+
+                        setTimeout(() => {
+                            this.innerText = originalText;
+                            this.style.opacity = '1';
+                            this.style.pointerEvents = 'auto';
+                            this.style.backgroundColor = ''; // Reset to default
+                        }, 2500);
+                    }, 1500);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
