@@ -281,7 +281,7 @@
 
         .table-head {
             display: grid;
-            grid-template-columns: 2fr 2fr 1fr 1.5fr;
+            grid-template-columns: 2fr 2fr 1.5fr 1fr 1.5fr;
             padding: 16px 24px;
             background: #f8fafc;
             border-bottom: 1px solid var(--border-color);
@@ -301,7 +301,7 @@
 
         .account-row {
             display: grid;
-            grid-template-columns: 2fr 2fr 1fr 1.5fr;
+            grid-template-columns: 2fr 2fr 1.5fr 1fr 1.5fr;
             padding: 20px 24px;
             align-items: center;
             font-size: 14px;
@@ -603,6 +603,7 @@
                     <div class="table-head">
                         <div>Provider</div>
                         <div>Account Email</div>
+                        <div>Location</div>
                         <div>Status</div>
                         <div>Actions</div>
                     </div>
@@ -625,6 +626,52 @@
         </div>
     </div>
 
+    <div id="onboarding-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 500px; text-align: center; padding: 40px;">
+            <div style="font-size: 48px; margin-bottom: 16px;">👋</div>
+            <h2 style="margin-top:0; font-size: 1.5rem; color: var(--text-main);">Welcome to Backupro!</h2>
+            <p style="color: var(--text-muted); margin-bottom: 32px; font-size: 15px; line-height: 1.5;">Let's get your
+                account set up. To start protecting your data, you'll need to connect your first data source.</p>
+            <button class="primary" id="btn-start-onboarding"
+                style="width: 100%; padding: 12px; font-size: 16px;">Connect a Data Source</button>
+        </div>
+    </div>
+
+    <div id="location-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>Select Storage Location</h2>
+                <button class="close-btn" id="close-location-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-muted); margin-top: 0; margin-bottom: 24px;">Choose where your backup data
+                    will be securely stored.</p>
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+                    <label
+                        style="display: flex; align-items: center; padding: 16px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; background: #f8fafc;">
+                        <input type="radio" name="storage-location" value="us-east" checked
+                            style="margin-right: 12px; width: 18px; height: 18px;">
+                        <div>
+                            <div style="font-weight: 500; color: var(--text-main);">US East (N. Virginia)</div>
+                            <div style="font-size: 13px; color: var(--text-muted);">Default region</div>
+                        </div>
+                    </label>
+                    <label
+                        style="display: flex; align-items: center; padding: 16px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer;">
+                        <input type="radio" name="storage-location" value="eu-central"
+                            style="margin-right: 12px; width: 18px; height: 18px;">
+                        <div>
+                            <div style="font-weight: 500; color: var(--text-main);">EU Central (Frankfurt)</div>
+                            <div style="font-size: 13px; color: var(--text-muted);">GDPR Compliant</div>
+                        </div>
+                    </label>
+                </div>
+                <button class="primary" id="btn-location-next" style="width: 100%; padding: 12px; font-size: 16px;">Next
+                    Step</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('is_authenticated') !== 'true') {
@@ -642,6 +689,44 @@
             const modal = document.getElementById('add-service-modal');
             const btnAddService = document.getElementById('btn-add-service');
             const btnCloseModal = document.getElementById('close-modal');
+
+            const locationModal = document.getElementById('location-modal');
+            const btnCloseLocationModal = document.getElementById('close-location-modal');
+            const btnLocationNext = document.getElementById('btn-location-next');
+
+            // --- ONBOARDING FLOW ---
+            if (localStorage.getItem('is_new_user') === 'true') {
+                const onboardingModal = document.getElementById('onboarding-modal');
+                onboardingModal.classList.remove('hidden');
+                document.getElementById('btn-start-onboarding').addEventListener('click', () => {
+                    onboardingModal.classList.add('hidden');
+                    localStorage.removeItem('is_new_user'); // Only show this once
+
+                    // Guide the user to the location selection modal FIRST
+                    locationModal.classList.remove('hidden');
+                });
+            }
+
+            // --- LOCATION MODAL LOGIC ---
+            if (btnLocationNext) {
+                btnLocationNext.addEventListener('click', () => {
+                    // Save the chosen location preference
+                    const selectedLoc = document.querySelector('input[name="storage-location"]:checked');
+                    if (selectedLoc) {
+                        const locName = selectedLoc.value === 'eu-central' ? 'EU Central (Frankfurt)' : 'US East (N. Virginia)';
+                        localStorage.setItem('selected_storage_location', locName);
+                    }
+
+                    locationModal.classList.add('hidden');
+                    modal.classList.remove('hidden'); // Move to service selection next
+                });
+            }
+            if (btnCloseLocationModal) {
+                btnCloseLocationModal.addEventListener('click', () => {
+                    locationModal.classList.add('hidden');
+                });
+                locationModal.addEventListener('click', (e) => { if (e.target === locationModal) locationModal.classList.add('hidden'); });
+            }
 
             // --- DATA SOURCE CONFIGURATION ---
             const serviceProviders = [
@@ -740,6 +825,7 @@
                         providerName: provider.name,
                         logo: provider.logo,
                         email: generateMockEmail(provider.mockEmail),
+                        location: localStorage.getItem('selected_storage_location') || 'US East (N. Virginia)',
                         status: 'Active',
                         services: provider.servicesList.map(s => ({ name: s, active: true }))
                     });
@@ -747,12 +833,13 @@
                     // Save the updated list to local storage
                     saveData();
 
+                    // Ensure we transition to the active accounts view
+                    startupView.classList.add('hidden');
+                    accountsListView.classList.remove('hidden');
+                    breadcrumbCurrent.innerText = 'Connected Accounts';
+
                     if (isFromModal) {
                         closeModal();
-                    } else {
-                        startupView.classList.add('hidden');
-                        accountsListView.classList.remove('hidden');
-                        breadcrumbCurrent.innerText = 'Connected Accounts';
                     }
 
                     renderAccountsList();
@@ -791,6 +878,10 @@
                                 ${acc.providerName}
                             </div>
                             <div style="color: #475569; font-weight: 500;">${acc.email}</div>
+                            <div style="display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 13px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                ${acc.location || 'US East (N. Virginia)'}
+                            </div>
                             <div><span class="status-badge">${acc.status}</span></div>
                             <div class="action-cell">
                                 <button class="action-btn" style="color: #ef4444; border-color: #fecaca;" onclick="removeAccount(event, ${index})">Disconnect</button>

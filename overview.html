@@ -377,9 +377,15 @@
                 window.location.href = 'login.html';
             }
 
-            // Make it somewhat dynamic by reading from the same localStorage we set up earlier!
             const connectedAccounts = JSON.parse(localStorage.getItem('storx_accounts')) || [];
 
+            // Redirect to dashboard to complete onboarding if no sources are connected
+            if (connectedAccounts.length === 0) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            // Make it somewhat dynamic by reading from the same localStorage we set up earlier!
             const countEl = document.getElementById('source-count');
             const statusEl = document.getElementById('source-status');
 
