@@ -280,6 +280,8 @@
             <div class="user-profile">
                 <div class="avatar"></div>
                 <span>Admin User</span>
+                <button id="logout-btn"
+                    style="margin-left: 10px; background: none; border: 1px solid var(--border-color); padding: 4px 8px; border-radius: 4px; cursor: pointer; color: var(--text-main); font-size: 12px;">Logout</button>
             </div>
         </header>
 
@@ -371,6 +373,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('is_authenticated') !== 'true') {
+                window.location.href = 'login.html';
+            }
+
             // Make it somewhat dynamic by reading from the same localStorage we set up earlier!
             const connectedAccounts = JSON.parse(localStorage.getItem('storx_accounts')) || [];
 
@@ -445,6 +451,14 @@
                     }
                 }
             });
+
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    localStorage.removeItem('is_authenticated');
+                    window.location.href = 'login.html';
+                });
+            }
         });
     </script>
 </body>

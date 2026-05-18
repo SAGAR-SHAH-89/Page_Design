@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Backupro</title>
+    <style>
+        :root {
+            --bg-color: #f5f6f8;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #6c757d;
+            --border-color: #e2e8f0;
+            --primary-color: #4a5568;
+            --accent-blue: #4285f4;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .brand {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .btn-login {
+            width: 100%;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-login:hover {
+            background: #3367d6;
+        }
+
+        .signup-link {
+            margin-top: 24px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .signup-link a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-card">
+        <div class="brand">Backupro</div>
+        <div class="subtitle">Create a new account</div>
+
+        <form id="signup-form">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" required placeholder="John Doe">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required placeholder="admin@company.com">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn-login">Sign Up</button>
+        </form>
+
+        <div class="signup-link">
+            Already have an account? <a href="login.html">Log in</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Redirect to dashboard if already authenticated
+            if (localStorage.getItem('is_authenticated') === 'true') {
+                window.location.href = 'overview.html';
+            }
+
+            const signupForm = document.getElementById('signup-form');
+            signupForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                if (email && password) {
+                    localStorage.setItem('is_authenticated', 'true');
+                    localStorage.setItem('user_email', email);
+                    window.location.href = 'overview.html';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

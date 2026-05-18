@@ -108,6 +108,22 @@
             font-weight: 500;
         }
 
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #cbd5e1;
+        }
+
         .main-content {
             padding: 32px;
             overflow-y: auto;
@@ -358,6 +374,12 @@
             <div class="breadcrumbs">
                 Data Sources / <span id="breadcrumb-current">Service List</span>
             </div>
+            <div class="user-profile">
+                <div class="avatar"></div>
+                <span>Admin User</span>
+                <button id="logout-btn"
+                    style="margin-left: 10px; background: none; border: 1px solid var(--border-color); padding: 4px 8px; border-radius: 4px; cursor: pointer; color: var(--text-main); font-size: 12px;">Logout</button>
+            </div>
         </header>
 
         <main class="main-content">
@@ -394,6 +416,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('is_authenticated') !== 'true') {
+                window.location.href = 'login.html';
+            }
+
             // 1. Get URL Parameters
             const params = new URLSearchParams(window.location.search);
             const serviceName = params.get('service') || 'Unknown Service';
@@ -690,6 +716,14 @@
                             this.style.backgroundColor = ''; // Reset to default
                         }, 2500);
                     }, 1500);
+                });
+            }
+
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    localStorage.removeItem('is_authenticated');
+                    window.location.href = 'login.html';
                 });
             }
         });
