@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Sources - Backupro</title>
+    <title>Data Sources - storX</title>
     <style>
         :root {
             --sidebar-width: 240px;
@@ -552,7 +552,7 @@
 <body>
 
     <aside class="sidebar">
-        <div class="sidebar-brand">Backupro</div>
+        <div class="sidebar-brand">storX</div>
         <ul class="sidebar-menu">
             <li class="sidebar-item"><a href="overview.html">Overview</a></li>
 
@@ -583,7 +583,7 @@
         <main class="main-content">
 
             <div id="startup-view">
-                <h1 class="page-title">Welcome to Backupro</h1>
+                <h1 class="page-title">Welcome to storX</h1>
                 <p class="page-subtitle">Add your first data source to begin protecting your infrastructure.</p>
 
                 <div class="grid" id="startup-cards-container">
@@ -629,7 +629,7 @@
     <div id="onboarding-modal" class="modal-overlay hidden">
         <div class="modal-content" style="max-width: 500px; text-align: center; padding: 40px;">
             <div style="font-size: 48px; margin-bottom: 16px;">👋</div>
-            <h2 style="margin-top:0; font-size: 1.5rem; color: var(--text-main);">Welcome to Backupro!</h2>
+            <h2 style="margin-top:0; font-size: 1.5rem; color: var(--text-main);">Welcome to storX!</h2>
             <p style="color: var(--text-muted); margin-bottom: 32px; font-size: 15px; line-height: 1.5;">Let's get your
                 account set up. To start protecting your data, you'll need to connect your first data source.</p>
             <button class="primary" id="btn-start-onboarding"
@@ -777,10 +777,23 @@
                 }
             ];
 
+            // --- FILTER PROVIDERS BASED ON USER EMAIL ---
+            const userEmail = (localStorage.getItem('user_email') || '').toLowerCase();
+            const isMicrosoftUser = userEmail.includes('microsoft') || userEmail.includes('outlook') || userEmail.includes('hotmail') || userEmail.includes('live.com');
+            const isGoogleUser = userEmail.includes('google') || userEmail.includes('gmail');
+
+            const availableProviders = serviceProviders.filter(sp => {
+                if (sp.id === 'local') return true; // Always show local
+                if (isMicrosoftUser && sp.id === 'microsoft') return true;
+                if (isGoogleUser && sp.id === 'google') return true;
+                if (!isMicrosoftUser && !isGoogleUser) return true; // Show all if email is generic
+                return false;
+            });
+
             // --- RENDER CARDS DYNAMICALLY ---
             function renderCards(containerId, isModal = false) {
                 const container = document.getElementById(containerId);
-                container.innerHTML = serviceProviders.map(sp => `
+                container.innerHTML = availableProviders.map(sp => `
                     <div class="source-card">
                         <div class="brand-text">
                             ${sp.brandHTML}
@@ -977,7 +990,7 @@
             }
 
             // --- MODAL CONTROLS ---
-            btnAddService.addEventListener('click', () => modal.classList.remove('hidden'));
+            btnAddService.addEventListener('click', () => locationModal.classList.remove('hidden'));
             function closeModal() { modal.classList.add('hidden'); }
             btnCloseModal.addEventListener('click', closeModal);
             modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
