@@ -1,388 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Service Backups - Backupro</title>
-    <style>
-        :root {
-            --sidebar-width: 240px;
-            --header-height: 60px;
-            --bg-color: #f5f6f8;
-            --card-bg: #ffffff;
-            --text-main: #333333;
-            --text-muted: #6c757d;
-            --border-color: #e2e8f0;
-            --primary-color: #4a5568;
-            --accent-blue: #4285f4;
-            --success-green: #10b981;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* --- SIDEBAR --- */
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: #1e293b;
-            color: #f8fafc;
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-        }
-
-        .sidebar-brand {
-            height: var(--header-height);
-            display: flex;
-            align-items: center;
-            padding: 0 24px;
-            font-size: 1.25rem;
-            font-weight: 700;
-            border-bottom: 1px solid #334155;
-        }
-
-        .sidebar-menu {
-            list-style: none;
-            padding: 24px 0;
-            margin: 0;
-        }
-
-        .sidebar-item a {
-            display: flex;
-            align-items: center;
-            padding: 12px 24px;
-            color: #cbd5e1;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .sidebar-item.active a {
-            background-color: #334155;
-            color: #ffffff;
-        }
-
-        .sidebar-section-label {
-            padding: 16px 24px 8px;
-            font-size: 11px;
-            font-weight: 700;
-            color: #64748b;
-            text-transform: uppercase;
-        }
-
-        /* --- HEADER & LAYOUT --- */
-        .app-container {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .header {
-            height: var(--header-height);
-            background-color: #ffffff;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 32px;
-            flex-shrink: 0;
-        }
-
-        .breadcrumbs {
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-
-        .breadcrumbs span {
-            color: var(--text-main);
-            font-weight: 500;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        .avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background-color: #cbd5e1;
-        }
-
-        .main-content {
-            padding: 32px;
-            overflow-y: auto;
-            flex-grow: 1;
-        }
-
-        /* --- PAGE SPECIFIC STYLES --- */
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--accent-blue);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 24px;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 24px;
-        }
-
-        .page-title {
-            margin: 0 0 8px 0;
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .page-subtitle {
-            margin: 0;
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        button.primary {
-            background: var(--accent-blue);
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        /* --- SERVICE WORKSPACE LAYOUT --- */
-        .service-workspace {
-            display: flex;
-            gap: 24px;
-            align-items: flex-start;
-        }
-
-        .service-nav {
-            width: 220px;
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .service-nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 16px;
-            border-radius: 20px;
-            /* Pill shape like Google */
-            cursor: pointer;
-            color: var(--text-main);
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .service-nav-item:hover {
-            background: #f1f5f9;
-        }
-
-        .service-nav-item.active {
-            background: #d3e3fd;
-            /* Google active blue */
-            color: #041e49;
-        }
-
-        .service-content {
-            flex-grow: 1;
-            min-width: 0;
-        }
-
-        /* --- DATA TABLE --- */
-        .data-table {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .table-row {
-            display: grid;
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--border-color);
-            align-items: center;
-            font-size: 14px;
-        }
-
-        .table-head {
-            background: #f8fafc;
-            font-weight: 600;
-            color: var(--text-muted);
-            font-size: 13px;
-        }
-
-        .table-body .table-row:hover {
-            background: #f8fafc;
-        }
-
-        .table-body .table-row:last-child {
-            border-bottom: none;
-        }
-
-        /* Grid Layouts for specific types */
-        .grid-email {
-            grid-template-columns: 3fr 2fr 1fr 1fr;
-            gap: 16px;
-        }
-
-        .grid-file {
-            grid-template-columns: 3fr 1.5fr 1.5fr 1fr;
-            gap: 16px;
-        }
-
-        .grid-general {
-            grid-template-columns: 2fr 2fr 1fr;
-            gap: 16px;
-        }
-
-        .icon-text {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 500;
-        }
-
-        .icon {
-            font-size: 18px;
-        }
-
-        /* --- ACTION BUTTONS --- */
-        .action-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        button.btn-secondary {
-            background: white;
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-            padding: 10px 18px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        button.btn-secondary:hover {
-            background: #f8fafc;
-        }
-
-        /* --- UTILITIES --- */
-        .hidden {
-            display: none !important;
-        }
-
-        /* --- DETAIL VIEW --- */
-        .detail-container {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 32px;
-        }
-
-        .detail-header {
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 16px;
-            margin-bottom: 24px;
-        }
-
-        .detail-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin: 0 0 8px 0;
-            color: var(--text-main);
-        }
-
-        .detail-meta {
-            color: var(--text-muted);
-            font-size: 14px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .detail-body {
-            font-size: 14px;
-            line-height: 1.6;
-            color: var(--text-main);
-            white-space: pre-wrap;
-        }
-
-        .preview-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-top: 16px;
-            border: 1px solid var(--border-color);
-        }
-
-        .clickable-row {
-            cursor: pointer;
-        }
-    </style>
+    <title>Service backups — Storx.io</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/app-shell.css" />
+    <link rel="stylesheet" href="../assets/css/pages.css" />
+    <link rel="stylesheet" href="../assets/css/service-listing.css" />
 </head>
 
+
 <body>
-    <aside class="sidebar">
-        <div class="sidebar-brand">Backupro</div>
-        <ul class="sidebar-menu">
-            <li class="sidebar-item"><a href="overview.html">Overview</a></li>
-
-            <!-- <div class="sidebar-section-label">Security</div> -->
-            <!-- <li class="sidebar-item"><a href="#">Cloud Monitor</a></li> -->
-            <div class="sidebar-section-label">Backup</div>
-            <li class="sidebar-item active"><a href="dashboard.html">Data Sources</a></li>
-            <li class="sidebar-item"><a href="activity.html">Activity Logs</a></li>
-            <!-- <li class="sidebar-item"><a href="#">Recovery</a></li> -->
-            <!-- <li class="sidebar-item"><a href="#">Settings</a></li> -->
-        </ul>
-    </aside>
-
-    <div class="app-container">
-        <header class="header">
-            <div class="breadcrumbs">
-                Data Sources / <span id="breadcrumb-current">Service List</span>
-            </div>
-            <div class="user-profile">
-                <div class="avatar"></div>
-                <span>Admin User</span>
-                <button id="logout-btn"
-                    style="margin-left: 10px; background: none; border: 1px solid var(--border-color); padding: 4px 8px; border-radius: 4px; cursor: pointer; color: var(--text-main); font-size: 12px;">Logout</button>
-            </div>
-        </header>
-
-        <main class="main-content">
+    <div class="app-shell">
+        <aside class="sidebar" data-storx-sidebar></aside>
+        <div class="app-main">
+            <header class="page-header-bar">
+                <div class="breadcrumbs">Backup / <span id="breadcrumb-current">Service list</span></div>
+            </header>
+            <main class="page-content">
             <a href="dashboard.html" class="back-link" id="back-link">&larr; Back to Data Sources</a>
 
             <div class="page-header">
@@ -394,7 +32,7 @@
                     <button class="btn-secondary">Download</button>
                     <button class="btn-secondary">Version</button>
                     <button class="btn-secondary">Restore</button>
-                    <button class="primary" id="btn-manual-backup">Backup Now</button>
+                    <button class="btn-primary" id="btn-manual-backup">Backup Now</button>
                 </div>
             </div>
 
@@ -412,13 +50,13 @@
                 </div>
             </div>
         </main>
+        </div>
     </div>
 
+    <script src="../assets/js/app-shell.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('is_authenticated') !== 'true') {
-                window.location.href = 'login.html';
-            }
+            if (!StorxApp.init({ active: 'sources', breadcrumb: 'Service list' })) return;
 
             // 1. Get URL Parameters
             const params = new URLSearchParams(window.location.search);
@@ -716,14 +354,6 @@
                             this.style.backgroundColor = ''; // Reset to default
                         }, 2500);
                     }, 1500);
-                });
-            }
-
-            const logoutBtn = document.getElementById('logout-btn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
-                    localStorage.removeItem('is_authenticated');
-                    window.location.href = 'login.html';
                 });
             }
         });

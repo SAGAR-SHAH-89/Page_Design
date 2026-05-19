@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Activity logs — Storx.io</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/app-shell.css" />
+  <link rel="stylesheet" href="../assets/css/pages.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" data-storx-sidebar></aside>
+
+    <div class="app-main">
+      <header class="page-header-bar">
+        <div class="breadcrumbs">System / <span id="breadcrumb-current">Activity logs</span></div>
+      </header>
+
+      <main class="page-content">
+        <header class="view-header">
+          <p class="eyebrow">Audit</p>
+          <h1 class="page-title">Activity logs</h1>
+          <p class="page-subtitle">A complete trail of backups, restores, and sync tasks.</p>
+        </header>
+
+        <div class="table-container">
+          <div class="filter-bar">
+            <select class="filter-select" aria-label="Filter by source">
+              <option value="all">All sources</option>
+              <option value="google">Google Workspace</option>
+              <option value="microsoft">Microsoft 365</option>
+              <option value="local">Local device</option>
+            </select>
+            <select class="filter-select" aria-label="Filter by status">
+              <option value="all">All statuses</option>
+              <option value="success">Success</option>
+              <option value="failed">Failed</option>
+              <option value="running">In progress</option>
+            </select>
+            <select class="filter-select" aria-label="Filter by date">
+              <option value="7">Last 7 days</option>
+              <option value="30">Last 30 days</option>
+            </select>
+          </div>
+
+          <table class="activity-table">
+            <thead>
+              <tr>
+                <th>Task detail</th>
+                <th>Account / source</th>
+                <th>Status</th>
+                <th>Items processed</th>
+                <th>Size</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody id="logs-body"></tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/app-shell.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (!StorxApp.init({ active: "activity", breadcrumb: "Activity logs" })) return;
+
+      const logs = [
+        { task: "Manual backup (Outlook)", source: "it-admin@company.com", type: "Microsoft 365", status: "success", items: "1,245", size: "1.2 GB", time: "10 mins ago" },
+        { task: "Auto backup (Drive)", source: "admin@company.com", type: "Google Workspace", status: "running", items: "Processing…", size: "—", time: "25 mins ago" },
+        { task: "Manual backup (Documents)", source: "admin@local-machine.dev", type: "Local device", status: "success", items: "342", size: "840 MB", time: "1 hour ago" },
+        { task: "Auto backup (Photos)", source: "admin@company.com", type: "Google Workspace", status: "failed", items: "0", size: "0 bytes", time: "2 hours ago", error: "Storage quota exceeded" },
+        { task: "Restore file", source: "Q4_Budget_Draft.xlsx", type: "Microsoft 365", status: "success", items: "1", size: "4.8 MB", time: "Yesterday, 4:15 PM" },
+        { task: "Auto backup (all services)", source: "it-admin@company.com", type: "Microsoft 365", status: "success", items: "42,109", size: "14.2 GB", time: "Yesterday, 2:00 AM" },
+      ];
+
+      function statusClass(status) {
+        if (status === "success") return "status-success";
+        if (status === "failed") return "status-failed";
+        if (status === "running") return "status-running";
+        return "status-warning";
+      }
+
+      document.getElementById("logs-body").innerHTML = logs
+        .map(
+          (log) => `
+        <tr>
+          <td>
+            <strong style="display:block;margin-bottom:0.25rem">${log.task}</strong>
+            ${log.error ? `<span style="color:var(--storx-cta);font-size:0.78rem">Error: ${log.error}</span>` : ""}
+          </td>
+          <td>
+            <span style="display:block">${log.source}</span>
+            <span style="font-size:0.78rem;color:var(--text-muted)">${log.type}</span>
+          </td>
+          <td><span class="status-pill ${statusClass(log.status)}">${log.status.charAt(0).toUpperCase() + log.status.slice(1)}</span></td>
+          <td>${log.items}</td>
+          <td>${log.size}</td>
+          <td style="color:var(--text-muted)">${log.time}</td>
+        </tr>`
+        )
+        .join("");
+    });
+  </script>
+</body>
+</html>
