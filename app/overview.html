@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overview — Storx.io</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/app-shell.css" />
+  <link rel="stylesheet" href="../assets/css/pages.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" data-storx-sidebar></aside>
+
+    <div class="app-main">
+      <header class="page-header-bar">
+        <div class="breadcrumbs">System / <span id="breadcrumb-current">Overview</span></div>
+      </header>
+
+      <main class="page-content">
+        <header class="view-header">
+          <p class="eyebrow">System</p>
+          <h1 class="page-title">Overview</h1>
+          <p class="page-subtitle">Manage your mailboxes, sync settings, and backup activity.</p>
+        </header>
+
+        <section class="chart-card mailbox-section" id="mailbox-section">
+          <div class="mailbox-section__head">
+            <div>
+              <h3 class="chart-title">Your mailboxes</h3>
+              <p class="mailbox-section__desc">Connected mailboxes can find and restore mail. Use Auto sync or One-time sync to connect new accounts.</p>
+            </div>
+            <button type="button" class="btn-mailbox btn-mailbox--primary" id="btn-add-mailbox">+ Add email</button>
+          </div>
+          <div id="mailbox-list" class="mailbox-list"></div>
+        </section>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <div class="stat-label">Total cloud storage used</div>
+            <div class="stat-value">1.4 TB</div>
+            <div class="stat-desc">42% of 3.0 TB quota</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-label">Connected data sources</div>
+            <div class="stat-value" id="source-count">—</div>
+            <div class="stat-desc" id="source-status">Loading…</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-label">Protected items</div>
+            <div class="stat-value">24,892</div>
+            <div class="stat-desc">+340 in the last 24 hours</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-label">System health</div>
+            <div class="stat-value" style="color: var(--storx-green)">Healthy</div>
+            <div class="stat-desc">Last autobackup: 10 mins ago</div>
+          </article>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="chart-card">
+            <h3 class="chart-title">7-day backup activity (GB)</h3>
+            <div style="height: 250px"><canvas id="backupSizeChart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3 class="chart-title">Protection status</h3>
+            <div style="height: 250px; display: flex; justify-content: center">
+              <canvas id="protectionChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <h3 class="chart-title">Recent activity</h3>
+          <table class="activity-table">
+            <thead>
+              <tr>
+                <th>Data source</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Size</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody id="activity-rows"></tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/app-shell.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (!StorxApp.init({ active: "overview", breadcrumb: "Overview" })) return;
+
+      const accounts = StorxApp.getAccounts();
+      const userEmail = localStorage.getItem("user_email") || "";
+      const countEl = document.getElementById("source-count");
+      const statusEl = document.getElementById("source-status");
+      const primaryEmail = accounts[0]?.email || userEmail || "—";
+
+      countEl.textContent = accounts.length;
+      statusEl.textContent =
+        accounts.length > 0 ? "All sources actively syncing" : "Connect a mailbox below to get started";
+      statusEl.className = accounts.length > 0 ? "stat-desc" : "stat-desc warning";
+
+      renderMailboxes(accounts, userEmail);
+
+      document.getElementById("btn-add-mailbox")?.addEventListener("click", () => {
+        const email = prompt("Email address to connect:", userEmail);
+        if (email) StorxApp.openConnectFlow(email.trim(), "auto");
+      });
+
+      document.getElementById("activity-rows").innerHTML = accounts.length
+        ? `
+        <tr>
+          <td><strong>Google Drive</strong><br><span style="color:var(--text-muted);font-size:0.78rem">${primaryEmail}</span></td>
+          <td>Auto backup</td>
+          <td><span class="status-pill status-success">Success</span></td>
+          <td>4.2 GB</td>
+          <td>10 mins ago</td>
+        </tr>
+        <tr>
+          <td><strong>Gmail</strong><br><span style="color:var(--text-muted);font-size:0.78rem">${primaryEmail}</span></td>
+          <td>Auto backup</td>
+          <td><span class="status-pill status-running">Running</span></td>
+          <td>—</td>
+          <td>25 mins ago</td>
+        </tr>`
+        : `<tr><td colspan="5" style="color:var(--text-muted);text-align:center;padding:2rem">No backup activity yet. Connect a mailbox above.</td></tr>`;
+
+      Chart.defaults.font.family = '"DM Sans", system-ui, sans-serif';
+      Chart.defaults.color = "#929fb1";
+
+      new Chart(document.getElementById("backupSizeChart"), {
+        type: "bar",
+        data: {
+          labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+          datasets: [{
+            label: "Data backed up (GB)",
+            data: [42, 58, 35, 75, 48, 62, 55],
+            backgroundColor: "#0149ff",
+            borderRadius: 4,
+            barThickness: 24,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, grid: { color: "#f5f7fa" } },
+            x: { grid: { display: false } },
+          },
+        },
+      });
+
+      new Chart(document.getElementById("protectionChart"), {
+        type: "doughnut",
+        data: {
+          labels: ["Protected", "Unprotected", "Failed"],
+          datasets: [{
+            data: [85, 10, 5],
+            backgroundColor: ["#00ac26", "#ebeef1", "#ff4646"],
+            borderWidth: 0,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "75%",
+          plugins: { legend: { position: "bottom" } },
+        },
+      });
+    });
+
+    function renderMailboxes(accounts, userEmail) {
+      const list = document.getElementById("mailbox-list");
+      if (!list) return;
+
+      const rows =
+        accounts.length > 0
+          ? accounts
+          : userEmail
+            ? [{ email: userEmail, status: "Not connected", syncMode: null, autoSync: false }]
+            : [];
+
+      if (rows.length === 0) {
+        list.innerHTML = `<p class="mailbox-empty">No mailboxes yet. Click <strong>Add email</strong> to connect your first account.</p>`;
+        return;
+      }
+
+      list.innerHTML = rows
+        .map((acc) => {
+          const connected = StorxApp.isEmailConnected(acc.email);
+          const syncLabel =
+            acc.syncMode === "auto" || acc.autoSync
+              ? "Auto sync on"
+              : acc.syncMode === "once"
+                ? "One-time sync"
+                : acc.syncMode === "browse"
+                  ? "Browse only"
+                  : connected
+                    ? "Connected"
+                    : "Not connected";
+          return `
+        <article class="mailbox-card ${connected ? "mailbox-card--connected" : ""}">
+          <div class="mailbox-card__main">
+            <span class="mailbox-card__avatar" aria-hidden="true">✉</span>
+            <div>
+              <strong>${acc.email}</strong>
+              <span class="mailbox-card__meta">${syncLabel} · ${acc.status || (connected ? "Active" : "Setup required")}</span>
+            </div>
+          </div>
+          <div class="mailbox-card__actions">
+            ${
+              connected
+                ? `<button type="button" class="btn-mailbox btn-mailbox--primary" data-action="find" data-email="${escapeHtml(acc.email)}">Find &amp; restore</button>`
+                : `<button type="button" class="btn-mailbox" data-action="auto" data-email="${acc.email}">Auto sync</button>
+            <button type="button" class="btn-mailbox" data-action="once" data-email="${acc.email}">One-time sync</button>`
+            }
+          </div>
+        </article>`;
+        })
+        .join("");
+
+
+      list.querySelectorAll("[data-action]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const email = btn.dataset.email;
+          const action = btn.dataset.action;
+          if (action === "find") {
+            StorxApp.openFindRestore(email);
+            return;
+          }
+          StorxApp.openConnectFlow(email, action);
+        });
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+  </script>
+</body>
+</html>

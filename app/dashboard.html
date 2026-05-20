@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data sources — Storx.io</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/app-shell.css" />
+    <link rel="stylesheet" href="../assets/css/pages.css" />
+    <link rel="stylesheet" href="../assets/css/dashboard.css" />
+</head>
+
+<body>
+    <div class="app-shell">
+        <aside class="sidebar" data-storx-sidebar></aside>
+        <div class="app-main">
+            <header class="page-header-bar">
+                <div class="breadcrumbs">Backup / <span id="breadcrumb-current">Data sources</span></div>
+            </header>
+            <main class="page-content">
+
+            <div id="startup-view">
+                <header class="view-header">
+                    <p class="eyebrow">Get started</p>
+                    <h1 class="page-title">Add a data source</h1>
+                    <p class="page-subtitle">Connect Google, Microsoft, or a local device to start protecting your data.</p>
+                </header>
+
+                <div class="source-grid" id="startup-cards-container">
+                </div>
+            </div>
+
+            <div id="accounts-list-view" class="hidden">
+                <div class="page-header-row">
+                    <div>
+                        <h1 class="page-title">Connected Accounts</h1>
+                        <p class="page-subtitle" style="margin-bottom: 0;">Manage your authorized service providers.</p>
+                    </div>
+                    <button class="btn-primary" id="btn-add-service">+ Add Services</button>
+                </div>
+
+                <div class="accounts-table">
+                    <div class="table-head">
+                        <div>Provider</div>
+                        <div>Account Email</div>
+                        <div>Location</div>
+                        <div>Status</div>
+                        <div>Actions</div>
+                    </div>
+                    <div id="accounts-table-body"></div>
+                </div>
+            </div>
+        </main>
+        </div>
+    </div>
+
+    <div id="add-service-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add a New Service</h2>
+                <button class="close-btn" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="source-grid" id="modal-cards-container">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="location-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>Select Storage Location</h2>
+                <button class="close-btn" id="close-location-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-muted); margin-top: 0; margin-bottom: 24px;">Choose where your backup data
+                    will be securely stored.</p>
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+                    <label
+                        style="display: flex; align-items: center; padding: 16px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; background: #f8fafc;">
+                        <input type="radio" name="storage-location" value="us-east" checked
+                            style="margin-right: 12px; width: 18px; height: 18px;">
+                        <div>
+                            <div style="font-weight: 500; color: var(--text-main);">US East (N. Virginia)</div>
+                            <div style="font-size: 13px; color: var(--text-muted);">Default region</div>
+                        </div>
+                    </label>
+                    <label
+                        style="display: flex; align-items: center; padding: 16px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer;">
+                        <input type="radio" name="storage-location" value="eu-central"
+                            style="margin-right: 12px; width: 18px; height: 18px;">
+                        <div>
+                            <div style="font-weight: 500; color: var(--text-main);">EU Central (Frankfurt)</div>
+                            <div style="font-size: 13px; color: var(--text-muted);">GDPR Compliant</div>
+                        </div>
+                    </label>
+                </div>
+                <button class="btn-primary" id="btn-location-next" style="width: 100%; padding: 12px; font-size: 16px;">Next
+                    Step</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/app-shell.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!StorxApp.init({ active: 'sources', breadcrumb: 'Data sources' })) return;
+
+            let connectedAccounts = JSON.parse(localStorage.getItem('storx_accounts')) || [];
+
+            const startupView = document.getElementById('startup-view');
+            const accountsListView = document.getElementById('accounts-list-view');
+            const tableBody = document.getElementById('accounts-table-body');
+            const breadcrumbCurrent = document.getElementById('breadcrumb-current');
+
+            const modal = document.getElementById('add-service-modal');
+            const btnAddService = document.getElementById('btn-add-service');
+            const btnCloseModal = document.getElementById('close-modal');
+
+            const locationModal = document.getElementById('location-modal');
+            const btnCloseLocationModal = document.getElementById('close-location-modal');
+            const btnLocationNext = document.getElementById('btn-location-next');
+
+            // --- LOCATION MODAL LOGIC ---
+            if (btnLocationNext) {
+                btnLocationNext.addEventListener('click', () => {
+                    // Save the chosen location preference
+                    const selectedLoc = document.querySelector('input[name="storage-location"]:checked');
+                    if (selectedLoc) {
+                        const locName = selectedLoc.value === 'eu-central' ? 'EU Central (Frankfurt)' : 'US East (N. Virginia)';
+                        localStorage.setItem('selected_storage_location', locName);
+                    }
+
+                    locationModal.classList.add('hidden');
+                    modal.classList.remove('hidden'); // Move to service selection next
+                });
+            }
+            if (btnCloseLocationModal) {
+                btnCloseLocationModal.addEventListener('click', () => {
+                    locationModal.classList.add('hidden');
+                });
+                locationModal.addEventListener('click', (e) => { if (e.target === locationModal) locationModal.classList.add('hidden'); });
+            }
+
+            // --- DATA SOURCE CONFIGURATION ---
+            const serviceProviders = [
+                {
+                    id: 'google',
+                    name: 'Google Workspace',
+                    logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg',
+                    btnClass: 'google-btn',
+                    btnText: 'Sign in with Google',
+                    mockEmail: 'admin@company.com',
+                    servicesList: ['Google Mail', 'Google Drive', 'Google Photos', 'Google Contacts'],
+                    brandHTML: `
+                        <div style="color: #4285f4; font-size: 1.8rem; font-weight: 500; line-height: 1;">
+                            <span style="color:#4285f4">G</span><span style="color:#ea4335">o</span><span style="color:#fbbc05">o</span><span style="color:#4285f4">g</span><span style="color:#34a853">l</span><span style="color:#ea4335">e</span>
+                        </div>
+                        <span style="color: #757575; font-size: 1.1rem; font-weight: 300; margin-top: 4px;">Workspace</span>
+                    `
+                },
+                {
+                    id: 'microsoft',
+                    name: 'Microsoft 365',
+                    logo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
+                    btnClass: 'ms-btn',
+                    btnText: 'Sign in with Microsoft',
+                    mockEmail: 'it-admin@company.onmicrosoft.com',
+                    servicesList: ['Outlook Exchange', 'OneDrive', 'SharePoint', 'Microsoft Teams'],
+                    brandHTML: `
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" height="24" alt="MS">
+                            <span style="font-size: 1.3rem; color: #4a5568;">Microsoft 365</span>
+                        </div>
+                    `
+                },
+                {
+                    id: 'local',
+                    name: 'Local Device',
+                    logo: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNGE1NTY4IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTIyIDEySDIiPjwvcGF0aD48cGF0aCBkPSJNNS40NSA1LjExTDIgMTJ2NmEyIDIgMCAwIDAgMiAyaDE2YTIgMiAwIDAgMCAyLTJ2LTZsLTMuNDUtNi44OUEyIDIgMCAwIDAgMTYuNzYgNEg3LjI0YTIgMiAwIDAgMC0xLjc5IDEuMTF6Ij48L3BhdGg+PGxpbmUgeDE9IjYiIHkxPSIxNiIgeDI9IjYuMDEiIHkyPSIxNiI+PC9saW5lPjxsaW5lIHgxPSIxMCIgeTE9IjE2IiB4Mj0iMTAuMDEiIHkyPSIxNiI+PC9saW5lPjwvc3ZnPg==',
+                    btnClass: 'ms-btn',
+                    btnText: 'Connect Local Device',
+                    mockEmail: 'admin@local-machine.dev',
+                    servicesList: ['Documents', 'Desktop', 'Downloads', 'Pictures'],
+                    brandHTML: `
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4a5568" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12H2"></path><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path><line x1="6" y1="16" x2="6.01" y2="16"></line><line x1="10" y1="16" x2="10.01" y2="16"></line></svg>
+                            <span style="font-size: 1.2rem; color: #4a5568; font-weight: 500;">Local Data</span>
+                        </div>
+                    `
+                }
+            ];
+
+            // --- FILTER PROVIDERS BASED ON USER EMAIL ---
+            const userEmail = (localStorage.getItem('user_email') || '').toLowerCase();
+            const isMicrosoftUser = userEmail.includes('microsoft') || userEmail.includes('outlook') || userEmail.includes('hotmail') || userEmail.includes('live.com');
+            const isGoogleUser = userEmail.includes('google') || userEmail.includes('gmail');
+
+            const availableProviders = serviceProviders.filter(sp => {
+                if (sp.id === 'local') return true; // Always show local
+                if (isMicrosoftUser && sp.id === 'microsoft') return true;
+                if (isGoogleUser && sp.id === 'google') return true;
+                if (!isMicrosoftUser && !isGoogleUser) return true; // Show all if email is generic
+                return false;
+            });
+
+            // --- RENDER CARDS DYNAMICALLY ---
+            function renderCards(containerId, isModal = false) {
+                const container = document.getElementById(containerId);
+                container.innerHTML = availableProviders.map(sp => `
+                    <div class="source-card">
+                        <div class="brand-text">
+                            ${sp.brandHTML}
+                        </div>
+                        <div class="btn-wrapper ${sp.btnClass}" onclick="handleAuth('${sp.id}', this, ${isModal})">
+                            <div class="btn-icon-box"><img src="${sp.logo}" alt="${sp.name}"></div>
+                            <button class="btn-label">${sp.btnText}</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            renderCards('startup-cards-container', false);
+            renderCards('modal-cards-container', true);
+
+            // --- INITIALIZATION ---
+            // If we have saved accounts, jump straight to the connected accounts view
+            if (connectedAccounts.length > 0) {
+                startupView.classList.add('hidden');
+                accountsListView.classList.remove('hidden');
+                breadcrumbCurrent.innerText = 'Connected Accounts';
+                renderAccountsList();
+            }
+
+            // --- AUTHENTICATION FLOW ---
+            window.handleAuth = function (providerId, btnElement, isFromModal) {
+                const provider = serviceProviders.find(p => p.id === providerId);
+                const btnLabel = btnElement.querySelector('.btn-label');
+                const originalText = btnLabel.innerText;
+
+                btnElement.style.pointerEvents = 'none';
+                btnElement.style.opacity = '0.7';
+                btnLabel.innerText = 'Authenticating...';
+
+                setTimeout(() => {
+                    btnElement.style.pointerEvents = 'auto';
+                    btnElement.style.opacity = '1';
+                    btnLabel.innerText = originalText;
+
+                    // Generate state object for this account
+                    connectedAccounts.push({
+                        providerName: provider.name,
+                        logo: provider.logo,
+                        email: generateMockEmail(provider.mockEmail),
+                        location: localStorage.getItem('selected_storage_location') || 'US East (N. Virginia)',
+                        status: 'Active',
+                        services: provider.id === 'google'
+                            ? [{ name: 'Gmail', active: true }]
+                            : provider.servicesList.map(s => ({ name: s, active: true }))
+                    });
+
+                    // Save the updated list to local storage
+                    saveData();
+
+                    // Ensure we transition to the active accounts view
+                    startupView.classList.add('hidden');
+                    accountsListView.classList.remove('hidden');
+                    breadcrumbCurrent.innerText = 'Connected Accounts';
+
+                    if (isFromModal) {
+                        closeModal();
+                    }
+
+                    renderAccountsList();
+                }, 1200);
+            };
+
+            function generateMockEmail(base) {
+                const count = connectedAccounts.length;
+                return count === 0 ? base : base.replace('@', `${count}@`);
+            }
+
+            function saveData() {
+                localStorage.setItem('storx_accounts', JSON.stringify(connectedAccounts));
+            }
+
+            function hasGmailService(acc) {
+                const provider = (acc.providerName || '').toLowerCase();
+                if (provider.includes('google')) return true;
+                return (acc.services || []).some((s) => {
+                    const n = (s.name || '').toLowerCase();
+                    return n.includes('gmail') || n.includes('google mail') || n.includes('mail');
+                });
+            }
+
+            // --- RENDER CONNECTED ACCOUNTS (flat list — Gmail only) ---
+            function renderAccountsList() {
+                tableBody.innerHTML = connectedAccounts.map((acc, index) => `
+                    <div class="account-wrapper" id="acc-wrapper-${index}">
+                        <div class="account-row account-row--flat">
+                            <div class="provider-cell">
+                                <img src="${acc.logo}" alt="${acc.providerName}">
+                                ${acc.providerName}
+                            </div>
+                            <div style="color: #475569; font-weight: 500;">${acc.email}</div>
+                            <div style="display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 13px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                ${acc.location || 'US East (N. Virginia)'}
+                            </div>
+                            <div><span class="status-badge">${acc.status}</span> · Gmail</div>
+                            <div class="action-cell">
+                                ${hasGmailService(acc) ? `<button type="button" class="action-btn action-btn--find" data-find-restore data-email="${escapeHtml(acc.email)}">Find &amp; restore</button>` : ""}
+                                <button type="button" class="action-btn action-btn--danger" data-disconnect data-index="${index}">Disconnect</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                tableBody.querySelectorAll('[data-find-restore]').forEach((btn) => {
+                    btn.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        const email = btn.getAttribute('data-email');
+                        if (email) StorxApp.openFindRestore(email);
+                    });
+                });
+
+                tableBody.querySelectorAll('[data-disconnect]').forEach((btn) => {
+                    btn.addEventListener('click', (event) => {
+                        const index = Number(btn.getAttribute('data-index'));
+                        removeAccount(event, index);
+                    });
+                });
+            }
+
+            function escapeHtml(value) {
+                return String(value)
+                    .replace(/&/g, '&amp;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+            }
+
+            // --- MODAL CONTROLS ---
+            btnAddService.addEventListener('click', () => locationModal.classList.remove('hidden'));
+            function closeModal() { modal.classList.add('hidden'); }
+            btnCloseModal.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+            window.removeAccount = function (event, index) {
+                event.stopPropagation();
+                if (confirm('Are you sure you want to disconnect this account?')) {
+                    connectedAccounts.splice(index, 1);
+
+                    // Save the updated list after removal
+                    saveData();
+                    renderAccountsList();
+
+                    if (connectedAccounts.length === 0) {
+                        accountsListView.classList.add('hidden');
+                        startupView.classList.remove('hidden');
+                        breadcrumbCurrent.innerText = 'Overview';
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

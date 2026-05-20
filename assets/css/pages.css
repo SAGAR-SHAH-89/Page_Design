@@ -1,0 +1,270 @@
+/* Shared page components for root app pages */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+.stat-card,
+.panel,
+.chart-card,
+.table-container {
+  background: var(--storx-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-card {
+  padding: 1.25rem 1.35rem;
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.stat-value {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.stat-desc {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--storx-green);
+}
+
+.stat-desc.warning {
+  color: var(--storx-warn);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.chart-card {
+  padding: 1.25rem 1.35rem;
+}
+
+.chart-title {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.activity-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.activity-table th,
+.activity-table td {
+  text-align: left;
+  padding: 0.85rem 1.15rem;
+  border-bottom: 1px solid var(--storx-bg);
+}
+
+.activity-table th {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--storx-bg);
+}
+
+.activity-table tr:hover td {
+  background: rgba(1, 55, 115, 0.03);
+}
+
+.activity-table tr:last-child td {
+  border-bottom: none;
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.status-success {
+  background: rgba(0, 172, 38, 0.12);
+  color: #047857;
+}
+
+.status-failed {
+  background: rgba(255, 70, 70, 0.12);
+  color: #b91c1c;
+}
+
+.status-running {
+  background: rgba(1, 73, 255, 0.1);
+  color: var(--storx-navy);
+}
+
+.status-warning {
+  background: rgba(255, 138, 0, 0.12);
+  color: #b45309;
+}
+
+.page-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-bar {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  background: var(--storx-bg);
+}
+
+.filter-select {
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--storx-surface);
+  color: var(--text);
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.filter-select:focus {
+  border-color: var(--storx-blue);
+}
+
+/* Mailboxes on overview */
+.mailbox-section__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.mailbox-section__desc {
+  margin: 0.35rem 0 0;
+  font-size: 0.875rem;
+  color: var(--storx-text);
+}
+
+.mailbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mailbox-empty {
+  margin: 0;
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  background: var(--storx-bg);
+  border-radius: var(--radius-sm);
+}
+
+.mailbox-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--storx-bg);
+}
+
+.mailbox-card--connected {
+  border-color: rgba(0, 172, 38, 0.35);
+  background: rgba(0, 172, 38, 0.04);
+}
+
+.mailbox-card__main {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.mailbox-card__avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: rgba(1, 73, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.mailbox-card__main strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.mailbox-card__meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.mailbox-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.btn-mailbox {
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--storx-surface);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--storx-navy);
+  cursor: pointer;
+}
+
+.btn-mailbox:hover {
+  background: var(--accent-dim);
+}
+
+.btn-mailbox--primary {
+  background: var(--storx-navy);
+  color: #fff;
+  border-color: var(--storx-navy);
+}
+
+.btn-mailbox--primary:hover {
+  background: #024a8f;
+}
+
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mailbox-card__actions {
+    width: 100%;
+  }
+}
