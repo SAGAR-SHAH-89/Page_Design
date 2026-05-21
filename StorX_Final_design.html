@@ -581,6 +581,11 @@
                     <span class="unicode-icon mr-3 text-lg">&#x1F465;</span><span class="text-sm font-medium">Users &
                         Groups</span>
                 </a>
+                <a href="#" onclick="showLocalVaults()" class="sidebar-item flex items-center px-6 py-3 mb-1"
+                    id="nav-local-vaults">
+                    <span class="unicode-icon mr-3 text-lg">&#x1F5C3;&#xFE0F;</span><span
+                        class="text-sm font-medium">Local Vaults</span>
+                </a>
 
                 <div class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider mt-6 mb-2">Data
                     Management</div>
@@ -598,7 +603,7 @@
                 <div class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider mt-6 mb-2">System &
                     Security</div>
                 <a href="#" onclick="showSecurity()"
-                    class="sidebar-item flex items-center px-6 py-3 mb-1 justify-between" id="nav-security">
+                    class="sidebar-item hidden items-center px-6 py-3 mb-1 justify-between" id="nav-security">
                     <div class="flex items-center">
                         <span class="unicode-icon mr-3 text-lg">&#x1F6E1;&#xFE0F;</span><span
                             class="text-sm font-medium">Security</span>
@@ -649,6 +654,13 @@
                         <div class="pulse-dot mr-2"></div><span class="text-xs font-bold text-emerald-600">Sync
                             Active</span>
                     </div>
+                    <!-- Notifications (Bell Icon) -->
+                    <div class="relative cursor-pointer text-slate-500 hover:text-slate-700 transition-colors flex items-center justify-center h-8 w-8 rounded-full hover:bg-stone-100"
+                        title="Notifications">
+                        <span class="unicode-icon text-lg">&#x1F514;</span>
+                        <span
+                            class="absolute top-1.5 right-1 w-2 h-2 bg-rose-500 rounded-full border border-white"></span>
+                    </div>
                     <!-- Profile / Logout Dropdown -->
                     <div class="relative group cursor-pointer">
                         <div
@@ -660,6 +672,12 @@
                             <div class="py-1">
                                 <div class="px-4 py-2 text-sm text-slate-700 border-b border-stone-100">Admin
                                     User<br><span class="text-xs text-slate-400">admin@acme.com</span></div>
+                                <!-- <a href="#"
+                                    class="block px-4 py-2 text-sm text-slate-700 hover:bg-stone-50 transition-colors">Access</a> -->
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-slate-700 hover:bg-stone-50 transition-colors">Resources</a>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-slate-700 hover:bg-stone-50 transition-colors border-b border-stone-100">Billing</a>
                                 <a href="#" onclick="logoutUser()"
                                     class="block px-4 py-2 text-sm text-rose-600 hover:bg-stone-50">Log out</a>
                             </div>
@@ -677,6 +695,31 @@
                         <p class="text-sm text-slate-500 mt-1">Real-time overview of your protected Google environment.
                         </p>
                     </div>
+                </div>
+
+                <!-- Dashboard Trial / Billing Card -->
+                <div
+                    class="hidden bg-white border border-teal-200 rounded-xl p-5 shadow-sm mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 relative overflow-hidden">
+                    <div class="absolute left-0 top-0 w-1 h-full bg-teal-500"></div>
+                    <div class="flex items-center gap-4 pl-2">
+                        <div
+                            class="w-10 h-10 bg-teal-50 rounded-full flex items-center justify-center border border-teal-100 shrink-0">
+                            <span class="unicode-icon text-xl text-teal-600">&#x2B50;</span>
+                        </div>
+                        <div>
+                            <h3 class="text-slate-900 font-bold text-base flex items-center gap-2">Enterprise Evaluation
+                                <span
+                                    class="bg-teal-100 text-teal-800 text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">Free
+                                    Trial</span>
+                            </h3>
+                            <p class="text-slate-500 text-sm mt-0.5">Your trial expires in <strong>14 days</strong>.
+                                Upgrade to maintain continuous protection.</p>
+                        </div>
+                    </div>
+                    <button onclick="showSettings()"
+                        class="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded-lg text-sm font-bold shadow-sm transition-colors whitespace-nowrap w-full sm:w-auto text-center flex items-center justify-center">
+                        Review Plans <span class="unicode-icon ml-2">&#x2192;</span>
+                    </button>
                 </div>
 
                 <!-- KPI Cards (Spin.AI / HYCU Inspired) -->
@@ -716,9 +759,28 @@
                         <div class="text-xs text-slate-400 mt-1">1,402 items synced successfully</div>
                     </div>
 
+                    <!-- Subscription / Billing KPI -->
+                    <div
+                        class="bg-white rounded-xl border border-stone-200 p-5 shadow-sm relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 h-full w-1 bg-indigo-500 group-hover:w-2 transition-all">
+                        </div>
+                        <div class="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wider">Plan Status
+                        </div>
+                        <div class="flex items-baseline mt-2">
+                            <div class="text-3xl font-bold text-slate-900">Trial</div>
+                            <div class="ml-2 text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">
+                                14 Days Left</div>
+                        </div>
+                        <div class="text-xs text-slate-400 mt-1 flex justify-between items-center">
+                            <span>Enterprise Eval</span>
+                            <button onclick="showSettings()"
+                                class="text-indigo-600 hover:text-indigo-800 font-bold transition-colors">Upgrade</button>
+                        </div>
+                    </div>
+
                     <!-- Ransomware Shield KPI -->
                     <div
-                        class="bg-rose-50/40 rounded-xl border border-rose-200 p-5 shadow-sm relative overflow-hidden group">
+                        class="hidden bg-rose-50/40 rounded-xl border border-rose-200 p-5 shadow-sm relative overflow-hidden group">
                         <div class="absolute right-0 top-0 h-full w-1 bg-rose-500 group-hover:w-2 transition-all"></div>
                         <div class="flex justify-between items-start">
                             <div>
@@ -1080,6 +1142,57 @@
                 </div>
             </main>
 
+            <!-- Local Vaults Content -->
+            <main id="view-local-vaults"
+                class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 w-full h-full hidden bg-stone-50">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900">Local Vaults</h1>
+                        <p class="text-sm text-slate-500 mt-1">Provision and manage on-premises storage targets for
+                            hybrid backup.</p>
+                    </div>
+                    <button onclick="createLocalVault()" id="btn-create-vault"
+                        class="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 flex items-center transition-colors">
+                        <span class="unicode-icon mr-2">&#x2795;</span> Provision Local Vault
+                    </button>
+                </div>
+
+                <div class="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden"
+                    id="vaults-container">
+                    <!-- Initial Empty State -->
+                    <div id="empty-vaults-state" class="p-12 text-center flex flex-col items-center justify-center">
+                        <div
+                            class="w-16 h-16 bg-stone-100 rounded-2xl flex items-center justify-center text-3xl unicode-icon mb-4 text-slate-400">
+                            &#x1F5C3;&#xFE0F;</div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-1">No Local Vaults Configured</h3>
+                        <p class="text-sm text-slate-500 max-w-sm mb-6">Create your first local vault to enable hybrid
+                            backup destinations on your own infrastructure.</p>
+                        <button onclick="createLocalVault()" id="btn-create-vault-empty"
+                            class="bg-white border border-stone-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-stone-50 transition-colors shadow-sm">Provision
+                            Local Vault</button>
+                    </div>
+
+                    <!-- Table State (Hidden initially) -->
+                    <table id="local-vaults-table" class="min-w-full divide-y divide-stone-200 hidden">
+                        <thead class="bg-stone-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Vault Name
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Location /
+                                    Path</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Status</th>
+                                <th class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase">Capacity
+                                    Used</th>
+                                <th class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="local-vaults-tbody" class="bg-white divide-y divide-stone-100">
+                            <!-- Dynamic rows appended here -->
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+
             <!-- Auto-Sync Policies Content -->
             <main id="view-autosync" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 w-full h-full hidden bg-stone-50">
                 <div class="flex justify-between items-center mb-6">
@@ -1088,20 +1201,14 @@
                         <p class="text-sm text-slate-500 mt-1">Configure automated backup intervals and retention rules
                             for your corporate tenant.</p>
                     </div>
-                    <button
-                        class="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 flex items-center transition-colors"><span
-                            class="unicode-icon mr-2">&#x2795;</span> Create Policy</button>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     <!-- Policy Card 1 -->
                     <div
                         class="bg-white border border-stone-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all relative">
-                        <div
-                            class="absolute top-0 right-0 bg-teal-100 text-teal-800 text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-xl uppercase tracking-wider">
-                            Default Global</div>
-                        <h3 class="text-lg font-bold text-slate-900 mb-1">Standard Corporate</h3>
-                        <p class="text-xs text-slate-500 mb-4">Applied to 118 users automatically.</p>
+                        <h3 class="text-lg font-bold text-slate-900 mb-1">Sarah Jenkins</h3>
+                        <p class="text-xs text-slate-500 mb-4">Account: s.jenkins@acme.com</p>
 
                         <div class="space-y-3 mb-6">
                             <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
@@ -1109,6 +1216,10 @@
                                     class="font-bold text-slate-800">Every 1 Hour</span>
                             </div>
                             <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
+                                <span class="text-slate-500">Next Backup</span><span class="font-bold text-slate-800">In
+                                    42 mins</span>
+                            </div>
+                            <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
                                 <span class="text-slate-500">Retention</span><span
                                     class="font-bold text-slate-800">Infinite</span>
                             </div>
@@ -1120,7 +1231,7 @@
                                         class="unicode-icon">&#x1F464;</span></span>
                             </div>
                         </div>
-                        <button
+                        <button onclick="openEditPolicyModal('Sarah Jenkins')"
                             class="w-full bg-stone-100 hover:bg-stone-200 text-slate-700 text-sm font-bold py-2 rounded-lg transition-colors border border-stone-200">Edit
                             Policy</button>
                     </div>
@@ -1128,13 +1239,17 @@
                     <!-- Policy Card 2 -->
                     <div
                         class="bg-white border border-stone-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all">
-                        <h3 class="text-lg font-bold text-slate-900 mb-1">Executive Critical</h3>
-                        <p class="text-xs text-slate-500 mb-4">Applied to "Executive Team" group.</p>
+                        <h3 class="text-lg font-bold text-slate-900 mb-1">Executive Team</h3>
+                        <p class="text-xs text-slate-500 mb-4">Group: execs@acme.com</p>
 
                         <div class="space-y-3 mb-6">
                             <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
                                 <span class="text-slate-500">Sync Interval</span><span
                                     class="font-bold text-teal-600">Real-Time (CDP)</span>
+                            </div>
+                            <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
+                                <span class="text-slate-500">Next Backup</span><span
+                                    class="font-bold text-teal-600">Continuous</span>
                             </div>
                             <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
                                 <span class="text-slate-500">Retention</span><span
@@ -1148,7 +1263,7 @@
                                         class="unicode-icon">&#x1F464;</span></span>
                             </div>
                         </div>
-                        <button
+                        <button onclick="openEditPolicyModal('Executive Team')"
                             class="w-full bg-stone-100 hover:bg-stone-200 text-slate-700 text-sm font-bold py-2 rounded-lg transition-colors border border-stone-200">Edit
                             Policy</button>
                     </div>
@@ -1411,9 +1526,106 @@
             <main id="view-settings" class="flex-1 overflow-y-auto bg-stone-50 p-4 sm:p-6 lg:p-8 w-full h-full hidden">
                 <div class="max-w-4xl">
                     <div class="mb-6">
-                        <h1 class="text-2xl font-bold text-slate-900">Tenant Settings</h1>
-                        <p class="text-sm text-slate-500 mt-1">Configure workspace integrations, billing, and system
-                            preferences.</p>
+                        <h1 class="text-2xl font-bold text-slate-900">Account & Tenant Settings</h1>
+                        <p class="text-sm text-slate-500 mt-1">Manage your personal profile, security preferences, and
+                            workspace integrations.</p>
+                    </div>
+
+                    <!-- Personal Profile Card -->
+                    <div class="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden mb-6">
+                        <div class="p-5 border-b border-stone-100 bg-stone-50">
+                            <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Personal Profile</h2>
+                        </div>
+                        <div class="p-6 space-y-6">
+                            <!-- Update Profile Name -->
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <div class="flex-1">
+                                    <label class="block text-sm font-bold text-slate-700 mb-1">Full Name</label>
+                                    <input type="text" value="Admin User"
+                                        class="bg-white border border-stone-300 text-slate-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 shadow-inner">
+                                </div>
+                                <div class="flex-1">
+                                    <label class="block text-sm font-bold text-slate-700 mb-1">Email Address</label>
+                                    <input type="email" value="admin@acme.com" disabled
+                                        class="bg-stone-100 border border-stone-200 text-slate-500 text-sm rounded-lg block w-full p-2.5 cursor-not-allowed">
+                                </div>
+                                <div class="flex items-end">
+                                    <button onclick="showToast('Profile name updated successfully!')"
+                                        class="bg-teal-600 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 transition-colors w-full sm:w-auto">Update
+                                        Profile</button>
+                                </div>
+                            </div>
+
+                            <!-- Social Accounts -->
+                            <div class="border-t border-stone-100 pt-6">
+                                <h3 class="text-sm font-bold text-slate-800 mb-3">Connected Social Accounts</h3>
+                                <div class="flex flex-wrap gap-4">
+                                    <button
+                                        class="bg-white border border-stone-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-stone-50 transition-colors shadow-sm flex items-center">
+                                        <span class="unicode-icon mr-2">&#x1F1EC;</span> Google (Connected)
+                                    </button>
+                                    <button
+                                        class="bg-white border border-stone-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-stone-50 transition-colors shadow-sm flex items-center">
+                                        <span class="unicode-icon mr-2">&#x1F517;</span> Add Microsoft
+                                    </button>
+                                    <button
+                                        class="bg-white border border-stone-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-stone-50 transition-colors shadow-sm flex items-center">
+                                        <span class="unicode-icon mr-2">&#x1F4BB;</span> Add GitHub
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security & Notifications Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <!-- 2FA -->
+                        <div class="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden">
+                            <div class="p-5 border-b border-stone-100 bg-stone-50">
+                                <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Account Security
+                                </h2>
+                            </div>
+                            <div class="p-6">
+                                <div class="flex justify-between items-center mb-4">
+                                    <div>
+                                        <h3 class="font-bold text-slate-900">Two-Factor Authentication</h3>
+                                        <p class="text-xs text-slate-500 mt-1">Add an extra layer of security.</p>
+                                    </div>
+                                    <span id="tfa-status-badge"
+                                        class="bg-stone-100 text-stone-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-stone-200">Disabled</span>
+                                </div>
+                                <button id="tfa-action-btn" onclick="openTwoFactorModal()"
+                                    class="w-full bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-slate-800 transition-colors">
+                                    Enable 2FA App
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Notifications -->
+                        <div class="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden">
+                            <div class="p-5 border-b border-stone-100 bg-stone-50 flex justify-between items-center">
+                                <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Notifications</h2>
+                                <button onclick="showToast('Notification preferences saved.')"
+                                    class="text-teal-600 text-xs font-bold hover:underline">Save</button>
+                            </div>
+                            <div class="p-6 space-y-3">
+                                <label class="flex items-center text-sm text-slate-700 font-medium cursor-pointer">
+                                    <input type="checkbox" checked
+                                        class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600">
+                                    Critical Security Alerts
+                                </label>
+                                <label class="flex items-center text-sm text-slate-700 font-medium cursor-pointer">
+                                    <input type="checkbox" checked
+                                        class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600">
+                                    Weekly Backup Reports
+                                </label>
+                                <label class="flex items-center text-sm text-slate-700 font-medium cursor-pointer">
+                                    <input type="checkbox"
+                                        class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600">
+                                    Marketing & Updates
+                                </label>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- NEW: Multi-Tenant Connection Manager -->
@@ -1478,6 +1690,57 @@
                                     <button class="text-sm text-teal-600 font-bold hover:underline">Switch to
                                         Tenant</button>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Developer Access Card -->
+                    <div class="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden mb-6">
+                        <div class="p-5 border-b border-stone-100 bg-stone-50 flex justify-between items-center">
+                            <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Developer Access</h2>
+                        </div>
+                        <div class="p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div>
+                                <div class="text-lg font-bold text-slate-900 mb-1">API Keys & Webhooks</div>
+                                <p class="text-sm text-slate-500">Generate API tokens for programmatic access to your
+                                    StorX vaults and connect custom webhooks.</p>
+                            </div>
+                            <button
+                                class="bg-white border border-stone-200 text-slate-700 px-6 py-2.5 rounded-lg text-sm font-bold shadow-sm hover:bg-stone-50 transition-colors whitespace-nowrap flex items-center">
+                                <span class="unicode-icon mr-2">&#x1F5DD;&#xFE0F;</span> Manage API Keys
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Billing & Subscription Card -->
+                    <div class="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden mb-6">
+                        <div class="p-5 border-b border-stone-100 bg-stone-50 flex justify-between items-center">
+                            <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Subscription & Billing
+                            </h2>
+                            <span
+                                class="bg-teal-100 text-teal-800 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Free
+                                Trial</span>
+                        </div>
+                        <div class="p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div>
+                                <div class="text-lg font-bold text-slate-900 mb-1">Enterprise Evaluation</div>
+                                <p class="text-sm text-slate-500">Your free trial is active. You have full access to all
+                                    premium features.</p>
+                                <div
+                                    class="mt-4 flex items-center text-sm bg-stone-50 border border-stone-200 w-max px-3 py-1.5 rounded-lg shadow-sm">
+                                    <span class="unicode-icon mr-2 text-rose-500">&#x23F3;</span>
+                                    <span class="font-bold text-slate-700">14 days remaining</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-3 w-full sm:w-auto">
+                                <button
+                                    class="bg-teal-600 text-white px-6 py-2.5 rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 transition-colors text-center whitespace-nowrap">
+                                    <span class="unicode-icon mr-1.5">&#x2B50;</span> Upgrade to Paid
+                                </button>
+                                <button
+                                    class="bg-white border border-stone-200 text-slate-700 px-6 py-2 rounded-lg text-sm font-bold hover:bg-stone-50 transition-colors text-center shadow-sm whitespace-nowrap">
+                                    View Invoices
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -1579,11 +1842,18 @@
                         id="full-service-name" class="ml-1 font-bold">Gmail</span>
                 </button>
             </div>
-            <button id="restore-btn"
-                class="px-6 py-2 bg-teal-600 text-white rounded-lg text-sm font-bold shadow-md opacity-50 cursor-not-allowed transition-all"
-                disabled onclick="executeRestore()">
-                Restore Selected
-            </button>
+            <div class="flex gap-3">
+                <button id="download-btn"
+                    class="px-5 py-2 bg-white text-slate-700 border border-stone-200 hover:bg-stone-50 rounded-lg text-sm font-bold shadow-sm opacity-50 cursor-not-allowed transition-all flex items-center"
+                    disabled onclick="executeDownload()">
+                    <span class="unicode-icon mr-1.5">&#x2B07;&#xFE0F;</span> Download
+                </button>
+                <button id="restore-btn"
+                    class="px-6 py-2 bg-teal-600 text-white rounded-lg text-sm font-bold shadow-md opacity-50 cursor-not-allowed transition-all"
+                    disabled onclick="executeRestore()">
+                    Restore Selected
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1615,6 +1885,121 @@
                 <h3 class="text-sm font-bold text-slate-700 mb-1">Instant Recovery Search</h3>
                 <p class="text-xs text-slate-500 max-w-xs">Start typing a file name, email address, or folder name to
                     instantly locate it across Gmail, Drive, and Photos.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Policy Modal -->
+    <div id="edit-policy-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-0">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeEditPolicyModal()"></div>
+        <div class="bg-white rounded-xl shadow-2xl z-10 w-full max-w-lg overflow-hidden border border-stone-200 flex flex-col transform transition-all scale-95 opacity-0"
+            id="edit-policy-content">
+            <div class="p-5 border-b border-stone-100 bg-stone-50 flex justify-between items-center">
+                <h2 class="text-lg font-bold text-slate-900 flex items-center">
+                    <span class="unicode-icon mr-2 text-teal-600">&#x2699;&#xFE0F;</span> Edit Policy: <span
+                        id="edit-policy-title" class="ml-1 text-teal-700"></span>
+                </h2>
+                <button onclick="closeEditPolicyModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <span class="unicode-icon">&#x274C;</span>
+                </button>
+            </div>
+            <div class="p-6 space-y-5 bg-white">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Sync Interval</label>
+                    <select
+                        class="w-full border border-stone-300 rounded-lg text-sm bg-stone-50 px-3 py-2.5 focus:ring-teal-500 focus:border-teal-500 shadow-sm">
+                        <option>Real-Time (CDP)</option>
+                        <option>Every 1 Hour</option>
+                        <option>Every 6 Hours</option>
+                        <option>Nightly</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Retention Period</label>
+                    <select
+                        class="w-full border border-stone-300 rounded-lg text-sm bg-stone-50 px-3 py-2.5 focus:ring-teal-500 focus:border-teal-500 shadow-sm">
+                        <option>Infinite (Never Delete)</option>
+                        <option>7 Years (Compliance)</option>
+                        <option>1 Year</option>
+                        <option>30 Days</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Protected Services</label>
+                    <div class="space-y-3 p-4 bg-stone-50 border border-stone-200 rounded-lg">
+                        <label class="flex items-center text-sm text-slate-700 font-medium cursor-pointer"><input
+                                type="checkbox" checked
+                                class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600">
+                            <span class="unicode-icon mr-2">&#x1F4E7;</span> Gmail</label>
+                        <label class="flex items-center text-sm text-slate-700 font-medium cursor-pointer"><input
+                                type="checkbox" checked
+                                class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600">
+                            <span class="unicode-icon mr-2">&#x1F4C2;</span> Google Drive</label>
+                        <label class="flex items-center text-sm text-slate-700 font-medium cursor-pointer"><input
+                                type="checkbox" checked
+                                class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600">
+                            <span class="unicode-icon mr-2">&#x1F464;</span> Contacts & Calendar</label>
+                        <label class="flex items-center text-sm text-slate-700 font-medium cursor-pointer"><input
+                                type="checkbox"
+                                class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600">
+                            <span class="unicode-icon mr-2">&#x1F3DD;&#xFE0F;</span> Google Photos</label>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-stone-100 bg-stone-50 flex justify-end gap-3">
+                <button onclick="closeEditPolicyModal()"
+                    class="px-4 py-2 bg-white border border-stone-300 text-slate-700 rounded-lg text-sm font-bold shadow-sm hover:bg-stone-50 transition-colors">Cancel</button>
+                <button id="save-policy-btn" onclick="savePolicyChanges()"
+                    class="px-5 py-2 bg-teal-600 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 transition-colors flex items-center">
+                    Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2FA Setup Modal -->
+    <div id="tfa-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-0">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeTwoFactorModal()"></div>
+        <div class="bg-white rounded-xl shadow-2xl z-10 w-full max-w-md overflow-hidden border border-stone-200 flex flex-col transform transition-all scale-95 opacity-0"
+            id="tfa-modal-content">
+            <div class="p-5 border-b border-stone-100 bg-stone-50 flex justify-between items-center">
+                <h2 class="text-lg font-bold text-slate-900 flex items-center">
+                    <span class="unicode-icon mr-2 text-teal-600">&#x1F512;</span> Setup Two-Factor Authentication
+                </h2>
+                <button onclick="closeTwoFactorModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <span class="unicode-icon">&#x274C;</span>
+                </button>
+            </div>
+            <div class="p-6 space-y-6 bg-white flex flex-col items-center">
+                <div class="text-center">
+                    <p class="text-sm text-slate-600 mb-4">Scan this QR code with Google Authenticator, Authy, or your
+                        preferred 2FA app.</p>
+                    <!-- Mock QR Code Pattern -->
+                    <div
+                        class="w-40 h-40 bg-stone-100 border border-stone-200 p-2 mx-auto rounded-lg shadow-sm flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-40"
+                            style="background-image: repeating-linear-gradient(45deg, #1e293b 25%, transparent 25%, transparent 75%, #1e293b 75%, #1e293b), repeating-linear-gradient(45deg, #1e293b 25%, #fcfbf9 25%, #fcfbf9 75%, #1e293b 75%, #1e293b); background-position: 0 0, 10px 10px; background-size: 20px 20px;">
+                        </div>
+                        <span
+                            class="unicode-icon text-4xl relative z-10 bg-white rounded-md p-1 border border-stone-200 shadow-sm">&#x1F4F1;</span>
+                    </div>
+                    <p class="text-xs font-mono text-slate-400 mt-3">ABCD-1234-EFGH-5678</p>
+                </div>
+
+                <div class="w-full">
+                    <label class="block text-sm font-bold text-slate-700 mb-2 text-center">Enter 6-digit code</label>
+                    <input type="text" id="tfa-code-input" maxlength="6"
+                        class="w-full border border-stone-300 rounded-lg text-center text-2xl tracking-[0.5em] bg-stone-50 px-3 py-3 focus:ring-teal-500 focus:border-teal-500 shadow-inner font-mono"
+                        placeholder="000000">
+                </div>
+            </div>
+            <div class="p-4 border-t border-stone-100 bg-stone-50 flex justify-end gap-3">
+                <button onclick="closeTwoFactorModal()"
+                    class="px-4 py-2 bg-white border border-stone-300 text-slate-700 rounded-lg text-sm font-bold shadow-sm hover:bg-stone-50 transition-colors">Cancel</button>
+                <button id="verify-tfa-btn" onclick="verifyTwoFactor()"
+                    class="px-5 py-2 bg-teal-600 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 transition-colors flex items-center">
+                    Verify & Enable
+                </button>
             </div>
         </div>
     </div>
@@ -1656,6 +2041,16 @@
 
             document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
             document.getElementById('nav-users').classList.add('active');
+        }
+
+        function showLocalVaults() {
+            document.querySelectorAll('main').forEach(m => { m.classList.remove('block'); m.classList.add('hidden'); });
+            document.getElementById('view-local-vaults').classList.remove('hidden');
+            document.getElementById('view-local-vaults').classList.add('block');
+            document.getElementById('topbar-breadcrumb').innerHTML = 'Local Vaults';
+
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('nav-local-vaults').classList.add('active');
         }
 
         function showAutoSync() {
@@ -1854,6 +2249,99 @@
             }
         });
 
+        /* --- EDIT POLICY MODAL LOGIC --- */
+        function openEditPolicyModal(policyName) {
+            document.getElementById('edit-policy-title').innerText = policyName;
+            const modal = document.getElementById('edit-policy-modal');
+            const content = document.getElementById('edit-policy-content');
+            modal.classList.remove('hidden');
+
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeEditPolicyModal() {
+            const modal = document.getElementById('edit-policy-modal');
+            const content = document.getElementById('edit-policy-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        function savePolicyChanges() {
+            const btn = document.getElementById('save-policy-btn');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<span class="unicode-icon animate-spin mr-2">&#x23F3;</span> Saving...';
+            btn.disabled = true;
+            setTimeout(() => {
+                closeEditPolicyModal();
+                showToast("Policy settings updated successfully.");
+                btn.innerHTML = orig;
+                btn.disabled = false;
+            }, 1000);
+        }
+
+        /* --- 2FA MODAL LOGIC --- */
+        let isTwoFactorEnabled = false;
+
+        function openTwoFactorModal() {
+            if (isTwoFactorEnabled) {
+                // Toggle Flow -> Disable 2FA
+                isTwoFactorEnabled = false;
+                document.getElementById('tfa-status-badge').className = "bg-stone-100 text-stone-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-stone-200";
+                document.getElementById('tfa-status-badge').innerText = "Disabled";
+                document.getElementById('tfa-action-btn').className = "w-full bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-slate-800 transition-colors";
+                document.getElementById('tfa-action-btn').innerText = "Enable 2FA App";
+                showToast("Two-Factor Authentication disabled.");
+                return;
+            }
+
+            document.getElementById('tfa-code-input').value = '';
+            const modal = document.getElementById('tfa-modal');
+            const content = document.getElementById('tfa-modal-content');
+            modal.classList.remove('hidden');
+
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+                document.getElementById('tfa-code-input').focus();
+            }, 10);
+        }
+
+        function closeTwoFactorModal() {
+            const modal = document.getElementById('tfa-modal');
+            const content = document.getElementById('tfa-modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        function verifyTwoFactor() {
+            const code = document.getElementById('tfa-code-input').value;
+            if (code.length < 6) return showToast("Please enter a valid 6-digit code.");
+
+            const btn = document.getElementById('verify-tfa-btn');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<span class="unicode-icon animate-spin mr-2">&#x23F3;</span> Verifying...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                isTwoFactorEnabled = true;
+                closeTwoFactorModal();
+                showToast("Two-Factor Authentication successfully enabled.");
+                btn.innerHTML = orig;
+                btn.disabled = false;
+
+                // Update UI visually
+                document.getElementById('tfa-status-badge').className = "bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-emerald-200";
+                document.getElementById('tfa-status-badge').innerText = "Active";
+                document.getElementById('tfa-action-btn').className = "w-full bg-white text-rose-600 border border-rose-200 px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-rose-50 transition-colors";
+                document.getElementById('tfa-action-btn').innerText = "Disable 2FA";
+            }, 1200);
+        }
+
         /* --- CONNECT NEW ACCOUNT FLOW --- */
         function connectNewAccount() {
             const btn = document.getElementById('connect-account-btn');
@@ -1912,6 +2400,51 @@
                     showToast("Successfully added 2 new entities from @globex.com");
                 }, 1500);
 
+            }, 1200);
+        }
+
+        /* --- LOCAL VAULTS FLOW --- */
+        let vaultCount = 0;
+        function createLocalVault() {
+            const btnTop = document.getElementById('btn-create-vault');
+            const btnEmpty = document.getElementById('btn-create-vault-empty');
+            const origTop = btnTop ? btnTop.innerHTML : '';
+            const origEmpty = btnEmpty ? btnEmpty.innerHTML : '';
+
+            if (btnTop) { btnTop.innerHTML = '<span class="unicode-icon animate-spin mr-2">&#x23F3;</span> Provisioning...'; btnTop.disabled = true; }
+            if (btnEmpty) { btnEmpty.innerHTML = '<span class="unicode-icon animate-spin mr-2">&#x23F3;</span> Provisioning...'; btnEmpty.disabled = true; }
+
+            setTimeout(() => {
+                vaultCount++;
+                document.getElementById('empty-vaults-state').classList.add('hidden');
+                document.getElementById('local-vaults-table').classList.remove('hidden');
+
+                const tbody = document.getElementById('local-vaults-tbody');
+                const vaultId = 'LV-' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+                const row = `
+                    <tr class="hover:bg-stone-50 transition-colors animate-[slideInLog_0.4s_forwards]">
+                        <td class="px-6 py-4">
+                            <div class="font-bold text-slate-900 text-sm">On-Prem NAS ${vaultCount}</div>
+                            <div class="text-xs text-slate-500">ID: ${vaultId}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-slate-600 font-mono text-xs bg-stone-100 px-2 py-1 rounded inline-block">/mnt/storx_backup_${vaultCount}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-bold uppercase flex items-center w-max">
+                                <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></div> Online
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-right text-sm text-slate-600 font-medium">0 B / 5 TB</td>
+                        <td class="px-6 py-4 text-right text-sm font-medium">
+                            <button class="text-slate-500 hover:text-slate-700 bg-white border border-stone-200 px-3 py-1.5 rounded-lg transition-colors shadow-sm font-bold text-xs">Configure</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', row);
+                showToast("Local Vault Provisioned Successfully!");
+
+                if (btnTop) { btnTop.innerHTML = origTop; btnTop.disabled = false; }
             }, 1200);
         }
 
@@ -2017,9 +2550,19 @@
         // Preview Generators
         function generateGmailPreview() {
             const user = currentExplorerUser.email || 'user@domain.com';
-            let html = `<div id="gmail-list-view">
-                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Inbox Archive: ${user}</div>
-                <div class="space-y-2">`;
+            let html = `<div id="gmail-list-view" class="flex flex-col sm:flex-row gap-4 h-full">
+                <div class="w-full sm:w-1/4 shrink-0 sm:border-r sm:border-stone-200 sm:pr-4">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Archive: ${user}</div>
+                    <div class="flex flex-row sm:flex-col space-x-2 sm:space-x-0 sm:space-y-1 overflow-x-auto hide-scrollbar pb-2 sm:pb-0">
+                        <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-teal-50 text-teal-700 rounded-lg text-sm font-bold transition-colors whitespace-nowrap sm:whitespace-normal">Inbox</button>
+                        <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal">Starred</button>
+                        <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal">Snoozed</button>
+                        <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal">Sent</button>
+                        <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal">Drafts</button>
+                    </div>
+                </div>
+                <div class="flex-1 overflow-y-auto">
+                    <div class="space-y-2">`;
             const emails = [
                 { s: "Invoice #4021 - APPROVED", f: "billing@vendor.com", d: "Oct 24" },
                 { s: "Q3 Project Updates & Timelines", f: "team@acme.com", d: "Oct 23" },
@@ -2040,12 +2583,11 @@
                             <div class="text-sm text-slate-600 truncate flex items-center">
                                 <span class="w-2 h-2 rounded-full bg-blue-400 mr-2"></span> ${e.s}
                             </div>
-                            <div class="text-[10px] text-slate-400 mt-1">To: ${user}</div>
                         </div>
                     </div>
                 `;
             });
-            html += `</div></div><div id="gmail-preview-view" class="hidden"></div>`;
+            html += `</div></div></div><div id="gmail-preview-view" class="hidden h-full"></div>`;
             return html;
         }
 
@@ -2111,8 +2653,19 @@
 
         function generateDrivePreview() {
             const name = currentExplorerUser.name || 'User';
-            let html = `<div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">My Drive: ${name}</div>
-                        <table class="w-full text-left text-sm bg-white rounded-lg border border-stone-200 overflow-hidden shadow-sm">
+            let html = `<div class="flex flex-col sm:flex-row gap-4 h-full">
+                <div class="w-full sm:w-1/4 shrink-0 sm:border-r sm:border-stone-200 sm:pr-4">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Vault: ${name}</div>
+                    <div class="flex flex-row sm:flex-col space-x-2 sm:space-x-0 sm:space-y-1 overflow-x-auto hide-scrollbar pb-2 sm:pb-0">
+                        <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-teal-50 text-teal-700 rounded-lg text-sm font-bold transition-colors whitespace-nowrap sm:whitespace-normal">My Drive</button>
+                        <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal">Shared with me</button>
+                        <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal">Recent</button>
+                        <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal">Starred</button>
+                        <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal">Trash</button>
+                    </div>
+                </div>
+                <div class="flex-1 overflow-y-auto">
+                    <table class="w-full text-left text-sm bg-white rounded-lg border border-stone-200 overflow-hidden shadow-sm">
                             <thead class="bg-stone-50 border-b border-stone-100">
                                 <tr>
                                     <th class="p-3 w-10"></th>
@@ -2136,23 +2689,43 @@
                     </tr>
                 `;
             });
-            return html + '</tbody></table>';
+            return html + '</tbody></table></div></div>';
         }
 
         function generatePhotosPreview() {
             const name = currentExplorerUser.name || 'User';
-            let html = `<div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Media Backups: ${name}</div><div class="photo-grid">`;
+            let html = `<div class="flex flex-col sm:flex-row gap-4 h-full">
+                <div class="w-full sm:w-1/4 shrink-0 sm:border-r sm:border-stone-200 sm:pr-4">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Media Backups: ${name}</div>
+                    <div class="flex flex-row sm:flex-col space-x-2 sm:space-x-0 sm:space-y-1 overflow-x-auto hide-scrollbar pb-2 sm:pb-0">
+                        <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-teal-50 text-teal-700 rounded-lg text-sm font-bold transition-colors whitespace-nowrap sm:whitespace-normal">Photos</button>
+                        <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal">Albums</button>
+                        <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal">Favorites</button>
+                    </div>
+                </div>
+                <div class="flex-1 overflow-y-auto">
+                    <div class="photo-grid">`;
             const colors = ['#fca5a5', '#93c5fd', '#86efac', '#fde047', '#d8b4fe', '#fdba74'];
             for (let i = 0; i < 6; i++) {
                 // Using placehold.co for more realistic thumbnail previews
                 html += `<div class="photo-item shadow-sm hover:shadow-md transition-shadow" style="background-image: url('https://placehold.co/150x150/${colors[i].replace('#', '')}/white?text=IMG_00${i + 1}')" onclick="togglePhoto(this)"></div>`;
             }
-            return html + '</div>';
+            return html + '</div></div></div>';
         }
 
         function generateContactsPreview() {
             const email = currentExplorerUser.email || 'user@domain.com';
-            let html = `<div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Address Book: ${email}</div><div class="grid grid-cols-1 md:grid-cols-2 gap-3">`;
+            let html = `<div class="flex flex-col sm:flex-row gap-4 h-full">
+                <div class="w-full sm:w-1/4 shrink-0 sm:border-r sm:border-stone-200 sm:pr-4">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Address Book: ${email}</div>
+                    <div class="flex flex-row sm:flex-col space-x-2 sm:space-x-0 sm:space-y-1 overflow-x-auto hide-scrollbar pb-2 sm:pb-0">
+                        <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-teal-50 text-teal-700 rounded-lg text-sm font-bold transition-colors whitespace-nowrap sm:whitespace-normal">Contacts</button>
+                        <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal">Directory</button>
+                        <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal">Starred</button>
+                    </div>
+                </div>
+                <div class="flex-1 overflow-y-auto">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">`;
             const contacts = ["Client Contact A", "Vendor Support", "Marketing Agency", "Board Member D"];
             contacts.forEach((c, i) => {
                 html += `
@@ -2168,12 +2741,21 @@
                     </label>
                 `;
             });
-            return html + '</div>';
+            return html + '</div></div></div>';
         }
 
         function generateCalendarPreview() {
             const email = currentExplorerUser.email || 'user@domain.com';
-            let html = `<div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Schedule Sync: ${email}</div><div class="space-y-3">`;
+            let html = `<div class="flex flex-col sm:flex-row gap-4 h-full">
+                <div class="w-full sm:w-1/4 shrink-0 sm:border-r sm:border-stone-200 sm:pr-4">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Schedule Sync: ${email}</div>
+                    <div class="flex flex-row sm:flex-col space-x-2 sm:space-x-0 sm:space-y-1 overflow-x-auto hide-scrollbar pb-2 sm:pb-0">
+                        <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-teal-50 text-teal-700 rounded-lg text-sm font-bold transition-colors whitespace-nowrap sm:whitespace-normal">My Calendars</button>
+                        <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal">Other Calendars</button>
+                    </div>
+                </div>
+                <div class="flex-1 overflow-y-auto">
+                    <div class="space-y-3">`;
             const events = [
                 { t: "Q4 Planning Onsite", d: "Oct 25, 10:00 AM - 11:30 AM", c: "bg-teal-500" },
                 { t: "Weekly Sync w/ Agency", d: "Oct 26, 2:00 PM - 3:00 PM", c: "bg-blue-500" },
@@ -2193,7 +2775,7 @@
                     </label>
                 `;
             });
-            return html + '</div>';
+            return html + '</div></div></div>';
         }
 
         // Selection Handlers
@@ -2208,15 +2790,28 @@
             updateRestoreBtn();
         }
 
+        function switchSidebarFilter(btn) {
+            const container = btn.parentElement;
+            container.querySelectorAll('button').forEach(b => {
+                b.className = "w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal";
+            });
+            btn.className = "w-full text-left px-3 py-2 bg-teal-50 text-teal-700 rounded-lg text-sm font-bold transition-colors whitespace-nowrap sm:whitespace-normal";
+        }
+
         function updateRestoreBtn() {
             document.getElementById('selected-count').innerText = selectedItems;
             const btn = document.getElementById('restore-btn');
+            const downloadBtn = document.getElementById('download-btn');
             if (selectedItems > 0) {
                 btn.classList.remove('opacity-50', 'cursor-not-allowed');
                 btn.disabled = false;
+                downloadBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                downloadBtn.disabled = false;
             } else {
                 btn.classList.add('opacity-50', 'cursor-not-allowed');
                 btn.disabled = true;
+                downloadBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                downloadBtn.disabled = true;
             }
         }
 
@@ -2230,6 +2825,19 @@
                 closeExplorer();
                 showToast(`Restored ${selectedItems} items back to live ${currentServiceContext} successfully.`);
                 btn.innerHTML = orig;
+            }, 1200);
+        }
+
+        function executeDownload() {
+            const btn = document.getElementById('download-btn');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<span class="unicode-icon animate-spin mr-1.5">&#x23F3;</span> Preparing...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                showToast(`Preparing ${selectedItems} items for secure download.`);
+                btn.innerHTML = orig;
+                btn.disabled = false;
             }, 1200);
         }
 

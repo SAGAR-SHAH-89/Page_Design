@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StorX | Complete Enterprise Backup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #14b8a6;
+            --bg-color: #f8fafc;
+            --text-main: #0f172a;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .unicode-icon {
+            font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+        }
+
+        /* View Management */
+        .app-view {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            width: 100%;
+            height: 100%;
+        }
+
+        .app-view.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .app-layout-view.active {
+            display: flex;
+        }
+
+        /* Sidebar/Navigation */
+        .sidebar-item {
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-item:hover,
+        .sidebar-item.active {
+            background-color: rgba(20, 184, 166, 0.1);
+            color: #14b8a6;
+            border-left: 3px solid #14b8a6;
+        }
+
+        /* Transitions & Animations */
+        .slide-over {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide-over.open {
+            transform: translateX(0);
+        }
+
+        .panel-overlay {
+            transition: opacity 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .panel-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Checkbox & Inputs */
+        .custom-checkbox:checked {
+            background-color: #14b8a6;
+            border-color: #14b8a6;
+        }
+
+        /* Spinner */
+        .spinner {
+            border: 3px solid rgba(20, 184, 166, 0.2);
+            border-top-color: #14b8a6;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Wizard */
+        .step-container {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+        }
+
+        .step-container.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Email Reader Transition */
+        #email-list-view,
+        #email-reader-view {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+
+<body class="selection:bg-teal-200 selection:text-teal-900 text-sm">
+
+    <div id="view-home" class="app-view active overflow-y-auto bg-white">
+        <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-stone-100">
+            <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+                <div class="flex items-center text-2xl font-bold text-slate-800 tracking-tight">
+                    <span class="text-3xl unicode-icon mr-2 text-teal-600">&#x1F5C4;&#xFE0F;</span>Stor<span
+                        class="text-teal-600">X</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#" class="text-slate-600 font-medium hover:text-teal-600">Platform</a>
+                    <a href="#" class="text-slate-600 font-medium hover:text-teal-600">Security</a>
+                    <a href="#" class="text-slate-600 font-medium hover:text-teal-600">Pricing</a>
+                </div>
+                <button onclick="navigateTo('view-onboarding')"
+                    class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-full font-medium transition shadow-md">Admin
+                    Login</button>
+            </div>
+        </nav>
+
+        <section
+            class="min-h-screen flex flex-col items-center justify-center text-center px-4 pt-20 relative overflow-hidden bg-stone-50">
+            <div class="absolute inset-0 z-0 opacity-40"
+                style="background-image: radial-gradient(#14b8a6 1px, transparent 1px); background-size: 40px 40px; mask-image: linear-gradient(to bottom, white, transparent);">
+            </div>
+            <div class="relative z-10 max-w-4xl">
+                <div
+                    class="inline-flex items-center px-4 py-2 rounded-full bg-teal-100/50 text-teal-800 font-bold text-xs mb-8 uppercase tracking-widest border border-teal-200">
+                    <span class="mr-2 unicode-icon">&#x2B50;</span> Enterprise Edition
+                </div>
+                <h1 class="text-6xl md:text-7xl font-extrabold text-slate-900 mb-6 tracking-tight leading-tight">Secure
+                    your workspace. <br><span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-blue-600">Free your
+                        mind.</span></h1>
+                <p class="text-xl text-slate-600 mb-10 max-w-2xl mx-auto">Automated, encrypted, and infinite cloud
+                    backups for Google Workspace, Microsoft 365, and Local Endpoints.</p>
+                <div class="flex justify-center gap-4">
+                    <button onclick="navigateTo('view-onboarding')"
+                        class="bg-teal-600 hover:bg-teal-700 text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl shadow-teal-500/20 transition-transform hover:-translate-y-1">Connect
+                        Workspace &rarr;</button>
+                    <button onclick="navigateTo('view-onboarding')"
+                        class="bg-white hover:bg-stone-50 text-slate-800 border border-stone-200 px-8 py-4 rounded-full font-bold text-lg shadow-sm transition-colors">Watch
+                        Demo</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="view-onboarding" class="app-view bg-stone-50 overflow-y-auto">
+        <nav class="w-full py-6 px-8 absolute top-0 z-50 flex justify-between items-center">
+            <div class="flex items-center text-2xl font-bold text-slate-800 cursor-pointer"
+                onclick="navigateTo('view-home')">
+                <span class="unicode-icon mr-2 text-teal-600">&#x1F5C4;&#xFE0F;</span>StorX
+            </div>
+            <span class="text-sm font-medium text-slate-500">Secure Setup <span
+                    class="unicode-icon">&#x1F512;</span></span>
+        </nav>
+
+        <div class="min-h-screen flex items-center justify-center p-4 pt-24">
+            <div class="bg-white rounded-3xl shadow-xl border border-stone-200 w-full max-w-2xl overflow-hidden">
+                <!-- Progress Header -->
+                <div
+                    class="bg-stone-50 border-b border-stone-100 px-8 py-4 flex justify-between items-center text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    <span id="wiz-ind-1" class="text-teal-600">1. Authenticate</span>
+                    <span id="wiz-ind-2">2. Policies</span>
+                    <span id="wiz-ind-3">3. Initialize</span>
+                </div>
+
+                <div class="p-10 min-h-[400px] flex flex-col justify-center">
+                    <!-- Step 1 -->
+                    <div id="wiz-step-1" class="step-container active text-center">
+                        <div
+                            class="w-16 h-16 bg-teal-50 rounded-2xl flex items-center justify-center text-3xl unicode-icon mx-auto mb-6">
+                            🔑</div>
+                        <h2 class="text-2xl font-bold text-slate-900 mb-2">Connect Google Workspace</h2>
+                        <p class="text-slate-500 mb-8 max-w-sm mx-auto">Authenticate with a Super Admin account to
+                            enable domain-wide auto-discovery and backup.</p>
+                        <button onclick="wizNext(2)"
+                            class="bg-white border border-stone-300 hover:bg-stone-50 text-slate-800 font-bold px-8 py-4 rounded-xl flex items-center justify-center mx-auto w-full max-w-sm shadow-sm transition">
+                            <span class="unicode-icon mr-3 text-xl">&#x1F1EC;</span> Sign in with Google
+                        </button>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div id="wiz-step-2" class="step-container">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-2 text-center">Configure Auto-Sync</h2>
+                        <p class="text-slate-500 mb-8 text-center">Set how frequently StorX should snapshot your
+                            corporate data.</p>
+
+                        <div class="space-y-4 max-w-md mx-auto">
+                            <label
+                                class="flex items-start p-4 border-2 border-teal-500 bg-teal-50 rounded-xl cursor-pointer">
+                                <input type="radio" name="sync" checked class="mt-1 text-teal-600 focus:ring-teal-500">
+                                <div class="ml-3">
+                                    <span class="block font-bold text-slate-900">High Frequency (Hourly)</span>
+                                    <span class="block text-sm text-slate-500">Recommended for active
+                                        organizations.</span>
+                                </div>
+                            </label>
+                            <label
+                                class="flex items-start p-4 border-2 border-stone-200 hover:border-stone-300 rounded-xl cursor-pointer">
+                                <input type="radio" name="sync" class="mt-1 text-teal-600 focus:ring-teal-500">
+                                <div class="ml-3">
+                                    <span class="block font-bold text-slate-900">Standard (Daily)</span>
+                                    <span class="block text-sm text-slate-500">Traditional nightly backups.</span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="mt-8 flex justify-between max-w-md mx-auto">
+                            <button onclick="wizNext(1)" class="text-slate-500 font-medium">Back</button>
+                            <button onclick="wizNext(3)"
+                                class="bg-teal-600 text-white px-6 py-2.5 rounded-lg font-bold shadow-md">Deploy Vault
+                                &rarr;</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div id="wiz-step-3" class="step-container text-center">
+                        <div class="relative w-20 h-20 mx-auto mb-6">
+                            <div class="absolute inset-0 border-4 border-stone-100 rounded-full"></div>
+                            <div
+                                class="absolute inset-0 border-4 border-teal-500 rounded-full border-t-transparent animate-spin">
+                            </div>
+                            <div class="absolute inset-0 flex items-center justify-center text-2xl unicode-icon">
+                                &#x2699;&#xFE0F;</div>
+                        </div>
+                        <h2 class="text-2xl font-bold text-slate-900 mb-2">Provisioning Secure Vault</h2>
+                        <p class="text-slate-500 mb-6">Establishing zero-knowledge encryption keys and indexing users.
+                        </p>
+                        <div class="bg-slate-900 rounded-xl p-4 text-left font-mono text-xs text-teal-400 h-24 overflow-hidden max-w-md mx-auto shadow-inner"
+                            id="term-logs">
+                            > Authenticating API...<br>> Mapping Tenant Directory...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-shell" class="app-view app-layout-view bg-stone-100 hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col h-full z-20 shrink-0">
+            <div class="h-16 flex items-center px-6 border-b border-slate-800 bg-slate-950 shrink-0 cursor-pointer"
+                onclick="showAppView('dashboard')">
+                <span class="text-xl unicode-icon mr-2 text-teal-500">&#x1F5C4;&#xFE0F;</span>
+                <span class="font-bold text-lg text-white">Stor<span class="text-teal-500">X</span></span>
+            </div>
+
+            <div class="p-4 border-b border-slate-800 shrink-0">
+                <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Active Tenant</div>
+                <div
+                    class="flex items-center justify-between bg-slate-800 rounded-lg p-2 cursor-pointer hover:bg-slate-700 transition">
+                    <div class="flex items-center overflow-hidden">
+                        <div
+                            class="w-6 h-6 rounded bg-teal-600 flex items-center justify-center text-white text-xs font-bold mr-2">
+                            A</div>
+                        <div class="truncate text-sm font-medium text-white">Acme Corp</div>
+                    </div>
+                    <span class="unicode-icon text-xs">&#x25BC;</span>
+                </div>
+            </div>
+
+            <nav class="flex-1 overflow-y-auto py-4">
+                <div class="px-6 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Overview</div>
+                <div onclick="showAppView('dashboard')"
+                    class="sidebar-item nav-dashboard active flex items-center px-6 py-2.5 mb-1"><span
+                        class="unicode-icon mr-3 w-5 text-center">&#x1F4CA;</span> <span
+                        class="text-sm font-medium">Dashboard</span></div>
+                <div onclick="showAppView('users')" class="sidebar-item nav-users flex items-center px-6 py-2.5 mb-1">
+                    <span class="unicode-icon mr-3 w-5 text-center">&#x1F465;</span> <span
+                        class="text-sm font-medium">Users & Groups</span>
+                </div>
+                <div onclick="showAppView('local-vaults')"
+                    class="sidebar-item nav-local-vaults flex items-center px-6 py-2.5 mb-1"><span
+                        class="unicode-icon mr-3 w-5 text-center">&#x1F5C3;&#xFE0F;</span> <span
+                        class="text-sm font-medium">Local Vaults</span></div>
+
+                <div class="px-6 text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-6 mb-2">Data
+                    Management</div>
+                <div onclick="showAppView('policies')"
+                    class="sidebar-item nav-policies flex items-center px-6 py-2.5 mb-1"><span
+                        class="unicode-icon mr-3 w-5 text-center">&#x1F504;</span> <span
+                        class="text-sm font-medium">Auto-Sync Policies</span></div>
+                <div onclick="showAppView('recovery')"
+                    class="sidebar-item nav-recovery flex items-center px-6 py-2.5 mb-1"><span
+                        class="unicode-icon mr-3 w-5 text-center">&#x23EA;</span> <span
+                        class="text-sm font-medium">Recovery Jobs</span></div>
+
+                <div class="px-6 text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-6 mb-2">System</div>
+                <div onclick="showAppView('security')"
+                    class="sidebar-item nav-security flex items-center px-6 py-2.5 mb-1 justify-between">
+                    <div class="flex items-center"><span
+                            class="unicode-icon mr-3 w-5 text-center">&#x1F6E1;&#xFE0F;</span> <span
+                            class="text-sm font-medium">Security</span></div>
+                    <span class="bg-rose-500/20 text-rose-400 text-[10px] px-2 py-0.5 rounded-full font-bold">1
+                        Alert</span>
+                </div>
+                <div onclick="showAppView('audit')" class="sidebar-item nav-audit flex items-center px-6 py-2.5 mb-1">
+                    <span class="unicode-icon mr-3 w-5 text-center">&#x1F4DC;</span> <span
+                        class="text-sm font-medium">Audit Logs</span>
+                </div>
+                <div onclick="showAppView('settings')"
+                    class="sidebar-item nav-settings flex items-center px-6 py-2.5 mb-1"><span
+                        class="unicode-icon mr-3 w-5 text-center">&#x2699;&#xFE0F;</span> <span
+                        class="text-sm font-medium">Settings</span></div>
+            </nav>
+
+            <div class="p-4 bg-slate-950 shrink-0 border-t border-slate-800">
+                <button onclick="logout()"
+                    class="w-full flex items-center justify-center text-slate-400 hover:text-white text-sm py-2 transition"><span
+                        class="unicode-icon mr-2">&#x1F6AA;</span> Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 flex flex-col h-full relative z-10 w-full overflow-hidden">
+            <!-- Topbar -->
+            <header
+                class="h-16 bg-white border-b border-stone-200 flex items-center justify-between px-6 z-20 shrink-0">
+                <!-- Global Search -->
+                <div class="flex-1 max-w-xl relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><span
+                            class="unicode-icon text-slate-400">&#x1F50D;</span></div>
+                    <input type="text"
+                        class="block w-full pl-10 pr-3 py-2 border border-stone-300 rounded-lg bg-stone-50 focus:bg-white focus:ring-2 focus:ring-teal-500 outline-none text-sm transition"
+                        placeholder="Global Search: Type a user or filename to restore... (Cmd+K)">
+                </div>
+                <div class="flex items-center space-x-4 ml-4">
+                    <div
+                        class="flex items-center bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-lg border border-emerald-200 text-xs font-bold">
+                        <span class="w-2 h-2 bg-emerald-500 rounded-full mr-2 animate-pulse"></span> Auto-Sync: Active
+                    </div>
+                    <div
+                        class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-sm shadow-sm cursor-pointer">
+                        AD</div>
+                </div>
+            </header>
+
+            <div id="content-dashboard" class="content-area active flex-1 overflow-y-auto p-6 bg-stone-50">
+                <div class="flex justify-between items-end mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900">Workspace Health</h1>
+                        <p class="text-slate-500 mt-1">Real-time overview of Acme Corp's protected data.</p>
+                    </div>
+                </div>
+
+                <!-- KPIs -->
+                <div class="grid grid-cols-4 gap-6 mb-8">
+                    <div
+                        class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm border-l-4 border-l-emerald-500">
+                        <div class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Protected Users</div>
+                        <div class="text-3xl font-extrabold text-slate-900">124</div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm border-l-4 border-l-blue-500">
+                        <div class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Total Vault Size
+                        </div>
+                        <div class="text-3xl font-extrabold text-slate-900">8.4 <span
+                                class="text-lg text-slate-500 font-medium">TB</span></div>
+                    </div>
+                    <div
+                        class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm border-l-4 border-l-amber-500">
+                        <div class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Active Endpoints
+                        </div>
+                        <div class="text-3xl font-extrabold text-slate-900">42</div>
+                    </div>
+                    <div class="bg-rose-50 p-5 rounded-xl border border-rose-200 shadow-sm border-l-4 border-l-rose-500 cursor-pointer hover:bg-rose-100 transition"
+                        onclick="showAppView('security')">
+                        <div class="text-xs font-bold text-rose-600 uppercase tracking-wide mb-1">Security Alerts</div>
+                        <div class="text-3xl font-extrabold text-rose-700 flex items-center"><span
+                                class="unicode-icon text-2xl mr-2">&#x26A0;&#xFE0F;</span> 1</div>
+                    </div>
+                </div>
+
+                <h2 class="text-lg font-bold text-slate-800 mb-4">Quick Restore by Service</h2>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+                    <!-- Service Cards -->
+                    <div class="bg-white rounded-xl border border-stone-200 p-4 shadow-sm hover:shadow-md transition group text-center cursor-pointer"
+                        onclick="showAppView('users')">
+                        <div
+                            class="w-12 h-12 mx-auto rounded-lg bg-red-50 flex items-center justify-center border border-red-100 mb-3">
+                            <span class="unicode-icon text-2xl text-red-500">&#x1F4E7;</span>
+                        </div>
+                        <h3 class="font-bold text-slate-900 mb-1">Gmail</h3>
+                        <p class="text-xs text-slate-500 mb-3">124 Mailboxes</p>
+                        <button
+                            class="w-full bg-stone-100 group-hover:bg-teal-50 text-slate-600 group-hover:text-teal-700 text-xs font-bold py-2 rounded transition">Browse
+                            & Restore</button>
+                    </div>
+                    <div class="bg-white rounded-xl border border-stone-200 p-4 shadow-sm hover:shadow-md transition group text-center cursor-pointer"
+                        onclick="showAppView('users')">
+                        <div
+                            class="w-12 h-12 mx-auto rounded-lg bg-blue-50 flex items-center justify-center border border-blue-100 mb-3">
+                            <span class="unicode-icon text-2xl text-blue-500">&#x1F4C2;</span>
+                        </div>
+                        <h3 class="font-bold text-slate-900 mb-1">Drive</h3>
+                        <p class="text-xs text-slate-500 mb-3">5.8 TB Stored</p>
+                        <button
+                            class="w-full bg-stone-100 group-hover:bg-teal-50 text-slate-600 group-hover:text-teal-700 text-xs font-bold py-2 rounded transition">Browse
+                            & Restore</button>
+                    </div>
+                    <div class="bg-white rounded-xl border border-stone-200 p-4 shadow-sm hover:shadow-md transition group text-center cursor-pointer"
+                        onclick="showAppView('users')">
+                        <div
+                            class="w-12 h-12 mx-auto rounded-lg bg-yellow-50 flex items-center justify-center border border-yellow-100 mb-3">
+                            <span class="unicode-icon text-2xl text-yellow-500">&#x1F3DD;&#xFE0F;</span>
+                        </div>
+                        <h3 class="font-bold text-slate-900 mb-1">Photos</h3>
+                        <p class="text-xs text-slate-500 mb-3">450 GB Stored</p>
+                        <button
+                            class="w-full bg-stone-100 group-hover:bg-teal-50 text-slate-600 group-hover:text-teal-700 text-xs font-bold py-2 rounded transition">Browse
+                            & Restore</button>
+                    </div>
+                    <div class="bg-white rounded-xl border border-stone-200 p-4 shadow-sm hover:shadow-md transition group text-center cursor-pointer"
+                        onclick="showAppView('users')">
+                        <div
+                            class="w-12 h-12 mx-auto rounded-lg bg-indigo-50 flex items-center justify-center border border-indigo-100 mb-3">
+                            <span class="unicode-icon text-2xl text-indigo-500">&#x1F464;</span>
+                        </div>
+                        <h3 class="font-bold text-slate-900 mb-1">Contacts</h3>
+                        <p class="text-xs text-slate-500 mb-3">124 Directories</p>
+                        <button
+                            class="w-full bg-stone-100 group-hover:bg-teal-50 text-slate-600 group-hover:text-teal-700 text-xs font-bold py-2 rounded transition">Browse
+                            & Restore</button>
+                    </div>
+                    <div class="bg-white rounded-xl border border-stone-200 p-4 shadow-sm hover:shadow-md transition group text-center cursor-pointer"
+                        onclick="showAppView('users')">
+                        <div
+                            class="w-12 h-12 mx-auto rounded-lg bg-teal-50 flex items-center justify-center border border-teal-100 mb-3">
+                            <span class="unicode-icon text-2xl text-teal-500">&#x1F4C5;</span>
+                        </div>
+                        <h3 class="font-bold text-slate-900 mb-1">Calendar</h3>
+                        <p class="text-xs text-slate-500 mb-3">5 GB Stored</p>
+                        <button
+                            class="w-full bg-stone-100 group-hover:bg-teal-50 text-slate-600 group-hover:text-teal-700 text-xs font-bold py-2 rounded transition">Browse
+                            & Restore</button>
+                    </div>
+                    <div class="bg-white rounded-xl border border-stone-200 p-4 shadow-sm hover:shadow-md transition group text-center cursor-pointer"
+                        onclick="showAppView('local-vaults')">
+                        <div
+                            class="w-12 h-12 mx-auto rounded-lg bg-slate-50 flex items-center justify-center border border-slate-200 mb-3">
+                            <span class="unicode-icon text-2xl text-slate-600">&#x1F5C3;&#xFE0F;</span>
+                        </div>
+                        <h3 class="font-bold text-slate-900 mb-1">Local Vaults</h3>
+                        <p class="text-xs text-slate-500 mb-3">12 Vaults</p>
+                        <button
+                            class="w-full bg-stone-100 group-hover:bg-slate-200 text-slate-600 group-hover:text-slate-800 text-xs font-bold py-2 rounded transition">Manage
+                            Vaults</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-6">
+                    <div class="col-span-2 bg-white rounded-xl border border-stone-200 shadow-sm p-5">
+                        <h2 class="text-base font-bold text-slate-800 mb-4">Storage Trend</h2>
+                        <div class="w-full h-64"><canvas id="dashStorageChart"></canvas></div>
+                    </div>
+                    <div
+                        class="col-span-1 bg-white rounded-xl border border-stone-200 shadow-sm flex flex-col overflow-hidden">
+                        <div
+                            class="p-4 border-b border-stone-100 bg-stone-50 font-bold text-slate-800 flex justify-between">
+                            Recent Activity <span class="text-teal-600 text-xs cursor-pointer">View All</span></div>
+                        <div class="flex-1 overflow-y-auto p-4 space-y-4">
+                            <div class="flex items-start">
+                                <span class="unicode-icon text-blue-500 mr-2 mt-0.5">&#x1F4C2;</span>
+                                <div>
+                                    <p class="text-sm font-medium text-slate-800">Auto-Sync Completed</p>
+                                    <p class="text-xs text-slate-500">Marketing Shared Drive (+12 items)</p>
+                                </div>
+                                <span class="ml-auto text-xs text-slate-400">2m</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="unicode-icon text-purple-500 mr-2 mt-0.5">&#x23EA;</span>
+                                <div>
+                                    <p class="text-sm font-medium text-slate-800">Admin Restore</p>
+                                    <p class="text-xs text-slate-500">S. Jenkins - Q3_Fin.xlsx</p>
+                                </div>
+                                <span class="ml-auto text-xs text-slate-400">1h</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="unicode-icon text-green-500 mr-2 mt-0.5">&#x1F465;</span>
+                                <div>
+                                    <p class="text-sm font-medium text-slate-800">New User Detected</p>
+                                    <p class="text-xs text-slate-500">A. Newhire (Auto-Protected)</p>
+                                </div>
+                                <span class="ml-auto text-xs text-slate-400">3h</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content-users" class="content-area hidden flex-1 flex flex-col overflow-hidden bg-white">
+                <div class="p-6 border-b border-stone-200 bg-stone-50 shrink-0">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h1 class="text-2xl font-bold text-slate-900 flex items-center">Users & Groups <span
+                                    class="ml-3 bg-slate-200 text-slate-700 text-xs px-2 py-1 rounded-full font-bold">124
+                                    Total</span></h1>
+                            <p class="text-slate-500 mt-1">Manage corporate entities, assign policies, and access
+                                service vaults.</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button
+                                class="bg-white border border-stone-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-stone-50 shadow-sm flex items-center transition"
+                                onclick="showToast('Initiating full directory sync...')">
+                                <span class="unicode-icon mr-2">&#x1F504;</span> Sync Directory
+                            </button>
+                            <button
+                                class="bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-slate-800 shadow-sm flex items-center transition"
+                                onclick="showToast('OAuth flow for new tenant would open here.')">
+                                <span class="unicode-icon mr-2">&#x2795;</span> Connect New Tenant
+                            </button>
+                        </div>
+                    </div>
+
+                    <div
+                        class="flex justify-between items-center bg-white p-2 rounded-lg border border-stone-200 shadow-sm">
+                        <div class="flex-1 relative border-r border-stone-200 pr-2">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><span
+                                    class="unicode-icon text-slate-400">&#x1F50D;</span></div>
+                            <input type="text"
+                                class="block w-full pl-10 pr-3 py-1.5 border-none bg-transparent focus:ring-0 text-sm outline-none"
+                                placeholder="Search users or groups...">
+                        </div>
+                        <div class="px-4 flex items-center gap-2">
+                            <span class="text-sm font-medium text-slate-700">Auto-Protect New Users:</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked class="sr-only peer">
+                                <div
+                                    class="w-9 h-5 bg-stone-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500">
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto p-6">
+                    <table
+                        class="w-full text-left border-collapse bg-white border border-stone-200 rounded-lg shadow-sm">
+                        <thead>
+                            <tr
+                                class="bg-stone-100 border-b border-stone-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                <th class="p-4 rounded-tl-lg">Entity</th>
+                                <th class="p-4">Tenant</th>
+                                <th class="p-4">Assigned Policy</th>
+                                <th class="p-4">Status</th>
+                                <th class="p-4">Storage Used</th>
+                                <th class="p-4 text-right rounded-tr-lg">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-100">
+                            <!-- New User Syncing -->
+                            <tr class="hover:bg-stone-50 transition bg-blue-50/30">
+                                <td class="p-4">
+                                    <div class="flex items-center">
+                                        <div
+                                            class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs mr-3 relative">
+                                            AN <span
+                                                class="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full border-2 border-white animate-pulse"></span>
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-slate-900 flex items-center">Alex Newhire <span
+                                                    class="ml-2 text-[9px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold uppercase">New</span>
+                                            </div>
+                                            <div class="text-xs text-slate-500">a.newhire@acme.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-4"><span
+                                        class="text-xs font-medium text-slate-600 bg-stone-100 px-2 py-1 rounded">@acme.com</span>
+                                </td>
+                                <td class="p-4"><span class="text-xs text-slate-600">Hourly (Auto-Assigned)</span></td>
+                                <td class="p-4"><span class="text-xs font-bold text-blue-600 flex items-center"><span
+                                            class="unicode-icon animate-spin mr-1">&#x23F3;</span> Initial
+                                        Syncing...</span></td>
+                                <td class="p-4 text-sm text-slate-500">--</td>
+                                <td class="p-4 text-right"><button
+                                        class="text-slate-400 text-sm font-medium cursor-not-allowed" disabled>View
+                                        Vault</button></td>
+                            </tr>
+
+                            <!-- Standard User -->
+                            <tr class="hover:bg-stone-50 transition cursor-pointer group"
+                                onclick="openExplorer('Sarah Jenkins', 's.jenkins@acme.com')">
+                                <td class="p-4">
+                                    <div class="flex items-center">
+                                        <div
+                                            class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs mr-3">
+                                            SJ</div>
+                                        <div>
+                                            <div class="font-bold text-slate-900 group-hover:text-teal-600 transition">
+                                                Sarah Jenkins</div>
+                                            <div class="text-xs text-slate-500">s.jenkins@acme.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-4"><span
+                                        class="text-xs font-medium text-slate-600 bg-stone-100 px-2 py-1 rounded">@acme.com</span>
+                                </td>
+                                <td class="p-4"><span class="text-xs text-slate-600">Hourly Default</span></td>
+                                <td class="p-4"><span class="text-xs font-bold text-emerald-600 flex items-center"><span
+                                            class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span> Protected</span>
+                                </td>
+                                <td class="p-4 text-sm font-medium text-slate-700">14.2 GB</td>
+                                <td class="p-4 text-right flex justify-end gap-2" onclick="event.stopPropagation()">
+                                    <button onclick="triggerFullRestore('Sarah Jenkins')"
+                                        class="bg-rose-50 text-rose-600 hover:bg-rose-100 px-3 py-1.5 rounded text-xs font-bold transition border border-rose-100">Full
+                                        Restore</button>
+                                    <button onclick="openExplorer('Sarah Jenkins', 's.jenkins@acme.com')"
+                                        class="bg-teal-50 text-teal-700 hover:bg-teal-100 px-3 py-1.5 rounded text-xs font-bold transition border border-teal-100">View
+                                        Vaults</button>
+                                </td>
+                            </tr>
+
+                            <!-- Google Group / Shared Drive -->
+                            <tr class="hover:bg-stone-50 transition cursor-pointer group"
+                                onclick="openExplorer('Marketing Shared Drive', 'marketing@acme.com', true)">
+                                <td class="p-4">
+                                    <div class="flex items-center">
+                                        <div
+                                            class="w-8 h-8 rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-lg mr-3">
+                                            <span class="unicode-icon">&#x1F4C2;</span>
+                                        </div>
+                                        <div>
+                                            <div
+                                                class="font-bold text-slate-900 group-hover:text-teal-600 transition flex items-center">
+                                                Marketing Shared Drive <span
+                                                    class="ml-2 text-[9px] bg-stone-200 text-stone-600 px-1.5 py-0.5 rounded font-bold uppercase">Shared</span>
+                                            </div>
+                                            <div class="text-xs text-slate-500">Google Workspace Drive</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-4"><span
+                                        class="text-xs font-medium text-slate-600 bg-stone-100 px-2 py-1 rounded">@acme.com</span>
+                                </td>
+                                <td class="p-4"><span class="text-xs text-slate-600">Real-Time (CDP)</span></td>
+                                <td class="p-4"><span class="text-xs font-bold text-emerald-600 flex items-center"><span
+                                            class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span> Protected</span>
+                                </td>
+                                <td class="p-4 text-sm font-medium text-slate-700">450.8 GB</td>
+                                <td class="p-4 text-right flex justify-end gap-2" onclick="event.stopPropagation()">
+                                    <button onclick="triggerFullRestore('Marketing Shared Drive')"
+                                        class="bg-rose-50 text-rose-600 hover:bg-rose-100 px-3 py-1.5 rounded text-xs font-bold transition border border-rose-100">Full
+                                        Restore</button>
+                                    <button onclick="openExplorer('Marketing Shared Drive', 'marketing@acme.com', true)"
+                                        class="bg-teal-50 text-teal-700 hover:bg-teal-100 px-3 py-1.5 rounded text-xs font-bold transition border border-teal-100">View
+                                        Vaults</button>
+                                </td>
+                            </tr>
+
+                            <!-- Multi-tenant User Example -->
+                            <tr class="hover:bg-stone-50 transition cursor-pointer group"
+                                onclick="openExplorer('David Smith', 'david@globex.com')">
+                                <td class="p-4">
+                                    <div class="flex items-center">
+                                        <div
+                                            class="w-8 h-8 rounded-full bg-orange-100 text-orange-700 flex items-center justify-center font-bold text-xs mr-3">
+                                            DS</div>
+                                        <div>
+                                            <div class="font-bold text-slate-900 group-hover:text-teal-600 transition">
+                                                David Smith</div>
+                                            <div class="text-xs text-slate-500">david@globex.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-4"><span
+                                        class="text-xs font-bold text-purple-700 bg-purple-50 border border-purple-100 px-2 py-1 rounded">@globex.com</span>
+                                </td>
+                                <td class="p-4"><span class="text-xs text-slate-600">Daily Default</span></td>
+                                <td class="p-4"><span class="text-xs font-bold text-emerald-600 flex items-center"><span
+                                            class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span> Protected</span>
+                                </td>
+                                <td class="p-4 text-sm font-medium text-slate-700">2.1 GB</td>
+                                <td class="p-4 text-right flex justify-end gap-2" onclick="event.stopPropagation()">
+                                    <button
+                                        class="bg-rose-50 text-rose-600 hover:bg-rose-100 px-3 py-1.5 rounded text-xs font-bold transition border border-rose-100">Full
+                                        Restore</button>
+                                    <button
+                                        class="bg-teal-50 text-teal-700 hover:bg-teal-100 px-3 py-1.5 rounded text-xs font-bold transition border border-teal-100">View
+                                        Vaults</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="content-local-vaults" class="content-area hidden flex-1 flex flex-col overflow-hidden bg-white">
+                <div class="p-6 border-b border-stone-200 bg-stone-50 shrink-0">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h1 class="text-2xl font-bold text-slate-900 flex items-center"><span
+                                    class="unicode-icon mr-3">&#x1F5C3;&#xFE0F;</span> Local Vaults</h1>
+                            <p class="text-slate-500 mt-1">Create secure, encrypted storage lockers for manual local
+                                file and folder uploads.</p>
+                        </div>
+                        <button
+                            class="bg-slate-900 text-white px-5 py-2.5 rounded-lg font-bold shadow-md hover:bg-slate-800 transition flex items-center"
+                            onclick="createNewVault()">
+                            <span class="unicode-icon mr-2">&#x2795;</span> Create New Vault
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto p-6">
+                    <table
+                        class="w-full text-left border-collapse bg-white border border-stone-200 rounded-lg shadow-sm">
+                        <thead class="bg-stone-50 border-b border-stone-200 text-xs font-bold text-slate-500 uppercase">
+                            <tr>
+                                <th class="p-4 rounded-tl-lg">Vault Name</th>
+                                <th class="p-4">Owner</th>
+                                <th class="p-4">Storage Used</th>
+                                <th class="p-4">Last Upload</th>
+                                <th class="p-4 text-right rounded-tr-lg">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-100" id="local-vaults-tbody">
+                            <tr class="hover:bg-stone-50 transition">
+                                <td class="p-4">
+                                    <div class="flex items-center">
+                                        <div
+                                            class="w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center text-lg mr-3">
+                                            <span class="unicode-icon text-indigo-500">&#x1F4C1;</span>
+                                        </div>
+                                        <div class="font-bold text-slate-800">Finance Q4 Archives</div>
+                                    </div>
+                                </td>
+                                <td class="p-4 text-sm text-slate-600">Sarah Jenkins</td>
+                                <td class="p-4 text-sm font-medium text-slate-700">2.4 GB</td>
+                                <td class="p-4 text-sm text-emerald-600 font-medium">Today, 9:00 AM</td>
+                                <td class="p-4 text-right">
+                                    <button
+                                        class="text-teal-600 font-bold text-xs bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded transition"
+                                        onclick="showToast('Opening vault for upload...')">Open Vault</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-stone-50 transition">
+                                <td class="p-4">
+                                    <div class="flex items-center">
+                                        <div
+                                            class="w-8 h-8 rounded-lg bg-orange-50 border border-orange-100 flex items-center justify-center text-lg mr-3">
+                                            <span class="unicode-icon text-orange-500">&#x1F4C1;</span>
+                                        </div>
+                                        <div class="font-bold text-slate-800">Design Assets (Raw)</div>
+                                    </div>
+                                </td>
+                                <td class="p-4 text-sm text-slate-600">Marcus Doe</td>
+                                <td class="p-4 text-sm font-medium text-slate-700">14.8 GB</td>
+                                <td class="p-4 text-sm text-slate-500 font-medium">Oct 20, 2026</td>
+                                <td class="p-4 text-right">
+                                    <button
+                                        class="text-teal-600 font-bold text-xs bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded transition"
+                                        onclick="showToast('Opening vault for upload...')">Open Vault</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Placeholder Views for other sidebar items -->
+            <div id="content-policies" class="content-area hidden p-6">
+                <h1 class="text-2xl font-bold">Auto-Sync Policies</h1>
+                <p class="mt-4 text-slate-500">Configure global retention rules and backup frequencies here.</p>
+            </div>
+            <div id="content-recovery" class="content-area hidden p-6">
+                <h1 class="text-2xl font-bold">Recovery Jobs</h1>
+                <p class="mt-4 text-slate-500">Track the progress of active restores and mass exports.</p>
+            </div>
+
+            <div id="content-security" class="content-area hidden flex-1 overflow-y-auto p-6 bg-stone-50">
+                <h1 class="text-2xl font-bold text-slate-900 mb-6 flex items-center"><span
+                        class="unicode-icon mr-3">&#x1F6E1;&#xFE0F;</span> Security Center</h1>
+
+                <div class="bg-rose-50 border-2 border-rose-500 rounded-xl p-6 shadow-md mb-8 relative overflow-hidden">
+                    <div
+                        class="absolute top-0 right-0 bg-rose-500 text-white px-4 py-1 rounded-bl-lg font-bold text-xs uppercase tracking-wide">
+                        Critical Alert</div>
+                    <div class="flex items-start">
+                        <div class="text-4xl unicode-icon mr-4 mt-1 text-rose-600">&#x1F6A8;</div>
+                        <div class="flex-1">
+                            <h2 class="text-xl font-bold text-rose-900 mb-1">Ransomware Anomaly Detected</h2>
+                            <p class="text-rose-700 text-sm mb-4">Unusual mass-deletion and encryption signature
+                                detected in <strong>Marketing Shared Drive</strong>. Auto-sync has been temporarily
+                                suspended for this volume to prevent backup corruption.</p>
+                            <div class="flex gap-3">
+                                <button
+                                    class="bg-rose-600 hover:bg-rose-700 text-white px-5 py-2 rounded-lg font-bold shadow-sm transition">Isolate
+                                    & Recover Last Clean Snapshot</button>
+                                <button
+                                    class="bg-white border border-rose-200 text-rose-700 px-5 py-2 rounded-lg font-bold hover:bg-rose-50 transition">Dismiss
+                                    Alert</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content-audit" class="content-area hidden p-6">
+                <h1 class="text-2xl font-bold">Audit Logs</h1>
+                <p class="mt-4 text-slate-500">Immutable ledger of all admin actions, restores, and system events.</p>
+            </div>
+            <div id="content-settings" class="content-area hidden p-6">
+                <h1 class="text-2xl font-bold">Settings</h1>
+                <p class="mt-4 text-slate-500">Manage API connections, billing, and admin roles.</p>
+            </div>
+
+        </main>
+    </div>
+
+    <div id="explorer-overlay" class="fixed inset-0 panel-overlay z-40 bg-slate-900/40 backdrop-blur-sm"
+        onclick="closeExplorer()"></div>
+    <div id="explorer-panel"
+        class="fixed inset-y-0 right-0 z-50 w-full max-w-4xl bg-white shadow-2xl transform translate-x-full slide-over flex flex-col border-l border-stone-200">
+
+        <!-- Header -->
+        <div class="px-6 py-5 bg-slate-900 text-white flex justify-between items-center shrink-0">
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-teal-500/20 text-teal-400 flex items-center justify-center font-bold text-lg mr-4"
+                    id="exp-avatar">SJ</div>
+                <div>
+                    <h2 class="text-xl font-bold flex items-center" id="exp-title">Sarah Jenkins</h2>
+                    <p class="text-xs text-slate-400 mt-0.5" id="exp-email">s.jenkins@acme.com &bull; Viewing Encrypted
+                        Vault</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="triggerFullRestore(currentExplorerUser)"
+                    class="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md transition flex items-center">
+                    <span class="unicode-icon mr-2">&#x23EA;</span> Restore All Data
+                </button>
+                <button onclick="closeExplorer()" class="text-slate-400 hover:text-white transition"><span
+                        class="unicode-icon text-2xl">&#x274C;</span></button>
+            </div>
+        </div>
+
+        <!-- Service Tabs -->
+        <div class="px-6 bg-stone-50 border-b border-stone-200 flex space-x-6 text-sm font-bold shrink-0 pt-2"
+            id="exp-tabs">
+            <button onclick="switchTab('mail')" id="tab-mail"
+                class="pb-3 px-2 border-b-2 border-teal-600 text-teal-700"><span
+                    class="unicode-icon mr-2">&#x1F4E7;</span>Gmail</button>
+            <button onclick="switchTab('drive')" id="tab-drive"
+                class="pb-3 px-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800"><span
+                    class="unicode-icon mr-2">&#x1F4C2;</span>Drive</button>
+            <button onclick="switchTab('photos')" id="tab-photos"
+                class="pb-3 px-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800"><span
+                    class="unicode-icon mr-2">&#x1F3DD;&#xFE0F;</span>Photos</button>
+            <button onclick="switchTab('contacts')" id="tab-contacts"
+                class="pb-3 px-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800"><span
+                    class="unicode-icon mr-2">&#x1F464;</span>Contacts</button>
+            <button onclick="switchTab('calendar')" id="tab-calendar"
+                class="pb-3 px-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800"><span
+                    class="unicode-icon mr-2">&#x1F4C5;</span>Calendar</button>
+        </div>
+
+        <!-- Snapshot Selector -->
+        <div class="px-6 py-3 bg-white border-b border-stone-100 flex justify-between items-center shrink-0">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Point-In-Time</span>
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-bold text-teal-600">Latest (Today, 10:05 AM)</span>
+                <button
+                    class="bg-stone-100 hover:bg-stone-200 text-slate-600 px-3 py-1 rounded text-xs font-bold transition">Change
+                    Time</button>
+            </div>
+        </div>
+
+        <!-- Dynamic Content Container -->
+        <div id="exp-content" class="flex-1 overflow-y-auto bg-white relative">
+            <!-- Mail List View -->
+            <div id="email-list-view" class="absolute inset-0 overflow-y-auto w-full h-full bg-white z-10">
+                <div
+                    class="px-6 py-3 border-b border-stone-100 bg-stone-50 flex justify-between items-center sticky top-0 z-20">
+                    <input type="text"
+                        class="w-2/3 text-sm border border-stone-300 rounded px-3 py-1.5 focus:ring-teal-500 outline-none"
+                        placeholder="Search emails in backup...">
+                    <button
+                        class="text-xs font-bold text-teal-700 bg-teal-50 border border-teal-200 px-3 py-1.5 rounded"
+                        onclick="restoreItem('All Emails')">Restore All Gmail</button>
+                </div>
+                <table class="w-full text-left text-sm">
+                    <tbody id="mail-tbody" class="divide-y divide-stone-100">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mail Reader View -->
+            <div id="email-reader-view"
+                class="absolute inset-0 overflow-y-auto w-full h-full bg-white z-20 translate-x-full border-l border-stone-200 flex flex-col hidden">
+                <div
+                    class="px-6 py-4 bg-stone-50 border-b border-stone-200 flex justify-between items-center shrink-0 sticky top-0">
+                    <button onclick="closeEmailReader()"
+                        class="text-slate-600 font-bold text-sm hover:text-slate-900 flex items-center transition"><span
+                            class="unicode-icon mr-2">&#x2B05;&#xFE0F;</span> Back to Inbox</button>
+                    <button onclick="restoreItem('Selected Email')"
+                        class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md transition flex items-center"><span
+                            class="unicode-icon mr-2">&#x23EA;</span> Restore this Email</button>
+                </div>
+                <div class="p-8 max-w-3xl mx-auto w-full flex-1">
+                    <h1 class="text-2xl font-bold text-slate-900 mb-6" id="reader-subject">Subject Line</h1>
+                    <div class="flex items-center mb-8 border-b border-stone-100 pb-6">
+                        <div
+                            class="w-10 h-10 rounded-full bg-stone-200 flex items-center justify-center font-bold text-slate-500 mr-4">
+                            F</div>
+                        <div>
+                            <div class="font-bold text-slate-900" id="reader-sender">Sender Name
+                                &lt;sender@example.com&gt;</div>
+                            <div class="text-xs text-slate-500">To: <span id="reader-to">recipient</span> &bull; Oct 24,
+                                2026, 9:45 AM</div>
+                        </div>
+                    </div>
+                    <div class="text-slate-800 leading-relaxed whitespace-pre-wrap font-serif" id="reader-body">
+                        Email body content goes here.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other Tabs Content (Simple Placeholders for Demo) -->
+            <div id="other-list-view" class="hidden absolute inset-0 overflow-y-auto w-full h-full bg-white z-10 p-6">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <div id="toast"
+        class="fixed bottom-6 right-6 bg-slate-900 text-white px-6 py-4 rounded-xl shadow-2xl z-[60] transform translate-y-24 opacity-0 transition-all duration-300 flex items-center border border-slate-700">
+        <span class="unicode-icon mr-3 text-emerald-400 text-lg">&#x2714;&#xFE0F;</span>
+        <span id="toast-msg" class="text-sm font-bold tracking-wide">Message</span>
+    </div>
+
+    <script>
+        // State
+        let currentExplorerUser = '';
+        let currentExplorerEmail = '';
+        let currentTab = 'mail';
+
+        // Navigation Functions
+        function navigateTo(viewId) {
+            document.querySelectorAll('.app-view').forEach(e => e.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+        }
+
+        function showAppView(section) {
+            // Hide all content areas
+            document.querySelectorAll('.content-area').forEach(e => e.classList.add('hidden'));
+            // Remove active state from sidebar
+            document.querySelectorAll('.sidebar-item').forEach(e => e.classList.remove('active'));
+
+            // Show requested content and highlight sidebar
+            document.getElementById('content-' + section).classList.remove('hidden');
+            const navItem = document.querySelector('.nav-' + section);
+            if (navItem) navItem.classList.add('active');
+
+            if (section === 'dashboard') initDashChart(); // Re-init chart if dashboard
+        }
+
+        function logout() {
+            showToast("Logging out securely...");
+            setTimeout(() => navigateTo('view-home'), 1000);
+        }
+
+        // Wizard Functions
+        function wizNext(step) {
+            document.querySelectorAll('.step-container').forEach(e => e.classList.remove('active'));
+            document.getElementById('wiz-step-' + step).classList.add('active');
+
+            // Update indicators
+            for (let i = 1; i <= 3; i++) {
+                const ind = document.getElementById('wiz-ind-' + i);
+                if (i < step) ind.className = 'text-slate-400';
+                else if (i === step) ind.className = 'text-teal-600';
+                else ind.className = 'text-slate-400';
+            }
+
+            if (step === 3) {
+                setTimeout(() => {
+                    document.getElementById('term-logs').innerHTML += '<br>> Keys generated.<br>> Sync complete.<br>> Redirecting...';
+                    setTimeout(() => {
+                        navigateTo('app-shell');
+                        showAppView('dashboard');
+                        showToast("Setup Complete. Vault is secure.");
+                    }, 1500);
+                }, 1500);
+            }
+        }
+
+        // Dashboard Chart
+        let dashChart;
+        function initDashChart() {
+            const canvas = document.getElementById('dashStorageChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            if (dashChart) dashChart.destroy();
+
+            dashChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Storage TB',
+                        data: [7.8, 7.9, 8.1, 8.1, 8.2, 8.3, 8.4],
+                        borderColor: '#14b8a6', backgroundColor: 'rgba(20, 184, 166, 0.1)',
+                        fill: true, tension: 0.4, borderWidth: 3, pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: false, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } }
+                }
+            });
+        }
+
+        // Explorer Logic
+        function openExplorer(name, email, isGroup = false) {
+            currentExplorerUser = name;
+            currentExplorerEmail = email;
+
+            document.getElementById('exp-title').innerText = name;
+            document.getElementById('exp-email').innerHTML = `${email} &bull; Viewing Encrypted Vault`;
+
+            const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2);
+            document.getElementById('exp-avatar').innerText = isGroup ? '📁' : initials;
+
+            document.getElementById('explorer-overlay').classList.add('open');
+            document.getElementById('explorer-panel').classList.add('open');
+
+            switchTab('mail'); // Default tab
+        }
+
+        function closeExplorer() {
+            document.getElementById('explorer-overlay').classList.remove('open');
+            document.getElementById('explorer-panel').classList.remove('open');
+            closeEmailReader(); // Ensure reader is closed
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            // Update Tab UI
+            ['mail', 'drive', 'photos', 'contacts', 'calendar'].forEach(t => {
+                const el = document.getElementById('tab-' + t);
+                if (t === tab) {
+                    el.classList.replace('border-transparent', 'border-teal-600');
+                    el.classList.replace('text-slate-500', 'text-teal-700');
+                } else {
+                    el.classList.replace('border-teal-600', 'border-transparent');
+                    el.classList.replace('text-teal-700', 'text-slate-500');
+                }
+            });
+
+            const emailView = document.getElementById('email-list-view');
+            const otherView = document.getElementById('other-list-view');
+            closeEmailReader(); // Always close reader when switching tabs
+
+            if (tab === 'mail') {
+                emailView.classList.remove('hidden');
+                otherView.classList.add('hidden');
+                renderMailList();
+            } else {
+                emailView.classList.add('hidden');
+                otherView.classList.remove('hidden');
+                renderOtherList(tab);
+            }
+        }
+
+        // Mock Data Generators
+        function renderMailList() {
+            const tbody = document.getElementById('mail-tbody');
+            const isSarah = currentExplorerUser.includes('Sarah');
+
+            const emails = [
+                { id: 1, sender: 'CEO Office', subject: 'Q4 Final Targets - Confidential', time: '10:00 AM', body: 'Sarah,\n\nPlease review the attached targets for Q4. Do not forward.\n\nBest,\nCEO' },
+                { id: 2, sender: 'Google Alerts', subject: 'Security Alert: New Sign-in', time: 'Yesterday', body: 'We noticed a new sign in to your Google Account...' },
+                { id: 3, sender: 'Marketing Team', subject: 'Campaign Assets Approval', time: 'Oct 22', body: 'The assets are ready for your final sign off in Drive.' }
+            ];
+
+            let html = '';
+            emails.forEach(e => {
+                html += `
+                <tr class="hover:bg-stone-50 border-b border-stone-100 cursor-pointer group">
+                    <td class="p-4 w-10" onclick="event.stopPropagation()">
+                        <input type="checkbox" class="custom-checkbox rounded border-stone-300 focus:ring-teal-500">
+                    </td>
+                    <td class="p-4" onclick="openEmailReader('${e.sender}', '${e.subject}', \`${e.body}\`)">
+                        <div class="flex items-center">
+                            <div class="font-bold text-slate-800 w-40 truncate">${e.sender}</div>
+                            <div class="text-slate-600 font-medium truncate flex-1 group-hover:text-teal-600 transition">${e.subject}</div>
+                            <div class="text-xs text-slate-400 w-20 text-right">${e.time}</div>
+                        </div>
+                    </td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function renderOtherList(tab) {
+            const container = document.getElementById('other-list-view');
+            let content = '';
+
+            const firstName = currentExplorerUser ? currentExplorerUser.split(' ')[0] : 'User';
+            const title = currentExplorerUser.includes('Shared Drive') ? currentExplorerUser : `${firstName}'s ${tab}`;
+
+            const header = `<div class="flex justify-between items-center mb-6"><h3 class="text-lg font-bold capitalize">${title} Backup</h3><button class="text-xs font-bold text-teal-700 bg-teal-50 border border-teal-200 px-3 py-1.5 rounded" onclick="restoreItem('All ${tab}')">Restore All ${tab}</button></div>`;
+
+            if (tab === 'drive') {
+                content = `
+                <table class="w-full text-left text-sm">
+                    <thead class="text-slate-400 border-b border-stone-200"><tr><th class="pb-2">Name</th><th class="pb-2">Size</th><th class="pb-2">Modified</th></tr></thead>
+                    <tbody class="divide-y divide-stone-100">
+                        <tr class="hover:bg-stone-50"><td class="py-3 flex items-center cursor-pointer"><span class="unicode-icon text-green-500 text-lg mr-3">&#x1F4CA;</span><span class="font-bold">Q4_Financials.xlsx</span></td><td class="py-3 text-slate-500">2.4 MB</td><td class="py-3 text-slate-500">Oct 23</td></tr>
+                        <tr class="hover:bg-stone-50"><td class="py-3 flex items-center cursor-pointer"><span class="unicode-icon text-blue-500 text-lg mr-3">&#x1F4DD;</span><span class="font-bold">Project_Proposal.docx</span></td><td class="py-3 text-slate-500">1.1 MB</td><td class="py-3 text-slate-500">Oct 20</td></tr>
+                        <tr class="hover:bg-stone-50 bg-rose-50/30"><td class="py-3 flex items-center cursor-pointer"><span class="unicode-icon text-red-500 text-lg mr-3">&#x1F4C4;</span><span class="font-bold line-through opacity-70">Deleted_Notes.pdf</span><span class="ml-2 text-[9px] bg-rose-100 text-rose-700 px-1 rounded font-bold uppercase">Deleted in live</span></td><td class="py-3 text-slate-500">45 KB</td><td class="py-3 text-slate-500">Oct 15</td></tr>
+                    </tbody>
+                </table>`;
+            } else if (tab === 'photos') {
+                content = `<div class="grid grid-cols-4 gap-4">
+                    <div class="aspect-square bg-stone-200 rounded-lg overflow-hidden relative group cursor-pointer border border-stone-300"><img src="https://placehold.co/200x200/e2e8f0/64748b?text=IMG_01" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-bold">Restore</div></div>
+                    <div class="aspect-square bg-stone-200 rounded-lg overflow-hidden relative group cursor-pointer border border-stone-300"><img src="https://placehold.co/200x200/e2e8f0/64748b?text=IMG_02" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-bold">Restore</div></div>
+                </div>`;
+            } else {
+                content = `<div class="text-center py-20 text-slate-500"><div class="text-4xl unicode-icon mb-4">&#x2699;&#xFE0F;</div><p>Detailed ${tab} view available in production.</p></div>`;
+            }
+            container.innerHTML = header + content;
+        }
+
+        // Email Reader Logic
+        function openEmailReader(sender, subject, body) {
+            document.getElementById('reader-sender').innerText = `${sender} <${sender.toLowerCase().replace(' ', '')}@example.com>`;
+            document.getElementById('reader-subject').innerText = subject;
+            document.getElementById('reader-to').innerText = currentExplorerEmail;
+            document.getElementById('reader-body').innerText = body;
+
+            document.getElementById('email-reader-view').classList.remove('hidden');
+            // Small delay for display:block to apply before transform
+            setTimeout(() => {
+                document.getElementById('email-reader-view').classList.remove('translate-x-full');
+            }, 10);
+        }
+
+        function closeEmailReader() {
+            document.getElementById('email-reader-view').classList.add('translate-x-full');
+            setTimeout(() => {
+                document.getElementById('email-reader-view').classList.add('hidden');
+            }, 300);
+        }
+
+        // Restore Actions
+        function triggerFullRestore(user) {
+            showToast(`Initiating Full Workspace Recovery for ${user}...`);
+            closeExplorer();
+        }
+
+        function restoreItem(itemName) {
+            showToast(`Restore queued: ${itemName}`);
+            if (itemName === 'Selected Email') closeEmailReader();
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-24', 'opacity-0'), 3000);
+        }
+
+        function createNewVault() {
+            const vaultName = prompt("Enter a name for the new Local Vault:", "My Secure Vault");
+            if (vaultName) {
+                showToast(`Provisioning encrypted storage for: ${vaultName}...`);
+
+                // Simulate network delay for creating the vault
+                setTimeout(() => {
+                    const tbody = document.getElementById('local-vaults-tbody');
+                    const newRow = `
+                        <tr class="hover:bg-stone-50 transition bg-emerald-50/40">
+                            <td class="p-4">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 rounded-lg bg-teal-50 border border-teal-100 flex items-center justify-center text-lg mr-3"><span class="unicode-icon text-teal-500">&#x1F4C1;</span></div>
+                                    <div class="font-bold text-slate-800">${vaultName} <span class="ml-2 text-[9px] bg-teal-100 text-teal-700 px-1.5 py-0.5 rounded font-bold uppercase animate-pulse">New</span></div>
+                                </div>
+                            </td>
+                            <td class="p-4 text-sm text-slate-600">Admin</td>
+                            <td class="p-4 text-sm font-medium text-slate-700">0 KB</td>
+                            <td class="p-4 text-sm text-emerald-600 font-medium">Just now</td>
+                            <td class="p-4 text-right">
+                                <button class="text-teal-600 font-bold text-xs bg-teal-50 hover:bg-teal-100 border border-teal-200 px-3 py-1.5 rounded transition shadow-sm" onclick="showToast('Opening dropzone for ${vaultName}...')">Upload Files</button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.insertAdjacentHTML('afterbegin', newRow);
+                    showToast(`${vaultName} created successfully. Ready for uploads.`);
+                }, 1200);
+            }
+        }
+
+        // Escape key handling
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeExplorer();
+        });
+
+    </script>
+</body>
+
+</html>
