@@ -1,0 +1,2275 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StorX | Intelligent Cloud Backup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #14b8a6;
+            /* teal-500 */
+            --bg-color: #fcfbf9;
+            --text-main: #1e293b;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .unicode-icon {
+            font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+        }
+
+        .app-view {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            width: 100%;
+            height: 100%;
+        }
+
+        .app-view.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .app-layout-view.active {
+            display: flex;
+        }
+
+        /* Homepage Specific */
+        .glass-nav {
+            background: rgba(252, 251, 249, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(20, 184, 166, 0.1);
+        }
+
+        /* Onboarding Specific */
+        .step-container {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .step-container.active {
+            display: block;
+        }
+
+        .step-container.fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .sync-option input[type="radio"] {
+            display: none;
+        }
+
+        .sync-option input[type="radio"]:checked+label {
+            border-color: #14b8a6;
+            background-color: #f0fdfa;
+        }
+
+        .sync-option input[type="radio"]:checked+label .check-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .spinner {
+            border: 3px solid rgba(20, 184, 166, 0.2);
+            border-top-color: #14b8a6;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .log-line {
+            opacity: 0;
+            transform: translateX(-10px);
+            animation: slideInLog 0.3s forwards;
+        }
+
+        @keyframes slideInLog {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Dashboard & Vault Specific */
+        .sidebar-item {
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-item:hover,
+        .sidebar-item.active {
+            background-color: rgba(20, 184, 166, 0.1);
+            color: #14b8a6;
+            border-right: 3px solid #14b8a6;
+        }
+
+        .service-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            border-color: #14b8a6;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #10b981;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+            }
+
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        /* Slide-over panel */
+        .slide-over {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .slide-over.open {
+            transform: translateX(0);
+        }
+
+        .panel-overlay {
+            background-color: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(2px);
+            transition: opacity 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .panel-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .timeline-node {
+            transition: all 0.2s ease;
+        }
+
+        .timeline-node.active {
+            background-color: #14b8a6;
+            box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.2);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Grid for Photo Previews */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .photo-item {
+            aspect-ratio: 1;
+            border-radius: 0.5rem;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .photo-item.selected {
+            border-color: #14b8a6;
+        }
+
+        .photo-item.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: #14b8a6;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body class="selection:bg-teal-200 selection:text-teal-900 overflow-hidden">
+
+    <!-- ========================================== -->
+    <!-- VIEW: HOMEPAGE                             -->
+    <!-- ========================================== -->
+    <div id="view-home" class="app-view active overflow-y-auto">
+        <nav class="glass-nav fixed w-full z-50" id="homepage-nav">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    <div class="flex-shrink-0 flex items-center cursor-pointer">
+                        <span class="text-3xl unicode-icon mr-2 text-teal-600">&#x1F5C4;&#xFE0F;</span>
+                        <span class="font-bold text-2xl tracking-tight text-slate-800">Stor<span
+                                class="text-teal-600">X</span></span>
+                    </div>
+                    <div class="hidden md:flex space-x-8 items-center">
+                        <a href="#features" class="text-slate-600 hover:text-teal-600 font-medium">Features</a>
+                        <a href="#pricing" class="text-slate-600 hover:text-teal-600 font-medium">Pricing</a>
+                        <button onclick="navigateTo('view-onboarding')"
+                            class="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2.5 rounded-full font-medium transition-colors shadow-lg shadow-teal-500/30">Start
+                            Free Trial</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <section
+            class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden min-h-screen flex flex-col justify-center">
+            <div class="absolute inset-0 z-0 opacity-30"
+                style="background-image: radial-gradient(#14b8a6 1px, transparent 1px); background-size: 40px 40px; mask-image: linear-gradient(to bottom, white, transparent); -webkit-mask-image: linear-gradient(to bottom, white, transparent);">
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                <div
+                    class="inline-flex items-center px-4 py-2 rounded-full bg-teal-50 border border-teal-100 text-teal-700 font-medium text-sm mb-8 shadow-sm">
+                    <span class="mr-2 unicode-icon">&#x1F680;</span> Enterprise Cloud Backup
+                </div>
+                <h1
+                    class="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 text-slate-900 leading-tight">
+                    Secure your data. <br class="hidden md:block" />
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Free your
+                        mind.</span>
+                </h1>
+                <p class="mt-4 max-w-2xl text-xl text-slate-600 mx-auto mb-10">
+                    Automated backup for Google Workspace. Protect Gmail, Drive, Photos, Contacts, and Calendar silently
+                    in the background with zero-knowledge encryption.
+                </p>
+                <div class="flex justify-center">
+                    <button onclick="navigateTo('view-onboarding')"
+                        class="bg-teal-600 hover:bg-teal-700 text-white px-8 py-4 rounded-full font-bold text-lg transition-all transform hover:scale-105 shadow-xl shadow-teal-500/30 flex items-center">
+                        Connect Google Workspace <span class="ml-2 unicode-icon">&#x2192;</span>
+                    </button>
+                </div>
+
+                <div
+                    class="mt-16 grid grid-cols-2 gap-8 md:grid-cols-4 border-t border-stone-200 pt-10 max-w-4xl mx-auto">
+                    <div>
+                        <div class="text-3xl font-bold text-slate-900">99.9%</div>
+                        <div class="text-xs font-medium text-slate-500 uppercase">Uptime SLA</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold text-slate-900">256-bit</div>
+                        <div class="text-xs font-medium text-slate-500 uppercase">AES Encryption</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold text-slate-900">Auto</div>
+                        <div class="text-xs font-medium text-slate-500 uppercase">Hourly Syncs</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold text-slate-900">1-Click</div>
+                        <div class="text-xs font-medium text-slate-500 uppercase">Granular Restore</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW: ONBOARDING / SIGNUP                  -->
+    <!-- ========================================== -->
+    <div id="view-onboarding" class="app-view bg-stone-50 overflow-y-auto">
+        <nav class="w-full py-6 px-4 sm:px-6 lg:px-8 absolute top-0 z-50">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="navigateTo('view-home')">
+                    <span class="text-3xl unicode-icon mr-2 text-teal-600">&#x1F5C4;&#xFE0F;</span>
+                    <span class="font-bold text-2xl tracking-tight text-slate-800">Stor<span
+                            class="text-teal-600">X</span></span>
+                </div>
+                <div class="text-sm font-medium text-slate-500">Secure Setup <span
+                        class="unicode-icon ml-1">&#x1F512;</span></div>
+            </div>
+        </nav>
+
+        <main class="min-h-screen flex items-center justify-center py-20 px-4 sm:px-6">
+            <div class="w-full max-w-2xl bg-white rounded-3xl shadow-xl border border-stone-200 overflow-hidden">
+                <!-- Progress Tracker -->
+                <div class="bg-stone-50 border-b border-stone-100 px-8 py-6">
+                    <div class="flex items-center justify-between relative">
+                        <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1 bg-stone-200 z-0">
+                        </div>
+                        <div id="progress-line"
+                            class="absolute left-0 top-1/2 transform -translate-y-1/2 h-1 bg-teal-500 z-0 transition-all duration-500 w-0">
+                        </div>
+
+                        <div class="relative z-10 flex flex-col items-center step-indicator" data-step="1">
+                            <div
+                                class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-sm">
+                                1</div>
+                            <span
+                                class="text-xs font-medium text-slate-700 mt-2 absolute -bottom-6 w-20 text-center">Account</span>
+                        </div>
+                        <div class="relative z-10 flex flex-col items-center step-indicator" data-step="2">
+                            <div
+                                class="w-8 h-8 rounded-full bg-stone-200 text-slate-500 flex items-center justify-center font-bold text-sm">
+                                2</div>
+                            <span
+                                class="text-xs font-medium text-slate-400 mt-2 absolute -bottom-6 w-20 text-center">Services</span>
+                        </div>
+                        <div class="relative z-10 flex flex-col items-center step-indicator" data-step="3">
+                            <div
+                                class="w-8 h-8 rounded-full bg-stone-200 text-slate-500 flex items-center justify-center font-bold text-sm">
+                                3</div>
+                            <span
+                                class="text-xs font-medium text-slate-400 mt-2 absolute -bottom-6 w-24 text-center">Auto-Sync</span>
+                        </div>
+                        <div class="relative z-10 flex flex-col items-center step-indicator" data-step="4">
+                            <div
+                                class="w-8 h-8 rounded-full bg-stone-200 text-slate-500 flex items-center justify-center font-bold text-sm">
+                                4</div>
+                            <span
+                                class="text-xs font-medium text-slate-400 mt-2 absolute -bottom-6 w-20 text-center">Initialize</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8 sm:p-12 relative min-h-[400px]">
+                    <!-- Step 1: Auth -->
+                    <div id="step-1" class="step-container active fade-in text-center">
+                        <div
+                            class="w-16 h-16 bg-teal-50 rounded-2xl flex items-center justify-center text-3xl unicode-icon mx-auto mb-6 text-teal-600">
+                            &#x1F464;</div>
+                        <h2 class="text-3xl font-bold text-slate-900 mb-3">Connect Workspace Admin</h2>
+                        <p class="text-slate-500 mb-8 max-w-md mx-auto">Authenticate with a Google Workspace Super Admin
+                            account to deploy the StorX enterprise app and backup all users in your tenant.</p>
+
+                        <button onclick="simulateAuth()" id="auth-btn"
+                            class="w-full sm:w-auto mx-auto flex items-center justify-center px-8 py-4 border border-stone-300 rounded-xl bg-white text-slate-700 font-bold hover:bg-stone-50 transition-all">
+                            <span class="unicode-icon mr-3 text-xl">&#x1F1EC;</span> Continue with Google
+                        </button>
+                    </div>
+
+                    <!-- Step 2: Scope Selection -->
+                    <div id="step-2" class="step-container">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-2 text-center">Select Services to Protect</h2>
+                        <div class="text-center mb-4"><span
+                                class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full border border-indigo-200">Corporate
+                                Tenant Found: 124 Users</span></div>
+                        <div class="space-y-3 max-w-lg mx-auto mt-2">
+                            <label
+                                class="flex items-center p-3 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 bg-stone-50 border-teal-200">
+                                <input type="checkbox" checked disabled
+                                    class="w-5 h-5 text-teal-600 bg-stone-100 border-stone-300 rounded focus:ring-teal-500">
+                                <div class="ml-4 flex-1 font-bold text-slate-800 flex items-center justify-between">
+                                    <span><span class="unicode-icon mr-2">&#x1F4E7;</span> Gmail</span> <span
+                                        class="text-xs font-normal text-slate-500">Required</span>
+                                </div>
+                            </label>
+                            <label
+                                class="flex items-center p-3 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50">
+                                <input type="checkbox" checked
+                                    class="w-5 h-5 text-teal-600 bg-stone-100 border-stone-300 rounded accent-teal-600">
+                                <div class="ml-4 flex-1 font-bold text-slate-800">
+                                    <span><span class="unicode-icon mr-2">&#x1F4C2;</span> Google Drive</span>
+                                </div>
+                            </label>
+                            <label
+                                class="flex items-center p-3 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50">
+                                <input type="checkbox" checked
+                                    class="w-5 h-5 text-teal-600 bg-stone-100 border-stone-300 rounded accent-teal-600">
+                                <div class="ml-4 flex-1 font-bold text-slate-800">
+                                    <span><span class="unicode-icon mr-2">&#x1F3DD;&#xFE0F;</span> Google Photos</span>
+                                </div>
+                            </label>
+                            <label
+                                class="flex items-center p-3 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50">
+                                <input type="checkbox" checked
+                                    class="w-5 h-5 text-teal-600 bg-stone-100 border-stone-300 rounded accent-teal-600">
+                                <div class="ml-4 flex-1 font-bold text-slate-800">
+                                    <span><span class="unicode-icon mr-2">&#x1F464;</span> Contacts & <span
+                                            class="unicode-icon ml-1 mr-2">&#x1F4C5;</span> Calendar</span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="mt-8 flex justify-between items-center max-w-lg mx-auto">
+                            <button onclick="prevStep()" class="text-slate-500 font-medium">Back</button>
+                            <button onclick="nextStep()"
+                                class="bg-teal-600 text-white px-6 py-2.5 rounded-xl font-bold">Continue</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Auto-Sync -->
+                    <div id="step-3" class="step-container">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-2 text-center">Configure Auto-Sync</h2>
+                        <div class="grid grid-cols-2 gap-4 max-w-lg mx-auto mt-6">
+                            <div class="sync-option">
+                                <input type="radio" name="sync" id="sync_cdp" value="cdp">
+                                <label for="sync_cdp" class="block p-4 border-2 border-stone-200 rounded-xl relative">
+                                    <div class="absolute top-2 right-2 text-teal-500 opacity-0 check-icon"><span
+                                            class="unicode-icon">&#x2714;&#xFE0F;</span></div>
+                                    <div class="font-bold text-slate-900">Real-Time</div>
+                                    <p class="text-xs text-slate-500 mt-1">Continuous protection</p>
+                                </label>
+                            </div>
+                            <div class="sync-option">
+                                <input type="radio" name="sync" id="sync_hourly" value="hourly" checked>
+                                <label for="sync_hourly"
+                                    class="block p-4 border-2 border-stone-200 rounded-xl relative">
+                                    <div class="absolute top-2 right-2 text-teal-500 opacity-0 check-icon"><span
+                                            class="unicode-icon">&#x2714;&#xFE0F;</span></div>
+                                    <div class="font-bold text-slate-900">Hourly</div>
+                                    <p class="text-xs text-slate-500 mt-1">Recommended</p>
+                                </label>
+                            </div>
+                            <div class="sync-option">
+                                <input type="radio" name="sync" id="sync_6h" value="6h">
+                                <label for="sync_6h" class="block p-4 border-2 border-stone-200 rounded-xl relative">
+                                    <div class="absolute top-2 right-2 text-teal-500 opacity-0 check-icon"><span
+                                            class="unicode-icon">&#x2714;&#xFE0F;</span></div>
+                                    <div class="font-bold text-slate-900">6 Hours</div>
+                                    <p class="text-xs text-slate-500 mt-1">Standard backup</p>
+                                </label>
+                            </div>
+                            <div class="sync-option">
+                                <input type="radio" name="sync" id="sync_daily" value="daily">
+                                <label for="sync_daily" class="block p-4 border-2 border-stone-200 rounded-xl relative">
+                                    <div class="absolute top-2 right-2 text-teal-500 opacity-0 check-icon"><span
+                                            class="unicode-icon">&#x2714;&#xFE0F;</span></div>
+                                    <div class="font-bold text-slate-900">Nightly</div>
+                                    <p class="text-xs text-slate-500 mt-1">Once per day</p>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mt-8 flex justify-between items-center max-w-lg mx-auto">
+                            <button onclick="prevStep()" class="text-slate-500 font-medium">Back</button>
+                            <button onclick="startInitialSync()"
+                                class="bg-teal-600 text-white px-6 py-2.5 rounded-xl font-bold">Start First
+                                Sync</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Initialize -->
+                    <div id="step-4" class="step-container">
+                        <div id="sync-active-view" class="text-center py-8">
+                            <div class="relative w-20 h-20 mx-auto mb-4">
+                                <div
+                                    class="absolute inset-0 border-4 border-teal-500 rounded-full border-t-transparent animate-[spin_1s_linear_infinite]">
+                                </div>
+                                <div
+                                    class="absolute inset-0 flex items-center justify-center text-2xl unicode-icon text-teal-600">
+                                    &#x1F512;</div>
+                            </div>
+                            <h2 class="text-xl font-bold text-slate-900 mb-4">Establishing Secure Vault...</h2>
+                            <div class="bg-slate-900 rounded-xl p-4 text-left font-mono text-xs text-teal-400 overflow-hidden h-32 max-w-md mx-auto shadow-inner"
+                                id="terminal-logs"></div>
+                        </div>
+
+                        <div id="sync-success-view" class="hidden text-center py-8">
+                            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center text-4xl unicode-icon mx-auto mb-4 text-green-600 scale-0 transition-transform duration-500"
+                                id="success-icon">&#x2714;&#xFE0F;</div>
+                            <h2 class="text-2xl font-bold text-slate-900 mb-2">Auto-Sync Activated!</h2>
+                            <p class="text-slate-600 mb-6 text-sm">Your Workspace is protected. Initial backup is
+                                running in the background.</p>
+                            <button onclick="loginUser()"
+                                class="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold w-full sm:w-auto">Go to
+                                Dashboard</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- APP SHELL (DASHBOARD & VAULT)              -->
+    <!-- ========================================== -->
+    <div id="app-shell" class="app-view app-layout-view bg-stone-50 hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col flex-shrink-0 h-full hidden md:flex z-20">
+            <div class="h-16 flex items-center px-6 border-b border-slate-800 bg-slate-950">
+                <span class="text-2xl unicode-icon mr-2 text-teal-500">&#x1F5C4;&#xFE0F;</span>
+                <span class="font-bold text-xl tracking-tight text-white">Stor<span
+                        class="text-teal-500">X</span></span>
+            </div>
+
+            <!-- NEW: Multi-Tenant Switcher -->
+            <div class="p-4 border-b border-slate-800 hover:bg-slate-800/50 transition-colors cursor-pointer group relative"
+                title="Switch Workspace Tenant">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div
+                            class="w-8 h-8 rounded-md bg-white flex items-center justify-center mr-3 text-slate-900 shadow-sm">
+                            <span class="unicode-icon">&#x1F3E2;</span>
+                        </div>
+                        <div class="overflow-hidden">
+                            <div class="text-sm font-bold text-white truncate">Acme Corp Ltd.</div>
+                            <div class="text-[10px] text-emerald-400 font-medium uppercase tracking-wider">Active Tenant
+                            </div>
+                        </div>
+                    </div>
+                    <span
+                        class="unicode-icon text-slate-500 text-xs group-hover:text-white transition-colors">&#x25BC;</span>
+                </div>
+            </div>
+
+            <nav class="flex-1 overflow-y-auto py-4">
+                <div class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Overview</div>
+                <a href="#" onclick="showDashboard()" class="sidebar-item active flex items-center px-6 py-3 mb-1"
+                    id="nav-dashboard">
+                    <span class="unicode-icon mr-3 text-lg">&#x1F4CA;</span><span
+                        class="text-sm font-medium">Dashboard</span>
+                </a>
+                <a href="#" onclick="showUsersGroups()" class="sidebar-item flex items-center px-6 py-3 mb-1"
+                    id="nav-users">
+                    <span class="unicode-icon mr-3 text-lg">&#x1F465;</span><span class="text-sm font-medium">Users &
+                        Groups</span>
+                </a>
+
+                <div class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider mt-6 mb-2">Data
+                    Management</div>
+                <a href="#" onclick="showAutoSync()" class="sidebar-item flex items-center px-6 py-3 mb-1"
+                    id="nav-autosync">
+                    <span class="unicode-icon mr-3 text-lg">&#x1F504;</span><span class="text-sm font-medium">Auto-Sync
+                        Policies</span>
+                </a>
+                <a href="#" onclick="showRecovery()" class="sidebar-item flex items-center px-6 py-3 mb-1"
+                    id="nav-recovery">
+                    <span class="unicode-icon mr-3 text-lg">&#x23EA;</span><span class="text-sm font-medium">Recovery &
+                        Restore</span>
+                </a>
+
+                <div class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider mt-6 mb-2">System &
+                    Security</div>
+                <a href="#" onclick="showSecurity()"
+                    class="sidebar-item flex items-center px-6 py-3 mb-1 justify-between" id="nav-security">
+                    <div class="flex items-center">
+                        <span class="unicode-icon mr-3 text-lg">&#x1F6E1;&#xFE0F;</span><span
+                            class="text-sm font-medium">Security</span>
+                    </div>
+                    <span
+                        class="bg-rose-500/20 text-rose-400 text-[10px] px-2 py-0.5 rounded-full font-bold border border-rose-500/30">1
+                        Alert</span>
+                </a>
+                <a href="#" onclick="showAudit()" class="sidebar-item flex items-center px-6 py-3 mb-1" id="nav-audit">
+                    <span class="unicode-icon mr-3 text-lg">&#x1F4DC;</span><span class="text-sm font-medium">Audit
+                        Logs</span>
+                </a>
+                <a href="#" onclick="showSettings()" class="sidebar-item flex items-center px-6 py-3 mb-1"
+                    id="nav-settings">
+                    <span class="unicode-icon mr-3 text-lg">&#x2699;&#xFE0F;</span><span
+                        class="text-sm font-medium">Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <div class="flex-1 flex flex-col h-full relative z-10 w-full overflow-hidden">
+            <!-- Top App Bar -->
+            <header
+                class="h-16 bg-white border-b border-stone-200 flex items-center justify-between px-4 sm:px-6 z-20 shadow-sm shrink-0">
+                <div class="flex items-center whitespace-nowrap">
+                    <div id="topbar-breadcrumb" class="font-bold text-slate-800 text-lg hidden sm:block">Dashboard</div>
+                </div>
+
+                <!-- AFI.AI Inspired Global Search -->
+                <div class="flex-1 max-w-2xl px-4 sm:px-6 relative" id="global-search-container">
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="unicode-icon text-slate-400">&#x1F50D;</span>
+                        </div>
+                        <input type="text" onclick="openGlobalSearch()"
+                            class="block w-full pl-10 pr-16 py-2 border border-stone-200 rounded-xl leading-5 bg-stone-50 placeholder-slate-400 hover:bg-stone-100 focus:outline-none focus:bg-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 sm:text-sm transition-all cursor-text shadow-inner"
+                            placeholder="Global Search: Type a user, email, or file to restore...">
+                        <div class="absolute inset-y-0 right-0 pr-2 flex items-center">
+                            <span
+                                class="text-xs text-slate-400 border border-slate-200 rounded px-2 py-0.5 font-mono bg-white shadow-sm">⌘K</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div
+                        class="flex items-center bg-stone-50 border border-stone-200 px-3 py-1.5 rounded-full hidden lg:flex">
+                        <div class="pulse-dot mr-2"></div><span class="text-xs font-bold text-emerald-600">Sync
+                            Active</span>
+                    </div>
+                    <!-- Profile / Logout Dropdown -->
+                    <div class="relative group cursor-pointer">
+                        <div
+                            class="h-8 w-8 rounded-full bg-teal-100 flex items-center justify-center border border-teal-200">
+                            <span class="text-teal-700 font-bold text-sm">AD</span>
+                        </div>
+                        <div
+                            class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-stone-200 hidden group-hover:block z-50">
+                            <div class="py-1">
+                                <div class="px-4 py-2 text-sm text-slate-700 border-b border-stone-100">Admin
+                                    User<br><span class="text-xs text-slate-400">admin@acme.com</span></div>
+                                <a href="#" onclick="logoutUser()"
+                                    class="block px-4 py-2 text-sm text-rose-600 hover:bg-stone-50">Log out</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <main id="view-dashboard" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 w-full h-full block">
+
+                <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900">Workspace Backup Health</h1>
+                        <p class="text-sm text-slate-500 mt-1">Real-time overview of your protected Google environment.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- KPI Cards (Spin.AI / HYCU Inspired) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    <div
+                        class="bg-white rounded-xl border border-stone-200 p-5 shadow-sm relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 h-full w-1 bg-emerald-500 group-hover:w-2 transition-all">
+                        </div>
+                        <div class="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wider">Protected Users
+                        </div>
+                        <div class="flex items-baseline mt-2">
+                            <div class="text-3xl font-bold text-slate-900">124</div>
+                            <div
+                                class="ml-2 text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                                +2 this week</div>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white rounded-xl border border-stone-200 p-5 shadow-sm relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 h-full w-1 bg-blue-500 group-hover:w-2 transition-all"></div>
+                        <div class="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wider">Total Vault Size
+                        </div>
+                        <div class="flex items-baseline mt-2">
+                            <div class="text-3xl font-bold text-slate-900">8.4</div>
+                            <div class="ml-1 text-sm font-medium text-slate-500">TB</div>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white rounded-xl border border-stone-200 p-5 shadow-sm relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 h-full w-1 bg-teal-500 group-hover:w-2 transition-all"></div>
+                        <div class="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wider">Last Snapshot
+                        </div>
+                        <div class="flex items-baseline mt-2">
+                            <div class="text-3xl font-bold text-slate-900">12</div>
+                            <div class="ml-1 text-sm font-medium text-slate-500">mins ago</div>
+                        </div>
+                        <div class="text-xs text-slate-400 mt-1">1,402 items synced successfully</div>
+                    </div>
+
+                    <!-- Ransomware Shield KPI -->
+                    <div
+                        class="bg-rose-50/40 rounded-xl border border-rose-200 p-5 shadow-sm relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 h-full w-1 bg-rose-500 group-hover:w-2 transition-all"></div>
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Ransomware
+                                    Monitor</div>
+                                <div class="text-lg font-bold text-rose-600 flex items-center mt-1">
+                                    <span class="unicode-icon mr-2">&#x26A0;&#xFE0F;</span> 1 Anomaly
+                                </div>
+                            </div>
+                            <button
+                                class="text-xs bg-rose-100 text-rose-700 px-2 py-1.5 rounded-lg hover:bg-rose-200 transition-colors font-bold shadow-sm">Review</button>
+                        </div>
+                        <div class="text-xs text-slate-500 mt-2 truncate font-medium">Mass-deletion detected in
+                            Marketing Drive.</div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-end mb-4">
+                    <h2 class="text-lg font-bold text-slate-800">Protected Services Overview</h2>
+                </div>
+
+                <!-- Service Cards (Datto / Backupify Action-Oriented Approach) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+
+                    <!-- Gmail Card -->
+                    <div
+                        class="bg-white rounded-xl border border-stone-200 p-0 shadow-sm service-card flex flex-col overflow-hidden">
+                        <div class="p-4 flex-1 cursor-pointer" onclick="openServiceVault('Gmail')">
+                            <div class="flex justify-between items-start mb-3">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center border border-red-100">
+                                    <span class="unicode-icon text-xl text-red-500">&#x1F4E7;</span>
+                                </div>
+                                <span
+                                    class="bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] px-2 py-1 rounded-full font-bold uppercase flex items-center">
+                                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5 animate-pulse"></span>
+                                    Protected
+                                </span>
+                            </div>
+                            <h3 class="font-bold text-slate-900 text-lg">Gmail</h3>
+                            <div class="text-xs text-slate-500 mt-1">2.1 TB &bull; 124 Mailboxes</div>
+                        </div>
+                        <div class="border-t border-stone-100 bg-stone-50/50 p-2 flex gap-2">
+                            <button onclick="openServiceVault('Gmail')"
+                                class="flex-1 bg-white border border-stone-200 hover:border-teal-300 hover:text-teal-700 text-slate-600 text-xs font-bold py-2 rounded-lg transition-colors text-center shadow-sm">
+                                Browse & Restore
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Drive Card -->
+                    <div
+                        class="bg-white rounded-xl border border-stone-200 p-0 shadow-sm service-card flex flex-col overflow-hidden">
+                        <div class="p-4 flex-1 cursor-pointer" onclick="openServiceVault('Drive')">
+                            <div class="flex justify-between items-start mb-3">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center border border-blue-100">
+                                    <span class="unicode-icon text-xl text-blue-500">&#x1F4C2;</span>
+                                </div>
+                                <span
+                                    class="bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] px-2 py-1 rounded-full font-bold uppercase flex items-center">
+                                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5 animate-pulse"></span>
+                                    Protected
+                                </span>
+                            </div>
+                            <h3 class="font-bold text-slate-900 text-lg">Drive</h3>
+                            <div class="text-xs text-slate-500 mt-1">5.8 TB &bull; 124 Drives</div>
+                        </div>
+                        <div class="border-t border-stone-100 bg-stone-50/50 p-2 flex gap-2">
+                            <button onclick="openServiceVault('Drive')"
+                                class="flex-1 bg-white border border-stone-200 hover:border-teal-300 hover:text-teal-700 text-slate-600 text-xs font-bold py-2 rounded-lg transition-colors text-center shadow-sm">
+                                Browse & Restore
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Photos Card -->
+                    <div
+                        class="bg-white rounded-xl border border-stone-200 p-0 shadow-sm service-card flex flex-col overflow-hidden">
+                        <div class="p-4 flex-1 cursor-pointer" onclick="openServiceVault('Photos')">
+                            <div class="flex justify-between items-start mb-3">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-yellow-50 flex items-center justify-center border border-yellow-100">
+                                    <span class="unicode-icon text-xl text-yellow-500">&#x1F3DD;&#xFE0F;</span>
+                                </div>
+                                <span
+                                    class="bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] px-2 py-1 rounded-full font-bold uppercase flex items-center">
+                                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5 animate-pulse"></span>
+                                    Protected
+                                </span>
+                            </div>
+                            <h3 class="font-bold text-slate-900 text-lg">Photos</h3>
+                            <div class="text-xs text-slate-500 mt-1">450 GB &bull; 42 Accounts</div>
+                        </div>
+                        <div class="border-t border-stone-100 bg-stone-50/50 p-2 flex gap-2">
+                            <button onclick="openServiceVault('Photos')"
+                                class="flex-1 bg-white border border-stone-200 hover:border-teal-300 hover:text-teal-700 text-slate-600 text-xs font-bold py-2 rounded-lg transition-colors text-center shadow-sm">
+                                Browse & Restore
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Contacts Card -->
+                    <div
+                        class="bg-white rounded-xl border border-stone-200 p-0 shadow-sm service-card flex flex-col overflow-hidden">
+                        <div class="p-4 flex-1 cursor-pointer" onclick="openServiceVault('Contacts')">
+                            <div class="flex justify-between items-start mb-3">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center border border-indigo-100">
+                                    <span class="unicode-icon text-xl text-indigo-500">&#x1F464;</span>
+                                </div>
+                                <span
+                                    class="bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] px-2 py-1 rounded-full font-bold uppercase flex items-center">
+                                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5 animate-pulse"></span>
+                                    Protected
+                                </span>
+                            </div>
+                            <h3 class="font-bold text-slate-900 text-lg">Contacts</h3>
+                            <div class="text-xs text-slate-500 mt-1">2 GB &bull; 124 Dirs</div>
+                        </div>
+                        <div class="border-t border-stone-100 bg-stone-50/50 p-2 flex gap-2">
+                            <button onclick="openServiceVault('Contacts')"
+                                class="flex-1 bg-white border border-stone-200 hover:border-teal-300 hover:text-teal-700 text-slate-600 text-xs font-bold py-2 rounded-lg transition-colors text-center shadow-sm">
+                                Browse & Restore
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Calendar Card -->
+                    <div
+                        class="bg-white rounded-xl border border-stone-200 p-0 shadow-sm service-card flex flex-col overflow-hidden">
+                        <div class="p-4 flex-1 cursor-pointer" onclick="openServiceVault('Calendar')">
+                            <div class="flex justify-between items-start mb-3">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-teal-50 flex items-center justify-center border border-teal-100">
+                                    <span class="unicode-icon text-xl text-teal-500">&#x1F4C5;</span>
+                                </div>
+                                <span
+                                    class="bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] px-2 py-1 rounded-full font-bold uppercase flex items-center">
+                                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5 animate-pulse"></span>
+                                    Protected
+                                </span>
+                            </div>
+                            <h3 class="font-bold text-slate-900 text-lg">Calendar</h3>
+                            <div class="text-xs text-slate-500 mt-1">5 GB &bull; 124 Cals</div>
+                        </div>
+                        <div class="border-t border-stone-100 bg-stone-50/50 p-2 flex gap-2">
+                            <button onclick="openServiceVault('Calendar')"
+                                class="flex-1 bg-white border border-stone-200 hover:border-teal-300 hover:text-teal-700 text-slate-600 text-xs font-bold py-2 rounded-lg transition-colors text-center shadow-sm">
+                                Browse & Restore
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts & Keepit Inspired Audit Log -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-xl border border-stone-200 p-5 shadow-sm lg:col-span-1 flex flex-col">
+                        <h2 class="text-sm font-bold text-slate-800 mb-4 uppercase tracking-wider">Vault Storage
+                            Distribution</h2>
+                        <div class="relative flex-1 min-h-[220px] flex items-center justify-center"><canvas
+                                id="dashStorageChart"></canvas></div>
+                    </div>
+
+                    <div
+                        class="bg-white rounded-xl border border-stone-200 shadow-sm lg:col-span-2 flex flex-col overflow-hidden">
+                        <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-stone-50">
+                            <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Auto-Sync & Audit Log
+                            </h2>
+                            <button class="text-xs text-teal-600 font-bold hover:underline flex items-center">View Full
+                                Audit <span class="unicode-icon ml-1">&#x27A1;&#xFE0F;</span></button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-stone-200">
+                                <tbody class="bg-white divide-y divide-stone-100">
+                                    <tr class="hover:bg-stone-50 transition-colors">
+                                        <td class="px-4 py-3 whitespace-nowrap w-8">
+                                            <span class="unicode-icon text-blue-500 text-lg">&#x1F4C2;</span>
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap">
+                                            <span
+                                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 uppercase tracking-wider">Auto-Sync</span>
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-slate-800 font-medium">
+                                            Marketing Shared Drive</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-xs text-slate-500">+12 modified
+                                            files synced</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-xs text-slate-400 text-right">2m ago
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-stone-50 transition-colors">
+                                        <td class="px-4 py-3 whitespace-nowrap w-8">
+                                            <span class="unicode-icon text-teal-500 text-lg">&#x23EA;</span>
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap">
+                                            <span
+                                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-800 uppercase tracking-wider">Admin
+                                                Restore</span>
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-slate-800 font-medium">
+                                            Q3_Financials_v2.xlsx</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-xs text-slate-500">Restored to
+                                            original location</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-xs text-slate-400 text-right">15m
+                                            ago</td>
+                                    </tr>
+                                    <tr class="hover:bg-stone-50 transition-colors">
+                                        <td class="px-4 py-3 whitespace-nowrap w-8">
+                                            <span class="unicode-icon text-red-500 text-lg">&#x1F4E7;</span>
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap">
+                                            <span
+                                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 uppercase tracking-wider">Auto-Sync</span>
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-slate-800 font-medium">
+                                            j.smith@acme.com</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-xs text-slate-500">+4 emails
+                                            archived</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-xs text-slate-400 text-right">1h ago
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-stone-50 transition-colors bg-rose-50/20">
+                                        <td class="px-4 py-3 whitespace-nowrap w-8">
+                                            <span class="unicode-icon text-rose-500 text-lg">&#x26A0;&#xFE0F;</span>
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap">
+                                            <span
+                                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 uppercase tracking-wider">Security
+                                                Alert</span>
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-rose-700 font-bold">Anomaly
+                                            Detection</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-xs text-slate-500">Unusual deletion
+                                            rate on Marketing Drive</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-xs text-slate-400 text-right">3h ago
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Users & Groups Content -->
+            <main id="view-users" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 w-full h-full hidden bg-stone-50">
+                <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center mb-6 gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900">Corporate Users & Groups</h1>
+                        <p class="text-sm text-slate-500 mt-1">Manage backup status across your entire Google Workspace
+                            tenant.</p>
+                    </div>
+
+                    <!-- Directory Sync, Auto-Protect, and NEW Connect Button -->
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="flex items-center bg-white p-2 rounded-xl border border-stone-200 shadow-sm">
+                            <div class="flex items-center border-r border-stone-200 pr-4 pl-2">
+                                <span
+                                    class="text-xs font-bold text-slate-500 uppercase tracking-wider mr-3">Auto-Protect</span>
+                                <button
+                                    class="relative inline-flex h-5 w-9 items-center rounded-full bg-teal-500 transition-colors focus:outline-none">
+                                    <span
+                                        class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-4 shadow-sm"></span>
+                                </button>
+                            </div>
+                            <button
+                                class="text-slate-700 px-3 py-1.5 rounded-lg text-sm font-bold hover:bg-stone-50 flex items-center transition-colors">
+                                <span class="unicode-icon mr-2 text-teal-600">&#x1F504;</span> Sync Directory
+                            </button>
+                        </div>
+
+                        <!-- NEW: Connect Account Button -->
+                        <button onclick="connectNewAccount()" id="connect-account-btn"
+                            class="bg-slate-900 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md hover:bg-slate-800 flex items-center transition-all">
+                            <span class="unicode-icon mr-2">&#x2795;</span> Connect New Account
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden mb-6">
+                    <div class="p-4 border-b border-stone-100 flex gap-4 bg-stone-50">
+                        <input type="text"
+                            class="flex-1 pl-4 pr-3 py-2 border border-stone-300 rounded-lg text-sm bg-white focus:ring-teal-500 focus:border-teal-500 shadow-inner"
+                            placeholder="Search by name, email, or group...">
+                        <select class="border border-stone-300 rounded-lg text-sm bg-white px-3 py-2 shadow-sm">
+                            <option>All Accounts/Domains</option>
+                            <option>acme.com (Current)</option>
+                            <option>Newly Connected</option>
+                        </select>
+                        <select class="border border-stone-300 rounded-lg text-sm bg-white px-3 py-2 shadow-sm">
+                            <option>All Statuses</option>
+                            <option>Protected</option>
+                            <option>Unprotected</option>
+                        </select>
+                    </div>
+                    <table class="min-w-full divide-y divide-stone-200">
+                        <thead class="bg-stone-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Entity</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Source Domain
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Assigned
+                                    Policy</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Status</th>
+                                <th class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase">Storage Used
+                                </th>
+                                <th class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body" class="bg-white divide-y divide-stone-100">
+                            <tr class="hover:bg-teal-50 cursor-pointer transition-colors group"
+                                onclick="openUserVault('Executive Team', 'execs@acme.com', 'Gmail')">
+                                <td class="px-6 py-4">
+                                    <div class="font-bold text-slate-900 text-sm group-hover:text-teal-700">Executive
+                                        Team</div>
+                                    <div class="text-xs text-slate-500">execs@acme.com</div>
+                                </td>
+                                <td class="px-6 py-4"><span
+                                        class="px-2 py-1 bg-stone-100 text-stone-600 rounded text-[10px] font-bold border border-stone-200 uppercase tracking-wider">@acme.com</span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-slate-600 font-medium">Real-Time (CDP)</td>
+                                <td class="px-6 py-4"><span
+                                        class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold flex items-center w-max">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></div>Protected
+                                    </span></td>
+                                <td class="px-6 py-4 text-right text-sm text-slate-600 font-medium">1.2 TB</td>
+                                <td class="px-6 py-4 text-right text-sm font-medium">
+                                    <button onclick="executeFullUserRestore(event, 'Executive Team')"
+                                        class="text-teal-600 hover:text-white hover:bg-teal-600 bg-teal-50 px-3 py-1.5 rounded transition-colors border border-teal-200 flex items-center justify-end w-full sm:w-auto ml-auto">
+                                        <span class="unicode-icon mr-1.5">&#x23EA;</span> Full Restore
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-teal-50 cursor-pointer transition-colors group"
+                                onclick="openUserVault('Sarah Jenkins', 's.jenkins@acme.com', 'Gmail')">
+                                <td class="px-6 py-4">
+                                    <div class="font-bold text-slate-900 text-sm group-hover:text-teal-700">Sarah
+                                        Jenkins</div>
+                                    <div class="text-xs text-slate-500">s.jenkins@acme.com</div>
+                                </td>
+                                <td class="px-6 py-4"><span
+                                        class="px-2 py-1 bg-stone-100 text-stone-600 rounded text-[10px] font-bold border border-stone-200 uppercase tracking-wider">@acme.com</span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-slate-600 font-medium">Standard (Hourly)</td>
+                                <td class="px-6 py-4"><span
+                                        class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold flex items-center w-max">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></div>Protected
+                                    </span></td>
+                                <td class="px-6 py-4 text-right text-sm text-slate-600 font-medium">14.2 GB</td>
+                                <td class="px-6 py-4 text-right text-sm font-medium">
+                                    <button onclick="executeFullUserRestore(event, 'Sarah Jenkins')"
+                                        class="text-teal-600 hover:text-white hover:bg-teal-600 bg-teal-50 px-3 py-1.5 rounded transition-colors border border-teal-200 flex items-center justify-end w-full sm:w-auto ml-auto">
+                                        <span class="unicode-icon mr-1.5">&#x23EA;</span> Full Restore
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+
+            <!-- Auto-Sync Policies Content -->
+            <main id="view-autosync" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 w-full h-full hidden bg-stone-50">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900">Auto-Sync Policies</h1>
+                        <p class="text-sm text-slate-500 mt-1">Configure automated backup intervals and retention rules
+                            for your corporate tenant.</p>
+                    </div>
+                    <button
+                        class="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 flex items-center transition-colors"><span
+                            class="unicode-icon mr-2">&#x2795;</span> Create Policy</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <!-- Policy Card 1 -->
+                    <div
+                        class="bg-white border border-stone-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all relative">
+                        <div
+                            class="absolute top-0 right-0 bg-teal-100 text-teal-800 text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-xl uppercase tracking-wider">
+                            Default Global</div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-1">Standard Corporate</h3>
+                        <p class="text-xs text-slate-500 mb-4">Applied to 118 users automatically.</p>
+
+                        <div class="space-y-3 mb-6">
+                            <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
+                                <span class="text-slate-500">Sync Interval</span><span
+                                    class="font-bold text-slate-800">Every 1 Hour</span>
+                            </div>
+                            <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
+                                <span class="text-slate-500">Retention</span><span
+                                    class="font-bold text-slate-800">Infinite</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-500">Services</span><span
+                                    class="font-medium text-slate-800 flex gap-1"><span title="Gmail"
+                                        class="unicode-icon">&#x1F4E7;</span><span title="Drive"
+                                        class="unicode-icon">&#x1F4C2;</span><span title="Contacts/Calendar"
+                                        class="unicode-icon">&#x1F464;</span></span>
+                            </div>
+                        </div>
+                        <button
+                            class="w-full bg-stone-100 hover:bg-stone-200 text-slate-700 text-sm font-bold py-2 rounded-lg transition-colors border border-stone-200">Edit
+                            Policy</button>
+                    </div>
+
+                    <!-- Policy Card 2 -->
+                    <div
+                        class="bg-white border border-stone-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all">
+                        <h3 class="text-lg font-bold text-slate-900 mb-1">Executive Critical</h3>
+                        <p class="text-xs text-slate-500 mb-4">Applied to "Executive Team" group.</p>
+
+                        <div class="space-y-3 mb-6">
+                            <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
+                                <span class="text-slate-500">Sync Interval</span><span
+                                    class="font-bold text-teal-600">Real-Time (CDP)</span>
+                            </div>
+                            <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
+                                <span class="text-slate-500">Retention</span><span
+                                    class="font-bold text-slate-800">Infinite</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-500">Services</span><span
+                                    class="font-medium text-slate-800 flex gap-1"><span title="Gmail"
+                                        class="unicode-icon">&#x1F4E7;</span><span title="Drive"
+                                        class="unicode-icon">&#x1F4C2;</span><span title="Contacts/Calendar"
+                                        class="unicode-icon">&#x1F464;</span></span>
+                            </div>
+                        </div>
+                        <button
+                            class="w-full bg-stone-100 hover:bg-stone-200 text-slate-700 text-sm font-bold py-2 rounded-lg transition-colors border border-stone-200">Edit
+                            Policy</button>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Vault Listing Content -->
+            <main id="view-vault" class="flex-1 overflow-y-auto bg-stone-50 p-4 sm:p-6 lg:p-8 w-full h-full hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900" id="vault-title">Service Vault</h1>
+                        <p class="text-sm text-slate-500 mt-1">Select a user or entity to browse and restore data.</p>
+                    </div>
+                    <div class="relative">
+                        <input type="text"
+                            class="pl-8 pr-3 py-2 border border-stone-300 rounded-lg text-sm bg-white focus:ring-teal-500 focus:border-teal-500 w-64"
+                            placeholder="Search users...">
+                        <span class="absolute left-2.5 top-2.5 unicode-icon text-slate-400 text-xs">&#x1F50D;</span>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden">
+                    <table class="min-w-full divide-y divide-stone-200">
+                        <thead class="bg-stone-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Resource /
+                                    User</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Vault Size
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Last Sync
+                                </th>
+                                <th class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vault-table-body" class="bg-white divide-y divide-stone-100">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+
+            <!-- Recovery & Restore Content -->
+            <main id="view-recovery" class="flex-1 overflow-y-auto bg-stone-50 p-4 sm:p-6 lg:p-8 w-full h-full hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900">Recovery & Restore Hub</h1>
+                        <p class="text-sm text-slate-500 mt-1">Track active recovery jobs and perform cross-service
+                            global restores.</p>
+                    </div>
+                    <button onclick="openGlobalSearch()"
+                        class="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 flex items-center transition-colors">
+                        <span class="unicode-icon mr-2">&#x1F50D;</span> Global Search
+                    </button>
+                </div>
+
+                <div class="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden">
+                    <div class="p-4 border-b border-stone-100 bg-stone-50">
+                        <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Recent Restore Jobs</h2>
+                    </div>
+                    <table class="min-w-full divide-y divide-stone-200">
+                        <thead class="bg-white">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Job ID /
+                                    Target</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Service</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Initiated By
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Status</th>
+                                <th class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-stone-100">
+                            <!-- Active Job -->
+                            <tr class="hover:bg-stone-50">
+                                <td class="px-6 py-4">
+                                    <div class="font-bold text-slate-900 text-sm">#RST-9042</div>
+                                    <div class="text-xs text-slate-500 truncate w-48">Q3_Financials_v2.xlsx</div>
+                                </td>
+                                <td class="px-6 py-4"><span
+                                        class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded text-xs font-bold"><span
+                                            class="unicode-icon mr-1">&#x1F4C2;</span> Drive</span></td>
+                                <td class="px-6 py-4 text-sm text-slate-600">Admin User</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="w-full bg-stone-200 rounded-full h-1.5 mr-2 w-24">
+                                            <div class="bg-teal-500 h-1.5 rounded-full" style="width: 45%"></div>
+                                        </div>
+                                        <span class="text-xs font-bold text-teal-600">45%</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-right text-sm text-slate-500">Just now</td>
+                            </tr>
+                            <!-- Completed Job -->
+                            <tr class="hover:bg-stone-50">
+                                <td class="px-6 py-4">
+                                    <div class="font-bold text-slate-900 text-sm">#RST-9041</div>
+                                    <div class="text-xs text-slate-500 truncate w-48">Bulk Inbox Restore (142 items)
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4"><span
+                                        class="px-2 py-1 bg-red-50 text-red-700 border border-red-200 rounded text-xs font-bold"><span
+                                            class="unicode-icon mr-1">&#x1F4E7;</span> Gmail</span></td>
+                                <td class="px-6 py-4 text-sm text-slate-600">s.jenkins@acme.com</td>
+                                <td class="px-6 py-4"><span
+                                        class="text-emerald-600 font-bold text-xs flex items-center"><span
+                                            class="unicode-icon mr-1">&#x2714;&#xFE0F;</span> Completed</span></td>
+                                <td class="px-6 py-4 text-right text-sm text-slate-500">Yesterday</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+
+            <!-- Security Content -->
+            <main id="view-security" class="flex-1 overflow-y-auto bg-stone-50 p-4 sm:p-6 lg:p-8 w-full h-full hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900">Security Center</h1>
+                        <p class="text-sm text-slate-500 mt-1">Ransomware protection, anomaly detection, and security
+                            posture.</p>
+                    </div>
+                    <button
+                        class="bg-white border border-stone-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-stone-50 flex items-center">
+                        <span class="unicode-icon mr-2">&#x2699;&#xFE0F;</span> Threat Settings
+                    </button>
+                </div>
+
+                <!-- Active Alert Banner -->
+                <div
+                    class="bg-rose-50 border border-rose-200 rounded-xl p-5 mb-6 flex items-start gap-4 shadow-sm relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-rose-500"></div>
+                    <div
+                        class="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 text-xl shrink-0">
+                        <span class="unicode-icon">&#x26A0;&#xFE0F;</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-rose-800 font-bold text-lg">High Severity Anomaly Detected</h3>
+                        <p class="text-rose-600 text-sm mt-1 mb-3">A massive deletion event (4,201 files) was detected
+                            in the <strong>Marketing Shared Drive</strong> within a 5-minute window. Auto-sync has been
+                            suspended for this drive to preserve the vault state.</p>
+                        <div class="flex gap-3">
+                            <button
+                                class="bg-rose-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-rose-700 transition-colors">Investigate
+                                & Restore</button>
+                            <button
+                                class="bg-white border border-rose-200 text-rose-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-rose-50 transition-colors">Dismiss
+                                Alert</button>
+                        </div>
+                    </div>
+                    <div class="text-xs font-bold text-rose-400">3 hours ago</div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white border border-stone-200 rounded-xl p-5 shadow-sm">
+                        <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-4">Ransomware Shield
+                        </h3>
+                        <div class="flex items-center justify-between mb-4 pb-4 border-b border-stone-100">
+                            <div class="flex items-center">
+                                <span class="unicode-icon text-2xl mr-3 text-emerald-500">&#x1F6E1;&#xFE0F;</span>
+                                <div>
+                                    <div class="font-bold text-slate-900">AI Threat Detection</div>
+                                    <div class="text-xs text-slate-500">Monitors for mass encryption/deletion</div>
+                                </div>
+                            </div>
+                            <span
+                                class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-1 rounded">ACTIVE</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <span class="unicode-icon text-2xl mr-3 text-blue-500">&#x1F512;</span>
+                                <div>
+                                    <div class="font-bold text-slate-900">Immutable Vaults</div>
+                                    <div class="text-xs text-slate-500">WORM compliance enabled</div>
+                                </div>
+                            </div>
+                            <span
+                                class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-1 rounded">SECURED</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Audit Logs Content -->
+            <main id="view-audit" class="flex-1 overflow-y-auto bg-stone-50 p-4 sm:p-6 lg:p-8 w-full h-full hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900">System Audit Logs</h1>
+                        <p class="text-sm text-slate-500 mt-1">Immutable ledger of all administrative and system
+                            actions.</p>
+                    </div>
+                    <button
+                        class="bg-white border border-stone-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-stone-50 flex items-center">
+                        <span class="unicode-icon mr-2">&#x1F4E4;</span> Export CSV
+                    </button>
+                </div>
+
+                <div class="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden">
+                    <div class="p-4 border-b border-stone-100 flex gap-4 bg-stone-50">
+                        <input type="text"
+                            class="flex-1 pl-4 pr-3 py-2 border border-stone-300 rounded-lg text-sm bg-white focus:ring-teal-500 focus:border-teal-500 shadow-inner"
+                            placeholder="Search logs by actor, resource, or ID...">
+                        <select class="border border-stone-300 rounded-lg text-sm bg-white px-3 py-2 shadow-sm">
+                            <option>All Events</option>
+                            <option>Restore</option>
+                            <option>Security</option>
+                            <option>Settings</option>
+                        </select>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-stone-200">
+                            <thead class="bg-stone-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Timestamp
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Actor
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Action
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Resource
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">IP
+                                        Address</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-stone-100 text-sm">
+                                <tr class="hover:bg-stone-50">
+                                    <td class="px-6 py-4 text-slate-500">May 20 2026, 11:15 AM</td>
+                                    <td class="px-6 py-4 font-medium text-slate-900">Admin User</td>
+                                    <td class="px-6 py-4"><span
+                                            class="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs font-bold">Initiated
+                                            Restore</span></td>
+                                    <td class="px-6 py-4 text-slate-600">Drive / Q3_Financials_v2.xlsx</td>
+                                    <td class="px-6 py-4 text-slate-400 font-mono text-xs">192.168.1.42</td>
+                                </tr>
+                                <tr class="hover:bg-stone-50 bg-rose-50/20">
+                                    <td class="px-6 py-4 text-slate-500">May 20 2026, 08:20 AM</td>
+                                    <td class="px-6 py-4 font-medium text-slate-900">System (Ransomware Shield)</td>
+                                    <td class="px-6 py-4"><span
+                                            class="px-2 py-1 bg-rose-100 text-rose-800 rounded text-xs font-bold">Threat
+                                            Detected</span></td>
+                                    <td class="px-6 py-4 text-slate-600">Marketing Shared Drive</td>
+                                    <td class="px-6 py-4 text-slate-400 font-mono text-xs">Internal API</td>
+                                </tr>
+                                <tr class="hover:bg-stone-50">
+                                    <td class="px-6 py-4 text-slate-500">May 19 2026, 11:00 PM</td>
+                                    <td class="px-6 py-4 font-medium text-slate-900">System (Scheduler)</td>
+                                    <td class="px-6 py-4"><span
+                                            class="px-2 py-1 bg-emerald-100 text-emerald-800 rounded text-xs font-bold">Auto-Sync</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-slate-600">Global Tenant (124 Users)</td>
+                                    <td class="px-6 py-4 text-slate-400 font-mono text-xs">Internal API</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Settings Content -->
+            <main id="view-settings" class="flex-1 overflow-y-auto bg-stone-50 p-4 sm:p-6 lg:p-8 w-full h-full hidden">
+                <div class="max-w-4xl">
+                    <div class="mb-6">
+                        <h1 class="text-2xl font-bold text-slate-900">Tenant Settings</h1>
+                        <p class="text-sm text-slate-500 mt-1">Configure workspace integrations, billing, and system
+                            preferences.</p>
+                    </div>
+
+                    <!-- NEW: Multi-Tenant Connection Manager -->
+                    <div class="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden mb-6">
+                        <div
+                            class="p-5 border-b border-stone-100 bg-stone-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div>
+                                <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Connected
+                                    Workspace Tenants</h2>
+                                <p class="text-xs text-slate-500 mt-1">Manage connected organizations. Ideal for MSPs or
+                                    multi-domain corporations.</p>
+                            </div>
+                            <button onclick="simulateAuth()"
+                                class="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 flex items-center transition-colors whitespace-nowrap">
+                                <span class="unicode-icon mr-2">&#x2795;</span> Connect New Tenant
+                            </button>
+                        </div>
+                        <div class="p-6">
+                            <!-- Tenant 1 (Active) -->
+                            <div class="flex items-center justify-between mb-4 pb-4 border-b border-stone-100">
+                                <div class="flex items-center">
+                                    <div
+                                        class="w-12 h-12 bg-stone-100 rounded-lg flex items-center justify-center text-2xl mr-4">
+                                        <span class="unicode-icon">&#x1F3E2;</span>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-slate-900 flex items-center">Acme Corp Ltd. <span
+                                                class="ml-2 text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold uppercase border border-slate-200">Current</span>
+                                        </div>
+                                        <div class="text-sm text-slate-500">Super Admin: admin@acme.com &bull; 124 Users
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <span
+                                        class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-bold flex items-center">
+                                        <div class="w-2 h-2 rounded-full bg-emerald-500 mr-2"></div> Connected
+                                    </span>
+                                    <button class="text-slate-400 hover:text-slate-600"><span
+                                            class="unicode-icon">&#x2699;&#xFE0F;</span></button>
+                                </div>
+                            </div>
+
+                            <!-- Tenant 2 (Secondary) -->
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center opacity-70">
+                                    <div
+                                        class="w-12 h-12 bg-stone-100 rounded-lg flex items-center justify-center text-2xl mr-4">
+                                        <span class="unicode-icon">&#x1F310;</span>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-slate-900">Globex Holdings (Subsidiary)</div>
+                                        <div class="text-sm text-slate-500">Super Admin: it@globex.com &bull; 45 Users
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <span
+                                        class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-bold flex items-center">
+                                        <div class="w-2 h-2 rounded-full bg-emerald-500 mr-2"></div> Connected
+                                    </span>
+                                    <button class="text-sm text-teal-600 font-bold hover:underline">Switch to
+                                        Tenant</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden">
+                        <div class="p-5 border-b border-stone-100 bg-stone-50">
+                            <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Data Residency &
+                                Encryption</h2>
+                        </div>
+                        <div class="p-6 space-y-6">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-1">Storage Region</label>
+                                <select disabled
+                                    class="bg-stone-100 border border-stone-200 text-slate-600 text-sm rounded-lg block w-full max-w-sm p-2.5 cursor-not-allowed">
+                                    <option>US-East (N. Virginia)</option>
+                                </select>
+                                <p class="text-xs text-slate-400 mt-1">Region is locked after initial vault creation for
+                                    compliance.</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-1">Encryption Key
+                                    Management</label>
+                                <div class="flex items-center text-sm text-slate-600 mt-2">
+                                    <input type="radio" checked disabled class="mr-2 text-teal-600"> StorX Managed Keys
+                                    (AES-256)
+                                </div>
+                                <div class="flex items-center text-sm text-slate-600 mt-2">
+                                    <input type="radio" disabled class="mr-2"> Bring Your Own Key (BYOK) - Enterprise
+                                    Plan Required
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- EXPLORER PANEL (SLIDE-OVER)                -->
+    <!-- ========================================== -->
+    <div id="explorer-overlay" class="fixed inset-0 panel-overlay z-40" onclick="closeExplorer()"></div>
+    <div id="explorer-panel"
+        class="fixed inset-y-0 right-0 z-50 w-full max-w-2xl bg-white shadow-2xl transform translate-x-full slide-over flex flex-col border-l border-stone-200">
+
+        <div class="px-6 py-4 bg-slate-900 text-white flex justify-between items-center shrink-0">
+            <div>
+                <h2 class="text-xl font-bold flex items-center" id="explorer-title"><span id="exp-icon"
+                        class="unicode-icon mr-2"></span> <span id="exp-name">User Name</span></h2>
+                <p class="text-sm text-slate-400 mt-0.5">Browsing Snapshot: <span
+                        class="text-teal-400 font-medium">Latest (Today, 10:05 AM)</span></p>
+            </div>
+            <button onclick="closeExplorer()" class="text-slate-400 hover:text-white"><span
+                    class="unicode-icon text-xl">&#x274C;</span></button>
+        </div>
+
+        <!-- NEW: Service Switching Tabs -->
+        <div class="px-6 border-b border-stone-200 bg-white flex space-x-6 shrink-0 overflow-x-auto" id="vault-tabs">
+            <button
+                class="vault-tab active py-3 text-sm font-bold text-teal-600 border-b-2 border-teal-600 whitespace-nowrap transition-colors"
+                data-service="Gmail" onclick="switchVaultTab('Gmail')">
+                <span class="unicode-icon mr-1">&#x1F4E7;</span> Gmail
+            </button>
+            <button
+                class="vault-tab py-3 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent whitespace-nowrap transition-colors"
+                data-service="Drive" onclick="switchVaultTab('Drive')">
+                <span class="unicode-icon mr-1">&#x1F4C2;</span> Drive
+            </button>
+            <button
+                class="vault-tab py-3 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent whitespace-nowrap transition-colors"
+                data-service="Photos" onclick="switchVaultTab('Photos')">
+                <span class="unicode-icon mr-1">&#x1F3DD;&#xFE0F;</span> Photos
+            </button>
+            <button
+                class="vault-tab py-3 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent whitespace-nowrap transition-colors"
+                data-service="Contacts" onclick="switchVaultTab('Contacts')">
+                <span class="unicode-icon mr-1">&#x1F464;</span> Contacts
+            </button>
+            <button
+                class="vault-tab py-3 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent whitespace-nowrap transition-colors"
+                data-service="Calendar" onclick="switchVaultTab('Calendar')">
+                <span class="unicode-icon mr-1">&#x1F4C5;</span> Calendar
+            </button>
+        </div>
+
+        <!-- Dynamic Preview Area -->
+        <div class="flex-1 overflow-y-auto bg-stone-50 p-4" id="explorer-content">
+            <!-- Content changes based on service (Emails, Files, Photos, etc) -->
+        </div>
+
+        <div class="p-4 border-t border-stone-200 bg-white shrink-0 flex justify-between items-center flex-wrap gap-4">
+            <div class="flex items-center gap-4">
+                <div class="text-sm font-medium text-slate-600">
+                    <span id="selected-count" class="font-bold text-teal-600 text-lg mr-1">0</span> items selected
+                </div>
+                <button id="restore-full-service-btn" onclick="executeFullServiceRestore()"
+                    class="text-xs font-bold text-slate-600 hover:text-teal-700 bg-stone-100 hover:bg-teal-50 px-3 py-1.5 rounded-lg border border-stone-200 hover:border-teal-300 transition-colors flex items-center shadow-sm">
+                    <span class="unicode-icon mr-1.5 text-teal-600">&#x1F4BE;</span> Restore All <span
+                        id="full-service-name" class="ml-1 font-bold">Gmail</span>
+                </button>
+            </div>
+            <button id="restore-btn"
+                class="px-6 py-2 bg-teal-600 text-white rounded-lg text-sm font-bold shadow-md opacity-50 cursor-not-allowed transition-all"
+                disabled onclick="executeRestore()">
+                Restore Selected
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast"
+        class="fixed bottom-4 right-4 bg-slate-800 text-white px-6 py-3 rounded-lg shadow-xl z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center">
+        <span class="unicode-icon mr-2 text-emerald-400">&#x2714;&#xFE0F;</span>
+        <span id="toast-msg" class="text-sm font-medium">Message</span>
+    </div>
+
+    <!-- Global Search Modal -->
+    <div id="global-search-modal" class="fixed inset-0 z-50 hidden flex items-start justify-center pt-20">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeGlobalSearch()"></div>
+        <div class="bg-white rounded-xl shadow-2xl z-10 w-full max-w-3xl mx-4 overflow-hidden border border-stone-200 flex flex-col transform transition-all scale-95 opacity-0"
+            id="search-modal-content">
+            <div class="p-4 border-b border-stone-100 flex items-center bg-white">
+                <span class="unicode-icon text-slate-400 text-xl mr-3">&#x1F50D;</span>
+                <input type="text" id="global-search-input"
+                    class="w-full text-lg border-none focus:outline-none focus:ring-0 text-slate-800 placeholder-slate-400"
+                    placeholder="Search across all vaults..." autocomplete="off">
+                <span
+                    class="text-xs text-slate-400 border border-slate-200 rounded px-1.5 py-0.5 font-mono bg-stone-50 ml-2 cursor-pointer hover:bg-stone-200"
+                    onclick="closeGlobalSearch()">ESC</span>
+            </div>
+            <div class="p-8 bg-stone-50 text-center flex flex-col items-center justify-center min-h-[200px]">
+                <div
+                    class="w-16 h-16 bg-white rounded-2xl shadow-sm border border-stone-200 flex items-center justify-center text-3xl unicode-icon mb-4 text-slate-300">
+                    &#x26A1;&#xFE0F;</div>
+                <h3 class="text-sm font-bold text-slate-700 mb-1">Instant Recovery Search</h3>
+                <p class="text-xs text-slate-500 max-w-xs">Start typing a file name, email address, or folder name to
+                    instantly locate it across Gmail, Drive, and Photos.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* --- STATE & ROUTING --- */
+        let currentServiceContext = '';
+
+        function navigateTo(viewId) {
+            document.querySelectorAll('.app-view').forEach(v => {
+                v.classList.remove('active');
+            });
+            document.getElementById(viewId).classList.add('active');
+
+            if (viewId === 'app-shell') {
+                showDashboard();
+            }
+        }
+
+        function showDashboard() {
+            document.querySelectorAll('main').forEach(m => { m.classList.remove('block'); m.classList.add('hidden'); });
+            document.getElementById('view-dashboard').classList.remove('hidden');
+            document.getElementById('view-dashboard').classList.add('block');
+            document.getElementById('topbar-breadcrumb').innerHTML = 'Dashboard';
+
+            // Update sidebar active state
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('nav-dashboard').classList.add('active');
+
+            // Render Chart if not exists
+            setTimeout(initDashChart, 100);
+        }
+
+        function showUsersGroups() {
+            document.querySelectorAll('main').forEach(m => { m.classList.remove('block'); m.classList.add('hidden'); });
+            document.getElementById('view-users').classList.remove('hidden');
+            document.getElementById('view-users').classList.add('block');
+            document.getElementById('topbar-breadcrumb').innerHTML = 'Users & Groups';
+
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('nav-users').classList.add('active');
+        }
+
+        function showAutoSync() {
+            document.querySelectorAll('main').forEach(m => { m.classList.remove('block'); m.classList.add('hidden'); });
+            document.getElementById('view-autosync').classList.remove('hidden');
+            document.getElementById('view-autosync').classList.add('block');
+            document.getElementById('topbar-breadcrumb').innerHTML = 'Auto-Sync Policies';
+
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('nav-autosync').classList.add('active');
+        }
+
+        /* --- NEW VIEW ROUTING FUNCTIONS --- */
+        function showRecovery() {
+            document.querySelectorAll('main').forEach(m => { m.classList.remove('block'); m.classList.add('hidden'); });
+            document.getElementById('view-recovery').classList.remove('hidden');
+            document.getElementById('view-recovery').classList.add('block');
+            document.getElementById('topbar-breadcrumb').innerHTML = 'Recovery & Restore';
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('nav-recovery').classList.add('active');
+        }
+
+        function showSecurity() {
+            document.querySelectorAll('main').forEach(m => { m.classList.remove('block'); m.classList.add('hidden'); });
+            document.getElementById('view-security').classList.remove('hidden');
+            document.getElementById('view-security').classList.add('block');
+            document.getElementById('topbar-breadcrumb').innerHTML = 'Security Center';
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('nav-security').classList.add('active');
+        }
+
+        function showAudit() {
+            document.querySelectorAll('main').forEach(m => { m.classList.remove('block'); m.classList.add('hidden'); });
+            document.getElementById('view-audit').classList.remove('hidden');
+            document.getElementById('view-audit').classList.add('block');
+            document.getElementById('topbar-breadcrumb').innerHTML = 'Audit Logs';
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('nav-audit').classList.add('active');
+        }
+
+        function showSettings() {
+            document.querySelectorAll('main').forEach(m => { m.classList.remove('block'); m.classList.add('hidden'); });
+            document.getElementById('view-settings').classList.remove('hidden');
+            document.getElementById('view-settings').classList.add('block');
+            document.getElementById('topbar-breadcrumb').innerHTML = 'Settings';
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('nav-settings').classList.add('active');
+        }
+
+        /* --- LOGIN / LOGOUT --- */
+        function loginUser() {
+            navigateTo('app-shell');
+        }
+
+        function logoutUser() {
+            showToast("Logging out securely...");
+            setTimeout(() => {
+                // Reset onboarding wizard
+                currentStep = 1;
+                updateWizardUI();
+                document.getElementById('sync-active-view').classList.remove('hidden');
+                document.getElementById('sync-success-view').classList.add('hidden');
+                document.getElementById('success-icon').classList.replace('scale-100', 'scale-0');
+
+                navigateTo('view-home');
+            }, 1000);
+        }
+
+        /* --- ONBOARDING WIZARD LOGIC --- */
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        function updateWizardUI() {
+            document.querySelectorAll('.step-container').forEach((el, i) => {
+                if (i + 1 === currentStep) {
+                    el.classList.add('active'); setTimeout(() => el.classList.add('fade-in'), 50);
+                } else {
+                    el.classList.remove('active', 'fade-in');
+                }
+            });
+            document.getElementById('progress-line').style.width = `${((currentStep - 1) / 3) * 100}%`;
+
+            document.querySelectorAll('.step-indicator').forEach(el => {
+                const step = parseInt(el.getAttribute('data-step'));
+                const circle = el.querySelector('div');
+                if (step < currentStep) {
+                    circle.className = 'w-8 h-8 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold text-sm';
+                    circle.innerHTML = '&#x2714;&#xFE0F;';
+                } else if (step === currentStep) {
+                    circle.className = 'w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-sm ring-4 ring-teal-100';
+                    circle.innerHTML = step;
+                } else {
+                    circle.className = 'w-8 h-8 rounded-full bg-stone-200 text-slate-500 flex items-center justify-center font-bold text-sm';
+                    circle.innerHTML = step;
+                }
+            });
+        }
+
+        function nextStep() { if (currentStep < totalSteps) { currentStep++; updateWizardUI(); } }
+        function prevStep() { if (currentStep > 1) { currentStep--; updateWizardUI(); } }
+
+        function simulateAuth() {
+            const btn = document.getElementById('auth-btn');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<div class="spinner mr-3"></div> Authenticating...';
+            btn.disabled = true;
+            setTimeout(() => {
+                btn.innerHTML = orig; btn.disabled = false;
+                showToast("OAuth Successful"); nextStep();
+            }, 1000);
+        }
+
+        function startInitialSync() {
+            nextStep();
+            const term = document.getElementById('terminal-logs');
+            term.innerHTML = '';
+            const logs = ["Connecting to APIs...", "Reading directory...", "Generating keys...", "Starting backup task..."];
+            let i = 0;
+            const logInterval = setInterval(() => {
+                if (i < logs.length) {
+                    term.innerHTML += `<p class="log-line text-stone-300">> ${logs[i]}</p>`;
+                    i++;
+                } else {
+                    clearInterval(logInterval);
+                    setTimeout(() => {
+                        document.getElementById('sync-active-view').classList.add('hidden');
+                        document.getElementById('sync-success-view').classList.remove('hidden');
+                        setTimeout(() => document.getElementById('success-icon').classList.replace('scale-0', 'scale-100'), 50);
+                    }, 500);
+                }
+            }, 600);
+        }
+
+        /* --- DASHBOARD CHART --- */
+        let dashChart = null;
+        function initDashChart() {
+            if (dashChart) return;
+            const ctx = document.getElementById('dashStorageChart').getContext('2d');
+            dashChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Drive', 'Gmail', 'Photos', 'Other'],
+                    datasets: [{
+                        data: [65, 25, 8, 2],
+                        backgroundColor: ['#3b82f6', '#ef4444', '#eab308', '#14b8a6'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: { position: 'right', labels: { usePointStyle: true, boxWidth: 8, font: { size: 11 } } }
+                    }
+                }
+            });
+        }
+
+        /* --- GLOBAL SEARCH LOGIC --- */
+        function openGlobalSearch() {
+            const modal = document.getElementById('global-search-modal');
+            const content = document.getElementById('search-modal-content');
+            modal.classList.remove('hidden');
+
+            // Animation
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+                document.getElementById('global-search-input').focus();
+            }, 10);
+        }
+
+        function closeGlobalSearch() {
+            const modal = document.getElementById('global-search-modal');
+            const content = document.getElementById('search-modal-content');
+
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // Global Keyboard Shortcut (Cmd/Ctrl + K)
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                openGlobalSearch();
+            }
+            if (e.key === 'Escape') {
+                closeGlobalSearch();
+                closeExplorer();
+            }
+        });
+
+        /* --- CONNECT NEW ACCOUNT FLOW --- */
+        function connectNewAccount() {
+            const btn = document.getElementById('connect-account-btn');
+            const orig = btn.innerHTML;
+
+            // 1. Simulate Google Auth Loading
+            btn.innerHTML = '<span class="unicode-icon animate-spin mr-2">&#x23F3;</span> Authenticating...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                // 2. Auth successful, reset button
+                btn.innerHTML = orig;
+                btn.disabled = false;
+
+                showToast("OAuth Successful! Fetching users from @globex.com...");
+
+                // 3. Inject the new users into the table with a slight delay
+                setTimeout(() => {
+                    const tbody = document.getElementById('users-table-body');
+                    const newRows = `
+                        <tr class="bg-blue-50/30 hover:bg-blue-50 transition-colors animate-[slideInLog_0.4s_forwards]">
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-slate-900 text-sm flex items-center">
+                                    David Miller <span class="ml-2 text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">New</span>
+                                </div>
+                                <div class="text-xs text-slate-500">d.miller@globex.com</div>
+                            </td>
+                            <td class="px-6 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-bold border border-blue-200 uppercase tracking-wider">@globex.com</span></td>
+                            <td class="px-6 py-4 text-sm text-slate-600 font-medium">Standard (Hourly)</td>
+                            <td class="px-6 py-4"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-bold flex items-center w-max"><span class="unicode-icon mr-1.5 text-xs">&#x23F3;</span> Initial Syncing...</span></td>
+                            <td class="px-6 py-4 text-right text-sm text-slate-600 font-medium">0 B</td>
+                            <td class="px-6 py-4 text-right text-sm font-medium">
+                                <button class="text-teal-600 bg-stone-100 px-3 py-1.5 rounded transition-colors border border-stone-200 flex items-center justify-end w-full sm:w-auto ml-auto opacity-50 cursor-not-allowed" disabled>
+                                    <span class="unicode-icon mr-1.5">&#x23EA;</span> Full Restore
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="bg-blue-50/30 hover:bg-blue-50 transition-colors animate-[slideInLog_0.4s_forwards]" style="animation-delay: 100ms">
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-slate-900 text-sm">Globex Operations</div>
+                                <div class="text-xs text-slate-500">ops@globex.com</div>
+                            </td>
+                            <td class="px-6 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-bold border border-blue-200 uppercase tracking-wider">@globex.com</span></td>
+                            <td class="px-6 py-4 text-sm text-slate-400 font-medium">None</td>
+                            <td class="px-6 py-4"><span class="px-2 py-1 bg-stone-100 text-stone-500 rounded-full text-xs font-bold flex items-center w-max"><div class="w-1.5 h-1.5 rounded-full bg-stone-400 mr-1.5"></div>Unprotected</span></td>
+                            <td class="px-6 py-4 text-right text-sm text-slate-600 font-medium">0 B</td>
+                            <td class="px-6 py-4 text-right text-sm font-medium">
+                                <button class="text-teal-600 bg-stone-100 px-3 py-1.5 rounded transition-colors border border-stone-200 flex items-center justify-end w-full sm:w-auto ml-auto opacity-50 cursor-not-allowed" disabled>
+                                    <span class="unicode-icon mr-1.5">&#x23EA;</span> Full Restore
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    // Insert at top of table
+                    tbody.insertAdjacentHTML('afterbegin', newRows);
+                    showToast("Successfully added 2 new entities from @globex.com");
+                }, 1500);
+
+            }, 1200);
+        }
+
+        /* --- STREAMING_CHUNK: Service Vault Logic & Dynamic Previews --- */
+        const serviceIcons = { 'Gmail': '&#x1F4E7;', 'Drive': '&#x1F4C2;', 'Photos': '&#x1F3DD;&#xFE0F;', 'Contacts': '&#x1F464;', 'Calendar': '&#x1F4C5;' };
+        const mockUsers = [
+            { name: "Sarah Jenkins", email: "s.jenkins@acme.com", size: "14.2 GB", initials: "SJ", color: "indigo" },
+            { name: "Marcus Doe", email: "m.doe@acme.com", size: "5.1 GB", initials: "MD", color: "amber" },
+            { name: "Global Marketing", email: "shared-drive", size: "450 GB", initials: "GM", color: "blue" }
+        ];
+
+        function openServiceVault(service) {
+            currentServiceContext = service;
+
+            // Switch UI
+            document.querySelectorAll('main').forEach(m => { m.classList.remove('block'); m.classList.add('hidden'); });
+            document.getElementById('view-vault').classList.remove('hidden');
+            document.getElementById('view-vault').classList.add('block');
+
+            // Update Headers
+            document.getElementById('topbar-breadcrumb').innerHTML = `<span class="text-slate-400 cursor-pointer hover:text-teal-600" onclick="showDashboard()">Dashboard</span> <span class="mx-2 text-slate-300">/</span> ${service} Vault`;
+            document.getElementById('vault-title').innerHTML = `<span class="unicode-icon mr-2">${serviceIcons[service]}</span> ${service} Backups`;
+
+            // Update Sidebar (Clear active states since specific vault links are removed)
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+
+            // Populate Table
+            const tbody = document.getElementById('vault-table-body');
+            tbody.innerHTML = '';
+            mockUsers.forEach(u => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-stone-100 cursor-pointer transition-colors" onclick="openUserVault('${u.name}', '${u.email}', '${service}')">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <div class="h-8 w-8 rounded-full bg-${u.color}-100 flex items-center justify-center text-${u.color}-700 font-bold text-xs mr-3">${u.initials}</div>
+                                <div><div class="text-sm font-bold text-slate-900">${u.name}</div><div class="text-xs text-slate-500">${u.email}</div></div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-600 font-medium">${service === 'Contacts' || service === 'Calendar' ? 'Under 1 GB' : u.size}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600"><span class="unicode-icon text-emerald-500 mr-1">&#x2714;&#xFE0F;</span> Today</td>
+                        <td class="px-6 py-4 text-right"><button class="text-teal-600 text-sm font-medium hover:underline">Browse</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        /* --- EXPLORER & RESTORE LOGIC --- */
+        let selectedItems = 0;
+        let currentExplorerUser = { name: '', email: '' };
+
+        function openUserVault(name, email, defaultService = 'Gmail') {
+            currentExplorerUser = { name, email };
+            document.getElementById('exp-name').innerText = name;
+
+            document.getElementById('explorer-overlay').classList.add('open');
+            document.getElementById('explorer-panel').classList.add('open');
+
+            // Initialize with the requested service tab
+            switchVaultTab(defaultService);
+        }
+
+        function switchVaultTab(service) {
+            currentServiceContext = service;
+
+            // 1. Update Tab UI styling
+            document.querySelectorAll('.vault-tab').forEach(tab => {
+                if (tab.getAttribute('data-service') === service) {
+                    tab.className = "vault-tab active py-3 text-sm font-bold text-teal-600 border-b-2 border-teal-600 whitespace-nowrap transition-colors";
+                } else {
+                    tab.className = "vault-tab py-3 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent whitespace-nowrap transition-colors";
+                }
+            });
+
+            // 2. Update Header Icon & Service Level Restore Button
+            document.getElementById('exp-icon').innerHTML = serviceIcons[service];
+            document.getElementById('full-service-name').innerText = service;
+
+            // 3. Clear content & reset selections
+            const contentArea = document.getElementById('explorer-content');
+            contentArea.innerHTML = '';
+            selectedItems = 0;
+            updateRestoreBtn();
+
+            // 4. Generate appropriate UI
+            if (service === 'Gmail') {
+                contentArea.innerHTML = generateGmailPreview();
+            } else if (service === 'Drive') {
+                contentArea.innerHTML = generateDrivePreview();
+            } else if (service === 'Photos') {
+                contentArea.innerHTML = generatePhotosPreview();
+            } else if (service === 'Contacts') {
+                contentArea.innerHTML = generateContactsPreview();
+            } else if (service === 'Calendar') {
+                contentArea.innerHTML = generateCalendarPreview();
+            }
+        }
+
+        function closeExplorer() {
+            document.getElementById('explorer-overlay').classList.remove('open');
+            document.getElementById('explorer-panel').classList.remove('open');
+        }
+
+        // Preview Generators
+        function generateGmailPreview() {
+            const user = currentExplorerUser.email || 'user@domain.com';
+            let html = `<div id="gmail-list-view">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Inbox Archive: ${user}</div>
+                <div class="space-y-2">`;
+            const emails = [
+                { s: "Invoice #4021 - APPROVED", f: "billing@vendor.com", d: "Oct 24" },
+                { s: "Q3 Project Updates & Timelines", f: "team@acme.com", d: "Oct 23" },
+                { s: "Client Presentation attached", f: "j.doe@client.com", d: "Oct 22" },
+                { s: "Action Required: Security Training", f: "it-sec@acme.com", d: "Oct 21" }
+            ];
+            emails.forEach(e => {
+                html += `
+                    <div class="flex items-start p-3 bg-white border border-stone-200 rounded-lg hover:border-teal-300 transition-all shadow-sm group">
+                        <div class="pt-0.5 pr-3 cursor-pointer" onclick="event.stopPropagation()">
+                            <input type="checkbox" class="w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500" onchange="toggleItem(this)">
+                        </div>
+                        <div class="flex-1 cursor-pointer" onclick="openEmailPreview('${e.s}', '${e.f}', '${e.d}', '${user}')">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-sm text-slate-800 group-hover:text-teal-700 transition-colors">${e.f}</span>
+                                <span class="text-xs font-medium text-slate-400 bg-stone-50 px-2 py-0.5 rounded border border-stone-100">${e.d}</span>
+                            </div>
+                            <div class="text-sm text-slate-600 truncate flex items-center">
+                                <span class="w-2 h-2 rounded-full bg-blue-400 mr-2"></span> ${e.s}
+                            </div>
+                            <div class="text-[10px] text-slate-400 mt-1">To: ${user}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += `</div></div><div id="gmail-preview-view" class="hidden"></div>`;
+            return html;
+        }
+
+        function openEmailPreview(subject, from, date, to) {
+            document.getElementById('gmail-list-view').classList.add('hidden');
+            const preview = document.getElementById('gmail-preview-view');
+
+            // Generate a realistic mock email body based on the sender
+            let body = "Hi there,<br><br>Please find the requested information attached to this email. If you need any further modifications before the deadline, let me know.<br><br>Let's schedule a quick sync later this week to go over the final details.<br><br>Best regards,<br>" + from.split('@')[0];
+
+            preview.innerHTML = `
+                <div class="mb-4">
+                    <button onclick="closeEmailPreview()" class="text-sm text-slate-500 hover:text-teal-600 font-bold flex items-center transition-colors bg-white px-3 py-1.5 rounded-lg border border-stone-200 shadow-sm">
+                        <span class="unicode-icon mr-2">&#x2190;</span> Back to Inbox
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden animate-[slideInLog_0.3s_forwards]">
+                    <div class="p-6 border-b border-stone-100">
+                        <h2 class="text-xl font-bold text-slate-900 mb-4">${subject}</h2>
+                        <div class="flex justify-between items-start">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-500 font-bold mr-3 border border-stone-200 text-sm">
+                                    ${from.charAt(0).toUpperCase()}
+                                </div>
+                                <div>
+                                    <div class="font-bold text-sm text-slate-800">${from}</div>
+                                    <div class="text-xs text-slate-500">To: ${to}</div>
+                                </div>
+                            </div>
+                            <div class="text-xs font-medium text-slate-400 bg-stone-50 px-2 py-1 rounded border border-stone-100">${date}</div>
+                        </div>
+                    </div>
+                    <div class="p-6 text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
+                        ${body}
+                    </div>
+                    <div class="p-4 bg-stone-50 border-t border-stone-100">
+                        <button onclick="executeSingleRestore(event, '${subject}')" class="bg-teal-50 text-teal-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-teal-100 transition-colors border border-teal-200 flex items-center">
+                            <span class="unicode-icon mr-2">&#x23EA;</span> Restore this Email
+                        </button>
+                    </div>
+                </div>
+            `;
+            preview.classList.remove('hidden');
+        }
+
+        function closeEmailPreview() {
+            document.getElementById('gmail-preview-view').classList.add('hidden');
+            document.getElementById('gmail-list-view').classList.remove('hidden');
+        }
+
+        function executeSingleRestore(event, item) {
+            const btn = event.currentTarget;
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<span class="unicode-icon animate-spin mr-2">&#x23F3;</span> Restoring...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                showToast(`Restored "${item}" back to live Gmail successfully.`);
+                btn.innerHTML = orig;
+                btn.disabled = false;
+            }, 1200);
+        }
+
+        function generateDrivePreview() {
+            const name = currentExplorerUser.name || 'User';
+            let html = `<div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">My Drive: ${name}</div>
+                        <table class="w-full text-left text-sm bg-white rounded-lg border border-stone-200 overflow-hidden shadow-sm">
+                            <thead class="bg-stone-50 border-b border-stone-100">
+                                <tr>
+                                    <th class="p-3 w-10"></th>
+                                    <th class="p-3 font-bold text-slate-500">File Name</th>
+                                    <th class="p-3 font-bold text-slate-500 text-right">Size</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+            const files = [
+                { n: `${name.split(' ')[0]}_Q4_Objectives.xlsx`, i: "&#x1F4CA;", s: "2.4 MB" },
+                { n: "Project_Alpha_Assets.zip", i: "&#x1F4C1;", s: "1.2 GB" },
+                { n: "Contract_Draft_v2.docx", i: "&#x1F4DD;", s: "45 KB" },
+                { n: "Q3_Review_Deck.pptx", i: "&#x1F4C8;", s: "15.8 MB" }
+            ];
+            files.forEach(f => {
+                html += `
+                    <tr class="border-b border-stone-100 hover:bg-teal-50 cursor-pointer transition-colors group" onclick="const cb = this.querySelector('input'); cb.checked = !cb.checked; toggleItem(cb)">
+                        <td class="p-3" onclick="event.stopPropagation()"><input type="checkbox" class="w-4 h-4 text-teal-600 rounded border-stone-300 focus:ring-teal-500" onchange="toggleItem(this)"></td>
+                        <td class="p-3 flex items-center"><span class="unicode-icon mr-3 text-lg text-slate-500 group-hover:text-teal-600 transition-colors">${f.i}</span><span class="font-medium text-slate-700">${f.n}</span></td>
+                        <td class="p-3 text-slate-400 text-right font-medium">${f.s}</td>
+                    </tr>
+                `;
+            });
+            return html + '</tbody></table>';
+        }
+
+        function generatePhotosPreview() {
+            const name = currentExplorerUser.name || 'User';
+            let html = `<div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Media Backups: ${name}</div><div class="photo-grid">`;
+            const colors = ['#fca5a5', '#93c5fd', '#86efac', '#fde047', '#d8b4fe', '#fdba74'];
+            for (let i = 0; i < 6; i++) {
+                // Using placehold.co for more realistic thumbnail previews
+                html += `<div class="photo-item shadow-sm hover:shadow-md transition-shadow" style="background-image: url('https://placehold.co/150x150/${colors[i].replace('#', '')}/white?text=IMG_00${i + 1}')" onclick="togglePhoto(this)"></div>`;
+            }
+            return html + '</div>';
+        }
+
+        function generateContactsPreview() {
+            const email = currentExplorerUser.email || 'user@domain.com';
+            let html = `<div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Address Book: ${email}</div><div class="grid grid-cols-1 md:grid-cols-2 gap-3">`;
+            const contacts = ["Client Contact A", "Vendor Support", "Marketing Agency", "Board Member D"];
+            contacts.forEach((c, i) => {
+                html += `
+                    <label class="flex p-4 bg-white border border-stone-200 rounded-lg cursor-pointer hover:border-teal-300 hover:shadow-sm transition-all items-center">
+                        <input type="checkbox" class="mr-4 w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500" onchange="toggleItem(this)">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-500 font-bold mr-3 border border-stone-200 text-xs">${c.charAt(0)}</div>
+                            <div>
+                                <div class="font-bold text-sm text-slate-800">${c}</div>
+                                <div class="text-xs text-slate-500 mt-0.5">contact${i + 1}@external.com</div>
+                            </div>
+                        </div>
+                    </label>
+                `;
+            });
+            return html + '</div>';
+        }
+
+        function generateCalendarPreview() {
+            const email = currentExplorerUser.email || 'user@domain.com';
+            let html = `<div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Schedule Sync: ${email}</div><div class="space-y-3">`;
+            const events = [
+                { t: "Q4 Planning Onsite", d: "Oct 25, 10:00 AM - 11:30 AM", c: "bg-teal-500" },
+                { t: "Weekly Sync w/ Agency", d: "Oct 26, 2:00 PM - 3:00 PM", c: "bg-blue-500" },
+                { t: "Client Kickoff Call", d: "Oct 27, 9:00 AM - 10:00 AM", c: "bg-purple-500" }
+            ];
+            events.forEach(e => {
+                html += `
+                    <label class="flex p-4 bg-white border border-stone-200 rounded-lg cursor-pointer hover:border-teal-300 transition-all items-center shadow-sm relative overflow-hidden">
+                        <div class="absolute left-0 top-0 w-1.5 h-full ${e.c}"></div>
+                        <input type="checkbox" class="ml-2 mr-4 w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500" onchange="toggleItem(this)">
+                        <div class="w-full">
+                            <div class="font-bold text-sm text-slate-800 mb-1">${e.t}</div>
+                            <div class="text-xs text-slate-500 flex items-center">
+                                <span class="unicode-icon mr-1.5 text-[10px]">&#x1F551;</span> ${e.d}
+                            </div>
+                        </div>
+                    </label>
+                `;
+            });
+            return html + '</div>';
+        }
+
+        // Selection Handlers
+        function toggleItem(checkbox) {
+            selectedItems += checkbox.checked ? 1 : -1;
+            updateRestoreBtn();
+        }
+
+        function togglePhoto(element) {
+            element.classList.toggle('selected');
+            selectedItems += element.classList.contains('selected') ? 1 : -1;
+            updateRestoreBtn();
+        }
+
+        function updateRestoreBtn() {
+            document.getElementById('selected-count').innerText = selectedItems;
+            const btn = document.getElementById('restore-btn');
+            if (selectedItems > 0) {
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btn.disabled = false;
+            } else {
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                btn.disabled = true;
+            }
+        }
+
+        function executeRestore() {
+            const btn = document.getElementById('restore-btn');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<span class="unicode-icon animate-spin mr-2">&#x23F3;</span> Restoring...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                closeExplorer();
+                showToast(`Restored ${selectedItems} items back to live ${currentServiceContext} successfully.`);
+                btn.innerHTML = orig;
+            }, 1200);
+        }
+
+        function executeFullUserRestore(event, userName) {
+            event.stopPropagation(); // Prevents the explorer panel from opening
+            const btn = event.currentTarget;
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<span class="unicode-icon animate-spin mr-1.5">&#x23F3;</span> Initiating...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                showToast(`Initiated full recovery for ALL services belonging to ${userName}. Task added to queue.`);
+                btn.innerHTML = orig;
+                btn.disabled = false;
+            }, 1500);
+        }
+
+        function executeFullServiceRestore() {
+            const btn = document.getElementById('restore-full-service-btn');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<span class="unicode-icon animate-spin mr-1.5">&#x23F3;</span> Restoring Vault...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                closeExplorer();
+                showToast(`Restored ENTIRE ${currentServiceContext} vault for ${currentExplorerUser.name} successfully.`);
+                btn.innerHTML = orig;
+                btn.disabled = false;
+            }, 1500);
+        }
+
+        /* --- UTILITIES --- */
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
+        }
+
+    </script>
+</body>
+
+</html>
