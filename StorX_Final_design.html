@@ -656,7 +656,7 @@
                     </div>
                     <!-- Notifications (Bell Icon) -->
                     <div class="relative cursor-pointer text-slate-500 hover:text-slate-700 transition-colors flex items-center justify-center h-8 w-8 rounded-full hover:bg-stone-100"
-                        title="Notifications">
+                        title="Notifications" onclick="showNotifications()">
                         <span class="unicode-icon text-lg">&#x1F514;</span>
                         <span
                             class="absolute top-1.5 right-1 w-2 h-2 bg-rose-500 rounded-full border border-white"></span>
@@ -674,9 +674,9 @@
                                     User<br><span class="text-xs text-slate-400">admin@acme.com</span></div>
                                 <!-- <a href="#"
                                     class="block px-4 py-2 text-sm text-slate-700 hover:bg-stone-50 transition-colors">Access</a> -->
-                                <a href="#"
+                                <a href="#" onclick="showResources()"
                                     class="block px-4 py-2 text-sm text-slate-700 hover:bg-stone-50 transition-colors">Resources</a>
-                                <a href="#"
+                                <a href="#" onclick="showBilling()"
                                     class="block px-4 py-2 text-sm text-slate-700 hover:bg-stone-50 transition-colors border-b border-stone-100">Billing</a>
                                 <a href="#" onclick="logoutUser()"
                                     class="block px-4 py-2 text-sm text-rose-600 hover:bg-stone-50">Log out</a>
@@ -808,7 +808,7 @@
                     <!-- Gmail Card -->
                     <div
                         class="bg-white rounded-xl border border-stone-200 p-0 shadow-sm service-card flex flex-col overflow-hidden">
-                        <div class="p-4 flex-1 cursor-pointer" onclick="openServiceVault('Gmail')">
+                        <div class="p-4 flex-1 cursor-pointer" onclick="showUsersGroups()">
                             <div class="flex justify-between items-start mb-3">
                                 <div
                                     class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center border border-red-100">
@@ -824,7 +824,7 @@
                             <div class="text-xs text-slate-500 mt-1">2.1 TB &bull; 124 Mailboxes</div>
                         </div>
                         <div class="border-t border-stone-100 bg-stone-50/50 p-2 flex gap-2">
-                            <button onclick="openServiceVault('Gmail')"
+                            <button onclick="showUsersGroups()"
                                 class="flex-1 bg-white border border-stone-200 hover:border-teal-300 hover:text-teal-700 text-slate-600 text-xs font-bold py-2 rounded-lg transition-colors text-center shadow-sm">
                                 Browse & Restore
                             </button>
@@ -834,7 +834,7 @@
                     <!-- Drive Card -->
                     <div
                         class="bg-white rounded-xl border border-stone-200 p-0 shadow-sm service-card flex flex-col overflow-hidden">
-                        <div class="p-4 flex-1 cursor-pointer" onclick="openServiceVault('Drive')">
+                        <div class="p-4 flex-1 cursor-pointer" onclick="showUsersGroups()">
                             <div class="flex justify-between items-start mb-3">
                                 <div
                                     class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center border border-blue-100">
@@ -850,7 +850,7 @@
                             <div class="text-xs text-slate-500 mt-1">5.8 TB &bull; 124 Drives</div>
                         </div>
                         <div class="border-t border-stone-100 bg-stone-50/50 p-2 flex gap-2">
-                            <button onclick="openServiceVault('Drive')"
+                            <button onclick="showUsersGroups()"
                                 class="flex-1 bg-white border border-stone-200 hover:border-teal-300 hover:text-teal-700 text-slate-600 text-xs font-bold py-2 rounded-lg transition-colors text-center shadow-sm">
                                 Browse & Restore
                             </button>
@@ -860,7 +860,7 @@
                     <!-- Photos Card -->
                     <div
                         class="bg-white rounded-xl border border-stone-200 p-0 shadow-sm service-card flex flex-col overflow-hidden">
-                        <div class="p-4 flex-1 cursor-pointer" onclick="openServiceVault('Photos')">
+                        <div class="p-4 flex-1 cursor-pointer" onclick="showUsersGroups()">
                             <div class="flex justify-between items-start mb-3">
                                 <div
                                     class="w-10 h-10 rounded-lg bg-yellow-50 flex items-center justify-center border border-yellow-100">
@@ -876,7 +876,7 @@
                             <div class="text-xs text-slate-500 mt-1">450 GB &bull; 42 Accounts</div>
                         </div>
                         <div class="border-t border-stone-100 bg-stone-50/50 p-2 flex gap-2">
-                            <button onclick="openServiceVault('Photos')"
+                            <button onclick="showUsersGroups()"
                                 class="flex-1 bg-white border border-stone-200 hover:border-teal-300 hover:text-teal-700 text-slate-600 text-xs font-bold py-2 rounded-lg transition-colors text-center shadow-sm">
                                 Browse & Restore
                             </button>
@@ -886,7 +886,7 @@
                     <!-- Contacts Card -->
                     <div
                         class="bg-white rounded-xl border border-stone-200 p-0 shadow-sm service-card flex flex-col overflow-hidden">
-                        <div class="p-4 flex-1 cursor-pointer" onclick="openServiceVault('Contacts')">
+                        <div class="p-4 flex-1 cursor-pointer" onclick="showUsersGroups()">
                             <div class="flex justify-between items-start mb-3">
                                 <div
                                     class="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center border border-indigo-100">
@@ -902,7 +902,7 @@
                             <div class="text-xs text-slate-500 mt-1">2 GB &bull; 124 Dirs</div>
                         </div>
                         <div class="border-t border-stone-100 bg-stone-50/50 p-2 flex gap-2">
-                            <button onclick="openServiceVault('Contacts')"
+                            <button onclick="showUsersGroups()"
                                 class="flex-1 bg-white border border-stone-200 hover:border-teal-300 hover:text-teal-700 text-slate-600 text-xs font-bold py-2 rounded-lg transition-colors text-center shadow-sm">
                                 Browse & Restore
                             </button>
@@ -912,7 +912,7 @@
                     <!-- Calendar Card -->
                     <div
                         class="bg-white rounded-xl border border-stone-200 p-0 shadow-sm service-card flex flex-col overflow-hidden">
-                        <div class="p-4 flex-1 cursor-pointer" onclick="openServiceVault('Calendar')">
+                        <div class="p-4 flex-1 cursor-pointer" onclick="showUsersGroups()">
                             <div class="flex justify-between items-start mb-3">
                                 <div
                                     class="w-10 h-10 rounded-lg bg-teal-50 flex items-center justify-center border border-teal-100">
@@ -928,7 +928,7 @@
                             <div class="text-xs text-slate-500 mt-1">5 GB &bull; 124 Cals</div>
                         </div>
                         <div class="border-t border-stone-100 bg-stone-50/50 p-2 flex gap-2">
-                            <button onclick="openServiceVault('Calendar')"
+                            <button onclick="showUsersGroups()"
                                 class="flex-1 bg-white border border-stone-200 hover:border-teal-300 hover:text-teal-700 text-slate-600 text-xs font-bold py-2 rounded-lg transition-colors text-center shadow-sm">
                                 Browse & Restore
                             </button>
@@ -1097,6 +1097,12 @@
                                     <div class="font-bold text-slate-900 text-sm group-hover:text-teal-700">Executive
                                         Team</div>
                                     <div class="text-xs text-slate-500">execs@acme.com</div>
+                                    <div class="flex gap-1.5 mt-1">
+                                        <span title="Gmail" class="text-xs unicode-icon">&#x1F4E7;</span>
+                                        <span title="Drive" class="text-xs unicode-icon">&#x1F4C2;</span>
+                                        <span title="Contacts & Calendar" class="text-xs unicode-icon">&#x1F464;</span>
+                                        <span title="Photos" class="text-xs unicode-icon">&#x1F3DD;&#xFE0F;</span>
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4"><span
                                         class="px-2 py-1 bg-stone-100 text-stone-600 rounded text-[10px] font-bold border border-stone-200 uppercase tracking-wider">@acme.com</span>
@@ -1120,6 +1126,11 @@
                                     <div class="font-bold text-slate-900 text-sm group-hover:text-teal-700">Sarah
                                         Jenkins</div>
                                     <div class="text-xs text-slate-500">s.jenkins@acme.com</div>
+                                    <div class="flex gap-1.5 mt-1">
+                                        <span title="Gmail" class="text-xs unicode-icon">&#x1F4E7;</span>
+                                        <span title="Drive" class="text-xs unicode-icon">&#x1F4C2;</span>
+                                        <span title="Contacts & Calendar" class="text-xs unicode-icon">&#x1F464;</span>
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4"><span
                                         class="px-2 py-1 bg-stone-100 text-stone-600 rounded text-[10px] font-bold border border-stone-200 uppercase tracking-wider">@acme.com</span>
@@ -1555,25 +1566,6 @@
                                         Profile</button>
                                 </div>
                             </div>
-
-                            <!-- Social Accounts -->
-                            <div class="border-t border-stone-100 pt-6">
-                                <h3 class="text-sm font-bold text-slate-800 mb-3">Connected Social Accounts</h3>
-                                <div class="flex flex-wrap gap-4">
-                                    <button
-                                        class="bg-white border border-stone-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-stone-50 transition-colors shadow-sm flex items-center">
-                                        <span class="unicode-icon mr-2">&#x1F1EC;</span> Google (Connected)
-                                    </button>
-                                    <button
-                                        class="bg-white border border-stone-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-stone-50 transition-colors shadow-sm flex items-center">
-                                        <span class="unicode-icon mr-2">&#x1F517;</span> Add Microsoft
-                                    </button>
-                                    <button
-                                        class="bg-white border border-stone-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-stone-50 transition-colors shadow-sm flex items-center">
-                                        <span class="unicode-icon mr-2">&#x1F4BB;</span> Add GitHub
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     </div>
 
@@ -1771,6 +1763,232 @@
                                     <input type="radio" disabled class="mr-2"> Bring Your Own Key (BYOK) - Enterprise
                                     Plan Required
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Resources Content -->
+            <main id="view-resources" class="flex-1 overflow-y-auto bg-stone-50 p-4 sm:p-6 lg:p-8 w-full h-full hidden">
+                <div class="max-w-5xl mx-auto">
+                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Resources & Support</h1>
+                    <p class="text-sm text-slate-500 mb-8">Get help with StorX, access API documentation, and join our
+                        community.</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div
+                            class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center text-2xl shrink-0">
+                                <span class="unicode-icon">&#x1F4DA;</span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-lg mb-1">Knowledge Base</h3>
+                                <p class="text-sm text-slate-500 mb-3">Browse articles, tutorials, and configuration
+                                    guides for StorX admins.</p>
+                                <span class="text-teal-600 font-bold text-sm">Browse Articles &rarr;</span>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl shrink-0">
+                                <span class="unicode-icon">&#x1F4BB;</span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-lg mb-1">API Documentation</h3>
+                                <p class="text-sm text-slate-500 mb-3">Integrate StorX into your own workflows using our
+                                    RESTful APIs.</p>
+                                <span class="text-indigo-600 font-bold text-sm">View API Docs &rarr;</span>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-2xl shrink-0">
+                                <span class="unicode-icon">&#x1F399;&#xFE0F;</span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-lg mb-1">Contact Support</h3>
+                                <p class="text-sm text-slate-500 mb-3">Open a ticket with our 24/7 technical support
+                                    engineering team.</p>
+                                <span class="text-rose-600 font-bold text-sm">Open a Ticket &rarr;</span>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-2xl shrink-0">
+                                <span class="unicode-icon">&#x1F4AC;</span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-lg mb-1">Community Forum</h3>
+                                <p class="text-sm text-slate-500 mb-3">Connect with other IT admins, share tips, and
+                                    request new features.</p>
+                                <span class="text-amber-600 font-bold text-sm">Join the Discussion &rarr;</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Billing Content -->
+            <main id="view-billing" class="flex-1 overflow-y-auto bg-stone-50 p-4 sm:p-6 lg:p-8 w-full h-full hidden">
+                <div class="max-w-5xl mx-auto">
+                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Billing & Subscriptions</h1>
+                    <p class="text-sm text-slate-500 mb-8">Manage your current plan, view invoices, and update payment
+                        methods.</p>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                        <div
+                            class="bg-white p-6 rounded-xl border border-teal-200 shadow-sm lg:col-span-2 relative overflow-hidden">
+                            <div class="absolute left-0 top-0 w-1 h-full bg-teal-500"></div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">Enterprise Plan
+                                        <span
+                                            class="bg-teal-100 text-teal-800 text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">Free
+                                            Trial</span>
+                                    </h3>
+                                    <p class="text-sm text-slate-500 mt-1">Unlimited storage, continuous backup (CDP),
+                                        and 24/7 support.</p>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-3xl font-extrabold text-slate-900">$4.50</div>
+                                    <div class="text-xs text-slate-500">/ user / month</div>
+                                </div>
+                            </div>
+                            <div
+                                class="bg-stone-50 p-4 rounded-lg border border-stone-200 flex justify-between items-center mb-6">
+                                <div class="flex items-center gap-3">
+                                    <span class="unicode-icon text-rose-500 text-xl">&#x23F3;</span>
+                                    <div>
+                                        <div class="text-sm font-bold text-slate-800">Trial expires in 14 days</div>
+                                        <div class="text-xs text-slate-500">Upgrade to maintain continuous protection.
+                                        </div>
+                                    </div>
+                                </div>
+                                <button
+                                    class="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 transition-colors">Upgrade
+                                    Now</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                            <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-4">Payment Method
+                            </h3>
+                            <div class="flex items-center gap-3 mb-4 p-3 border border-stone-200 rounded-lg">
+                                <div
+                                    class="w-10 h-6 bg-slate-200 rounded text-slate-500 font-bold text-[10px] flex items-center justify-center">
+                                    VISA</div>
+                                <div>
+                                    <div class="text-sm font-bold text-slate-900">•••• •••• •••• 4242</div>
+                                    <div class="text-xs text-slate-500">Expires 12/28</div>
+                                </div>
+                            </div>
+                            <button
+                                class="w-full bg-white border border-stone-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-stone-50 transition-colors">Update
+                                Card</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden">
+                        <div class="p-5 border-b border-stone-100 bg-stone-50">
+                            <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Billing History</h3>
+                        </div>
+                        <table class="min-w-full divide-y divide-stone-200">
+                            <thead class="bg-white">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Invoice
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Amount
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Status
+                                    </th>
+                                    <th class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase">Download
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-stone-100">
+                                <tr class="hover:bg-stone-50">
+                                    <td class="px-6 py-4 text-sm text-slate-500">May 01, 2026</td>
+                                    <td class="px-6 py-4 text-sm font-medium text-slate-900">INV-2026-05</td>
+                                    <td class="px-6 py-4 text-sm text-slate-600">$0.00 (Trial)</td>
+                                    <td class="px-6 py-4"><span
+                                            class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded font-bold uppercase">Paid</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right"><button
+                                            class="text-teal-600 hover:text-teal-800 font-bold text-sm"><span
+                                                class="unicode-icon">&#x2B07;&#xFE0F;</span> PDF</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Notifications Content -->
+            <main id="view-notifications"
+                class="flex-1 overflow-y-auto bg-stone-50 p-4 sm:p-6 lg:p-8 w-full h-full hidden">
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h1 class="text-2xl font-bold text-slate-900">Notifications</h1>
+                            <p class="text-sm text-slate-500 mt-1">Review alerts, system events, and backup status
+                                reports.</p>
+                        </div>
+                        <button class="text-sm font-bold text-teal-600 hover:text-teal-800 transition-colors">Mark all
+                            as read</button>
+                    </div>
+                    <div class="space-y-4">
+                        <div
+                            class="bg-white border border-rose-200 p-5 rounded-xl shadow-sm flex items-start gap-4 relative overflow-hidden">
+                            <div class="absolute left-0 top-0 w-1 h-full bg-rose-500"></div>
+                            <div
+                                class="w-10 h-10 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center text-xl shrink-0">
+                                <span class="unicode-icon">&#x26A0;&#xFE0F;</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-slate-900 text-base">Ransomware Anomaly Detected</h3>
+                                    <span class="text-xs text-slate-400">3 hours ago</span>
+                                </div>
+                                <p class="text-sm text-slate-600 mt-1 mb-3">Unusual mass deletion activity observed in
+                                    Marketing Shared Drive. Auto-sync suspended.</p>
+                                <button onclick="showSecurity()"
+                                    class="bg-rose-50 text-rose-700 px-4 py-2 rounded-lg text-xs font-bold hover:bg-rose-100 transition-colors border border-rose-200">Review
+                                    Incident</button>
+                            </div>
+                        </div>
+                        <div class="bg-white border border-stone-200 p-5 rounded-xl shadow-sm flex items-start gap-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center text-xl shrink-0">
+                                <span class="unicode-icon">&#x1F4BE;</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-slate-900 text-base">Full Tenant Sync Completed</h3>
+                                    <span class="text-xs text-slate-400">Yesterday, 11:30 PM</span>
+                                </div>
+                                <p class="text-sm text-slate-600 mt-1">Successfully backed up 124 accounts and 3 shared
+                                    drives (Total: 4.2 TB processed).</p>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-white border border-stone-200 p-5 rounded-xl shadow-sm flex items-start gap-4 opacity-75">
+                            <div
+                                class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xl shrink-0">
+                                <span class="unicode-icon">&#x1F465;</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-slate-900 text-base">New Users Auto-Protected</h3>
+                                    <span class="text-xs text-slate-400">Oct 22, 09:15 AM</span>
+                                </div>
+                                <p class="text-sm text-slate-600 mt-1">Detected 2 new Google Workspace accounts. They
+                                    have been assigned the default "Hourly" sync policy.</p>
                             </div>
                         </div>
                     </div>
@@ -2100,6 +2318,30 @@
             document.getElementById('nav-settings').classList.add('active');
         }
 
+        function showResources() {
+            document.querySelectorAll('main').forEach(m => { m.classList.remove('block'); m.classList.add('hidden'); });
+            document.getElementById('view-resources').classList.remove('hidden');
+            document.getElementById('view-resources').classList.add('block');
+            document.getElementById('topbar-breadcrumb').innerHTML = 'Resources';
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+        }
+
+        function showBilling() {
+            document.querySelectorAll('main').forEach(m => { m.classList.remove('block'); m.classList.add('hidden'); });
+            document.getElementById('view-billing').classList.remove('hidden');
+            document.getElementById('view-billing').classList.add('block');
+            document.getElementById('topbar-breadcrumb').innerHTML = 'Billing & Subscriptions';
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+        }
+
+        function showNotifications() {
+            document.querySelectorAll('main').forEach(m => { m.classList.remove('block'); m.classList.add('hidden'); });
+            document.getElementById('view-notifications').classList.remove('hidden');
+            document.getElementById('view-notifications').classList.add('block');
+            document.getElementById('topbar-breadcrumb').innerHTML = 'Notifications';
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+        }
+
         /* --- LOGIN / LOGOUT --- */
         function loginUser() {
             navigateTo('app-shell');
@@ -2368,6 +2610,11 @@
                                     David Miller <span class="ml-2 text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">New</span>
                                 </div>
                                 <div class="text-xs text-slate-500">d.miller@globex.com</div>
+                                <div class="flex gap-1.5 mt-1">
+                                    <span title="Gmail" class="text-xs unicode-icon">&#x1F4E7;</span>
+                                    <span title="Drive" class="text-xs unicode-icon">&#x1F4C2;</span>
+                                    <span title="Contacts & Calendar" class="text-xs unicode-icon">&#x1F464;</span>
+                                </div>
                             </td>
                             <td class="px-6 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-bold border border-blue-200 uppercase tracking-wider">@globex.com</span></td>
                             <td class="px-6 py-4 text-sm text-slate-600 font-medium">Standard (Hourly)</td>
