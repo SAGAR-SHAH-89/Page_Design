@@ -273,6 +273,8 @@
                     <div class="hidden md:flex space-x-8 items-center">
                         <a href="#features" class="text-slate-600 hover:text-teal-600 font-medium">Features</a>
                         <a href="#pricing" class="text-slate-600 hover:text-teal-600 font-medium">Pricing</a>
+                        <a href="#" onclick="navigateTo('view-login')"
+                            class="text-slate-600 hover:text-teal-600 font-medium">Log in</a>
                         <button onclick="navigateTo('view-onboarding')"
                             class="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2.5 rounded-full font-medium transition-colors shadow-lg shadow-teal-500/30">Start
                             Free Trial</button>
@@ -538,6 +540,42 @@
     </div>
 
     <!-- ========================================== -->
+    <!-- VIEW: LOGIN                                -->
+    <!-- ========================================== -->
+    <div id="view-login" class="app-view bg-stone-50 overflow-y-auto">
+        <nav class="w-full py-6 px-4 sm:px-6 lg:px-8 absolute top-0 z-50">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="navigateTo('view-home')">
+                    <span class="text-3xl unicode-icon mr-2 text-teal-600">&#x1F5C4;&#xFE0F;</span>
+                    <span class="font-bold text-2xl tracking-tight text-slate-800">Stor<span
+                            class="text-teal-600">X</span></span>
+                </div>
+            </div>
+        </nav>
+
+        <main class="min-h-screen flex items-center justify-center py-20 px-4 sm:px-6">
+            <div
+                class="w-full max-w-md bg-white rounded-3xl shadow-xl border border-stone-200 overflow-hidden p-8 sm:p-12 text-center">
+                <div
+                    class="w-16 h-16 bg-teal-50 rounded-2xl flex items-center justify-center text-3xl unicode-icon mx-auto mb-6 text-teal-600">
+                    &#x1F512;
+                </div>
+                <h2 class="text-3xl font-bold text-slate-900 mb-3">Welcome Back</h2>
+                <p class="text-slate-500 mb-8">Sign in to your StorX admin dashboard.</p>
+
+                <button onclick="simulateLogin()" id="login-btn"
+                    class="w-full flex items-center justify-center px-8 py-4 border border-stone-300 rounded-xl bg-white text-slate-700 font-bold hover:bg-stone-50 transition-all mb-4">
+                    <span class="unicode-icon mr-3 text-xl">&#x1F1EC;</span> Sign in with Google
+                </button>
+
+                <p class="text-sm text-slate-500 mt-8">Don't have an account? <a href="#"
+                        onclick="navigateTo('view-onboarding')" class="text-teal-600 font-bold hover:underline">Start
+                        Free Trial</a></p>
+            </div>
+        </main>
+    </div>
+
+    <!-- ========================================== -->
     <!-- APP SHELL (DASHBOARD & VAULT)              -->
     <!-- ========================================== -->
     <div id="app-shell" class="app-view app-layout-view bg-stone-50 hidden">
@@ -662,13 +700,13 @@
                             class="absolute top-1.5 right-1 w-2 h-2 bg-rose-500 rounded-full border border-white"></span>
                     </div>
                     <!-- Profile / Logout Dropdown -->
-                    <div class="relative group cursor-pointer">
+                    <div class="relative cursor-pointer" onclick="toggleProfileMenu(event)">
                         <div
                             class="h-8 w-8 rounded-full bg-teal-100 flex items-center justify-center border border-teal-200">
                             <span class="text-teal-700 font-bold text-sm">AD</span>
                         </div>
-                        <div
-                            class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-stone-200 hidden group-hover:block z-50">
+                        <div id="profile-dropdown-menu"
+                            class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-stone-200 hidden z-50">
                             <div class="py-1">
                                 <div class="px-4 py-2 text-sm text-slate-700 border-b border-stone-100">Admin
                                     User<br><span class="text-xs text-slate-400">admin@acme.com</span></div>
@@ -740,11 +778,18 @@
                     <div
                         class="bg-white rounded-xl border border-stone-200 p-5 shadow-sm relative overflow-hidden group">
                         <div class="absolute right-0 top-0 h-full w-1 bg-blue-500 group-hover:w-2 transition-all"></div>
-                        <div class="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wider">Total Vault Size
+                        <div class="flex justify-between items-start mb-1">
+                            <div class="text-xs font-medium text-slate-500 uppercase tracking-wider">Storage Quota</div>
+                            <div
+                                class="text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">
+                                84% Used</div>
                         </div>
-                        <div class="flex items-baseline mt-2">
-                            <div class="text-3xl font-bold text-slate-900">8.4</div>
-                            <div class="ml-1 text-sm font-medium text-slate-500">TB</div>
+                        <div class="flex items-baseline mt-2 mb-3">
+                            <div class="text-3xl font-bold text-slate-900">840</div>
+                            <div class="ml-1 text-sm font-medium text-slate-500">GB / 1 TB</div>
+                        </div>
+                        <div class="w-full bg-stone-100 rounded-full h-1.5 mt-auto">
+                            <div class="bg-blue-500 h-1.5 rounded-full" style="width: 84%"></div>
                         </div>
                     </div>
                     <div
@@ -821,7 +866,7 @@
                                 </span>
                             </div>
                             <h3 class="font-bold text-slate-900 text-lg">Gmail</h3>
-                            <div class="text-xs text-slate-500 mt-1">2.1 TB &bull; 124 Mailboxes</div>
+                            <div class="text-xs text-slate-500 mt-1">210 GB &bull; 124 Mailboxes</div>
                         </div>
                         <div class="border-t border-stone-100 bg-stone-50/50 p-2 flex gap-2">
                             <button onclick="showUsersGroups()"
@@ -847,7 +892,7 @@
                                 </span>
                             </div>
                             <h3 class="font-bold text-slate-900 text-lg">Drive</h3>
-                            <div class="text-xs text-slate-500 mt-1">5.8 TB &bull; 124 Drives</div>
+                            <div class="text-xs text-slate-500 mt-1">580 GB &bull; 124 Drives</div>
                         </div>
                         <div class="border-t border-stone-100 bg-stone-50/50 p-2 flex gap-2">
                             <button onclick="showUsersGroups()"
@@ -873,7 +918,7 @@
                                 </span>
                             </div>
                             <h3 class="font-bold text-slate-900 text-lg">Photos</h3>
-                            <div class="text-xs text-slate-500 mt-1">450 GB &bull; 42 Accounts</div>
+                            <div class="text-xs text-slate-500 mt-1">45 GB &bull; 42 Accounts</div>
                         </div>
                         <div class="border-t border-stone-100 bg-stone-50/50 p-2 flex gap-2">
                             <button onclick="showUsersGroups()"
@@ -939,8 +984,9 @@
                 <!-- Charts & Keepit Inspired Audit Log -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="bg-white rounded-xl border border-stone-200 p-5 shadow-sm lg:col-span-1 flex flex-col">
-                        <h2 class="text-sm font-bold text-slate-800 mb-4 uppercase tracking-wider">Vault Storage
-                            Distribution</h2>
+                        <h2 class="text-sm font-bold text-slate-800 mb-4 uppercase tracking-wider">Storage & Bandwidth
+                            Trends
+                        </h2>
                         <div class="relative flex-1 min-h-[220px] flex items-center justify-center"><canvas
                                 id="dashStorageChart"></canvas></div>
                     </div>
@@ -1112,7 +1158,7 @@
                                         class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold flex items-center w-max">
                                         <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></div>Protected
                                     </span></td>
-                                <td class="px-6 py-4 text-right text-sm text-slate-600 font-medium">1.2 TB</td>
+                                <td class="px-6 py-4 text-right text-sm text-slate-600 font-medium">450 GB</td>
                                 <td class="px-6 py-4 text-right text-sm font-medium">
                                     <button onclick="executeFullUserRestore(event, 'Executive Team')"
                                         class="text-teal-600 hover:text-white hover:bg-teal-600 bg-teal-50 px-3 py-1.5 rounded transition-colors border border-teal-200 flex items-center justify-end w-full sm:w-auto ml-auto">
@@ -1723,6 +1769,12 @@
                                     <span class="unicode-icon mr-2 text-rose-500">&#x23F3;</span>
                                     <span class="font-bold text-slate-700">14 days remaining</span>
                                 </div>
+                                <div class="mt-4 flex items-center gap-3">
+                                    <div class="w-full bg-stone-100 rounded-full h-1.5 w-48">
+                                        <div class="bg-teal-500 h-1.5 rounded-full" style="width: 84%"></div>
+                                    </div>
+                                    <span class="text-xs font-bold text-slate-600">840 GB / 1 TB used</span>
+                                </div>
                             </div>
                             <div class="flex flex-col gap-3 w-full sm:w-auto">
                                 <button
@@ -1851,8 +1903,16 @@
                                             class="bg-teal-100 text-teal-800 text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">Free
                                             Trial</span>
                                     </h3>
-                                    <p class="text-sm text-slate-500 mt-1">Unlimited storage, continuous backup (CDP),
+                                    <p class="text-sm text-slate-500 mt-1">1 TB storage limit, continuous backup (CDP),
                                         and 24/7 support.</p>
+                                    <div class="mt-4 flex items-center gap-3">
+                                        <div
+                                            class="w-full bg-stone-100 rounded-full h-2 min-w-[200px] sm:min-w-[300px]">
+                                            <div class="bg-teal-500 h-2 rounded-full" style="width: 84%"></div>
+                                        </div>
+                                        <span class="text-xs font-bold text-slate-600 whitespace-nowrap">840 GB / 1
+                                            TB</span>
+                                    </div>
                                 </div>
                                 <div class="text-right">
                                     <div class="text-3xl font-extrabold text-slate-900">$4.50</div>
@@ -1973,7 +2033,7 @@
                                     <span class="text-xs text-slate-400">Yesterday, 11:30 PM</span>
                                 </div>
                                 <p class="text-sm text-slate-600 mt-1">Successfully backed up 124 accounts and 3 shared
-                                    drives (Total: 4.2 TB processed).</p>
+                                    drives (Total: 840 GB processed).</p>
                             </div>
                         </div>
                         <div
@@ -2226,6 +2286,16 @@
         /* --- STATE & ROUTING --- */
         let currentServiceContext = '';
 
+        function toggleProfileMenu(event) {
+            event.stopPropagation();
+            document.getElementById('profile-dropdown-menu').classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', () => {
+            const menu = document.getElementById('profile-dropdown-menu');
+            if (menu) menu.classList.add('hidden');
+        });
+
         function navigateTo(viewId) {
             document.querySelectorAll('.app-view').forEach(v => {
                 v.classList.remove('active');
@@ -2357,7 +2427,20 @@
                 document.getElementById('sync-success-view').classList.add('hidden');
                 document.getElementById('success-icon').classList.replace('scale-100', 'scale-0');
 
-                navigateTo('view-home');
+                navigateTo('view-login');
+            }, 1000);
+        }
+
+        function simulateLogin() {
+            const btn = document.getElementById('login-btn');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<div class="spinner mr-3"></div> Signing in...';
+            btn.disabled = true;
+            setTimeout(() => {
+                btn.innerHTML = orig;
+                btn.disabled = false;
+                showToast("Login Successful");
+                navigateTo('app-shell');
             }, 1000);
         }
 
@@ -2432,22 +2515,58 @@
             if (dashChart) return;
             const ctx = document.getElementById('dashStorageChart').getContext('2d');
             dashChart = new Chart(ctx, {
-                type: 'doughnut',
+                type: 'line',
                 data: {
-                    labels: ['Drive', 'Gmail', 'Photos', 'Other'],
-                    datasets: [{
-                        data: [65, 25, 8, 2],
-                        backgroundColor: ['#3b82f6', '#ef4444', '#eab308', '#14b8a6'],
-                        borderWidth: 2,
-                        borderColor: '#ffffff'
-                    }]
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [
+                        {
+                            label: 'Storage (GB)',
+                            data: [780, 790, 810, 810, 820, 830, 840],
+                            borderColor: '#14b8a6',
+                            backgroundColor: 'rgba(20, 184, 166, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Bandwidth (GB)',
+                            data: [120, 150, 180, 90, 110, 80, 95],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            yAxisID: 'y1'
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '75%',
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
                     plugins: {
-                        legend: { position: 'right', labels: { usePointStyle: true, boxWidth: 8, font: { size: 11 } } }
+                        legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8, font: { size: 11 } } }
+                    },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            grid: { color: '#f1f5f9' },
+                            title: { display: true, text: 'Storage (GB)', font: { size: 10 } }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            grid: { drawOnChartArea: false },
+                            title: { display: true, text: 'Bandwidth (GB)', font: { size: 10 } }
+                        }
                     }
                 }
             });
