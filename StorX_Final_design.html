@@ -253,6 +253,30 @@
             font-size: 12px;
             font-weight: bold;
         }
+
+        /* Collapsible Sidebar */
+        #app-sidebar {
+            transition: width 0.3s ease;
+        }
+
+        #app-sidebar.collapsed {
+            width: 4.5rem;
+        }
+
+        #app-sidebar.collapsed .sidebar-text {
+            opacity: 0;
+            display: none;
+        }
+
+        #app-sidebar.collapsed .sidebar-item {
+            justify-content: center;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        #app-sidebar.collapsed .sidebar-item .unicode-icon {
+            margin-right: 0;
+        }
     </style>
 </head>
 
@@ -571,7 +595,8 @@
     <!-- ========================================== -->
     <div id="app-shell" class="app-view app-layout-view bg-stone-50 hidden">
         <!-- Sidebar -->
-        <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col flex-shrink-0 h-full hidden md:flex z-20">
+        <aside id="app-sidebar"
+            class="w-64 bg-slate-900 text-slate-300 flex flex-col flex-shrink-0 h-full hidden md:flex z-20 overflow-x-hidden">
             <div class="h-16 flex items-center px-6 border-b border-slate-800 bg-slate-950">
             </div>
 
@@ -596,56 +621,66 @@
             </div> -->
 
             <nav class="flex-1 overflow-y-auto py-4">
-                <div class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Overview</div>
+                <div
+                    class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 sidebar-text whitespace-nowrap">
+                    Overview</div>
                 <a href="#" onclick="showDashboard()" class="sidebar-item active flex items-center px-6 py-3 mb-1"
                     id="nav-dashboard">
                     <span class="unicode-icon mr-3 text-lg">&#x1F4CA;</span><span
-                        class="text-sm font-medium">Dashboard</span>
+                        class="text-sm font-medium sidebar-text whitespace-nowrap">Dashboard</span>
                 </a>
                 <a href="#" onclick="showUsersGroups()" class="sidebar-item flex items-center px-6 py-3 mb-1"
                     id="nav-users">
-                    <span class="unicode-icon mr-3 text-lg">&#x1F465;</span><span class="text-sm font-medium">Users &
+                    <span class="unicode-icon mr-3 text-lg">&#x1F465;</span><span
+                        class="text-sm font-medium sidebar-text whitespace-nowrap">Users &
                         Groups</span>
                 </a>
                 <a href="#" onclick="showLocalVaults()" class="sidebar-item flex items-center px-6 py-3 mb-1"
                     id="nav-local-vaults">
                     <span class="unicode-icon mr-3 text-lg">&#x1F5C3;&#xFE0F;</span><span
-                        class="text-sm font-medium">Local Vaults</span>
+                        class="text-sm font-medium sidebar-text whitespace-nowrap">Local Vaults</span>
                 </a>
 
-                <div class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider mt-6 mb-2">Data
+                <div
+                    class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider mt-6 mb-2 sidebar-text whitespace-nowrap">
+                    Data
                     Management</div>
                 <a href="#" onclick="showAutoSync()" class="sidebar-item flex items-center px-6 py-3 mb-1"
                     id="nav-autosync">
-                    <span class="unicode-icon mr-3 text-lg">&#x1F504;</span><span class="text-sm font-medium">Auto-Sync
+                    <span class="unicode-icon mr-3 text-lg">&#x1F504;</span><span
+                        class="text-sm font-medium sidebar-text whitespace-nowrap">Auto-Sync
                         Policies</span>
                 </a>
                 <a href="#" onclick="showRecovery()" class="sidebar-item flex items-center px-6 py-3 mb-1"
                     id="nav-recovery">
-                    <span class="unicode-icon mr-3 text-lg">&#x23EA;</span><span class="text-sm font-medium">Recovery &
+                    <span class="unicode-icon mr-3 text-lg">&#x23EA;</span><span
+                        class="text-sm font-medium sidebar-text whitespace-nowrap">Recovery &
                         Restore</span>
                 </a>
 
-                <div class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider mt-6 mb-2">System &
+                <div
+                    class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider mt-6 mb-2 sidebar-text whitespace-nowrap">
+                    System &
                     Security</div>
                 <a href="#" onclick="showSecurity()"
                     class="sidebar-item hidden items-center px-6 py-3 mb-1 justify-between" id="nav-security">
                     <div class="flex items-center">
                         <span class="unicode-icon mr-3 text-lg">&#x1F6E1;&#xFE0F;</span><span
-                            class="text-sm font-medium">Security</span>
+                            class="text-sm font-medium sidebar-text whitespace-nowrap">Security</span>
                     </div>
                     <span
-                        class="bg-rose-500/20 text-rose-400 text-[10px] px-2 py-0.5 rounded-full font-bold border border-rose-500/30">1
+                        class="bg-rose-500/20 text-rose-400 text-[10px] px-2 py-0.5 rounded-full font-bold border border-rose-500/30 sidebar-text whitespace-nowrap">1
                         Alert</span>
                 </a>
                 <a href="#" onclick="showAudit()" class="sidebar-item flex items-center px-6 py-3 mb-1" id="nav-audit">
-                    <span class="unicode-icon mr-3 text-lg">&#x1F4DC;</span><span class="text-sm font-medium">Audit
+                    <span class="unicode-icon mr-3 text-lg">&#x1F4DC;</span><span
+                        class="text-sm font-medium sidebar-text whitespace-nowrap">Audit
                         Logs</span>
                 </a>
                 <a href="#" onclick="showSettings()" class="sidebar-item flex items-center px-6 py-3 mb-1"
                     id="nav-settings">
                     <span class="unicode-icon mr-3 text-lg">&#x2699;&#xFE0F;</span><span
-                        class="text-sm font-medium">Settings</span>
+                        class="text-sm font-medium sidebar-text whitespace-nowrap">Settings</span>
                 </a>
             </nav>
         </aside>
@@ -655,6 +690,10 @@
             <header
                 class="h-16 bg-white border-b border-stone-200 flex items-center justify-between px-4 sm:px-6 z-20 shadow-sm shrink-0">
                 <div class="flex items-center whitespace-nowrap">
+                    <button onclick="toggleSidebar()"
+                        class="mr-4 text-slate-500 hover:text-slate-800 transition-colors hidden md:block">
+                        <span class="unicode-icon text-xl">&#x2630;</span>
+                    </button>
                     <div id="topbar-breadcrumb" class="font-bold text-slate-800 text-lg hidden sm:block">Dashboard</div>
                 </div>
 
@@ -2621,6 +2660,10 @@
     <script>
         /* --- STATE & ROUTING --- */
         let currentServiceContext = '';
+
+        function toggleSidebar() {
+            document.getElementById('app-sidebar').classList.toggle('collapsed');
+        }
 
         function toggleProfileMenu(event) {
             event.stopPropagation();
