@@ -266,9 +266,6 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-20">
                     <div class="flex-shrink-0 flex items-center cursor-pointer">
-                        <span class="text-3xl unicode-icon mr-2 text-teal-600">&#x1F5C4;&#xFE0F;</span>
-                        <span class="font-bold text-2xl tracking-tight text-slate-800">Stor<span
-                                class="text-teal-600">X</span></span>
                     </div>
                     <div class="hidden md:flex space-x-8 items-center">
                         <a href="#features" class="text-slate-600 hover:text-teal-600 font-medium">Features</a>
@@ -341,9 +338,6 @@
         <nav class="w-full py-6 px-4 sm:px-6 lg:px-8 absolute top-0 z-50">
             <div class="max-w-7xl mx-auto flex justify-between items-center">
                 <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="navigateTo('view-home')">
-                    <span class="text-3xl unicode-icon mr-2 text-teal-600">&#x1F5C4;&#xFE0F;</span>
-                    <span class="font-bold text-2xl tracking-tight text-slate-800">Stor<span
-                            class="text-teal-600">X</span></span>
                 </div>
                 <div class="text-sm font-medium text-slate-500">Secure Setup <span
                         class="unicode-icon ml-1">&#x1F512;</span></div>
@@ -546,9 +540,6 @@
         <nav class="w-full py-6 px-4 sm:px-6 lg:px-8 absolute top-0 z-50">
             <div class="max-w-7xl mx-auto flex justify-between items-center">
                 <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="navigateTo('view-home')">
-                    <span class="text-3xl unicode-icon mr-2 text-teal-600">&#x1F5C4;&#xFE0F;</span>
-                    <span class="font-bold text-2xl tracking-tight text-slate-800">Stor<span
-                            class="text-teal-600">X</span></span>
                 </div>
             </div>
         </nav>
@@ -582,13 +573,10 @@
         <!-- Sidebar -->
         <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col flex-shrink-0 h-full hidden md:flex z-20">
             <div class="h-16 flex items-center px-6 border-b border-slate-800 bg-slate-950">
-                <span class="text-2xl unicode-icon mr-2 text-teal-500">&#x1F5C4;&#xFE0F;</span>
-                <span class="font-bold text-xl tracking-tight text-white">Stor<span
-                        class="text-teal-500">X</span></span>
             </div>
 
             <!-- NEW: Multi-Tenant Switcher -->
-            <div class="p-4 border-b border-slate-800 hover:bg-slate-800/50 transition-colors cursor-pointer group relative"
+            <!-- <div class="p-4 border-b border-slate-800 hover:bg-slate-800/50 transition-colors cursor-pointer group relative"
                 title="Switch Workspace Tenant">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
@@ -605,7 +593,7 @@
                     <span
                         class="unicode-icon text-slate-500 text-xs group-hover:text-white transition-colors">&#x25BC;</span>
                 </div>
-            </div>
+            </div> -->
 
             <nav class="flex-1 overflow-y-auto py-4">
                 <div class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Overview</div>
@@ -1126,12 +1114,18 @@
                         <thead class="bg-stone-50">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Entity</th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Source Domain
+                                <th class="hidden px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Source
+                                    Domain
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Assigned
+                                <th class="hidden px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">
+                                    Assigned
                                     Policy</th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Status</th>
-                                <th class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase">Storage Used
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Sync Services
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Sync Status
+                                </th>
+                                <th class="hidden px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase">
+                                    Storage Used
                                 </th>
                                 <th class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase">Actions</th>
                             </tr>
@@ -1140,25 +1134,37 @@
                             <tr class="hover:bg-teal-50 cursor-pointer transition-colors group"
                                 onclick="openUserVault('Executive Team', 'execs@acme.com', 'Gmail')">
                                 <td class="px-6 py-4">
-                                    <div class="font-bold text-slate-900 text-sm group-hover:text-teal-700">Executive
-                                        Team</div>
-                                    <div class="text-xs text-slate-500">execs@acme.com</div>
-                                    <div class="flex gap-1.5 mt-1">
-                                        <span title="Gmail" class="text-xs unicode-icon">&#x1F4E7;</span>
-                                        <span title="Drive" class="text-xs unicode-icon">&#x1F4C2;</span>
-                                        <span title="Contacts & Calendar" class="text-xs unicode-icon">&#x1F464;</span>
-                                        <span title="Photos" class="text-xs unicode-icon">&#x1F3DD;&#xFE0F;</span>
+                                    <div
+                                        class="font-bold text-slate-900 text-sm group-hover:text-teal-700 flex items-center">
+                                        Executive Team
                                     </div>
+                                    <div class="text-xs text-slate-500">execs@acme.com</div>
                                 </td>
-                                <td class="px-6 py-4"><span
+                                <td class="hidden px-6 py-4"><span
                                         class="px-2 py-1 bg-stone-100 text-stone-600 rounded text-[10px] font-bold border border-stone-200 uppercase tracking-wider">@acme.com</span>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-slate-600 font-medium">Real-Time (CDP)</td>
-                                <td class="px-6 py-4"><span
-                                        class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold flex items-center w-max">
-                                        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></div>Protected
-                                    </span></td>
-                                <td class="px-6 py-4 text-right text-sm text-slate-600 font-medium">450 GB</td>
+                                <td class="hidden px-6 py-4 text-sm text-slate-600 font-medium">Real-Time (CDP)</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex gap-1">
+                                            <span title="Gmail" class="text-sm unicode-icon">&#x1F4E7;</span>
+                                            <span title="Drive" class="text-sm unicode-icon">&#x1F4C2;</span>
+                                            <span title="Contacts & Calendar"
+                                                class="text-sm unicode-icon">&#x1F464;</span>
+                                            <span title="Photos" class="text-sm unicode-icon">&#x1F3DD;&#xFE0F;</span>
+                                        </div>
+                                        <button onclick="openUpdateSyncModal(event, 'Executive Team')"
+                                            class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-full text-xs font-bold flex items-center w-max">
+                                        <span class="unicode-icon animate-spin mr-1.5 text-[10px]">&#x23F3;</span>
+                                        Syncing
+                                    </span>
+                                </td>
+                                <td class="hidden px-6 py-4 text-right text-sm text-slate-600 font-medium">450 GB</td>
                                 <td class="px-6 py-4 text-right text-sm font-medium">
                                     <button onclick="executeFullUserRestore(event, 'Executive Team')"
                                         class="text-teal-600 hover:text-white hover:bg-teal-600 bg-teal-50 px-3 py-1.5 rounded transition-colors border border-teal-200 flex items-center justify-end w-full sm:w-auto ml-auto">
@@ -1172,23 +1178,68 @@
                                     <div class="font-bold text-slate-900 text-sm group-hover:text-teal-700">Sarah
                                         Jenkins</div>
                                     <div class="text-xs text-slate-500">s.jenkins@acme.com</div>
-                                    <div class="flex gap-1.5 mt-1">
-                                        <span title="Gmail" class="text-xs unicode-icon">&#x1F4E7;</span>
-                                        <span title="Drive" class="text-xs unicode-icon">&#x1F4C2;</span>
-                                        <span title="Contacts & Calendar" class="text-xs unicode-icon">&#x1F464;</span>
-                                    </div>
                                 </td>
-                                <td class="px-6 py-4"><span
+                                <td class="hidden px-6 py-4"><span
                                         class="px-2 py-1 bg-stone-100 text-stone-600 rounded text-[10px] font-bold border border-stone-200 uppercase tracking-wider">@acme.com</span>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-slate-600 font-medium">Standard (Hourly)</td>
-                                <td class="px-6 py-4"><span
-                                        class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold flex items-center w-max">
-                                        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></div>Protected
-                                    </span></td>
-                                <td class="px-6 py-4 text-right text-sm text-slate-600 font-medium">14.2 GB</td>
+                                <td class="hidden px-6 py-4 text-sm text-slate-600 font-medium">Standard (Hourly)</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex gap-1">
+                                            <span title="Gmail" class="text-sm unicode-icon">&#x1F4E7;</span>
+                                            <span title="Drive" class="text-sm unicode-icon">&#x1F4C2;</span>
+                                            <span title="Contacts & Calendar"
+                                                class="text-sm unicode-icon">&#x1F464;</span>
+                                        </div>
+                                        <button onclick="openUpdateSyncModal(event, 'Sarah Jenkins')"
+                                            class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-full text-xs font-bold flex items-center w-max">
+                                        <span class="unicode-icon animate-spin mr-1.5 text-[10px]">&#x23F3;</span>
+                                        Syncing
+                                    </span>
+                                </td>
+                                <td class="hidden px-6 py-4 text-right text-sm text-slate-600 font-medium">14.2 GB</td>
                                 <td class="px-6 py-4 text-right text-sm font-medium">
                                     <button onclick="executeFullUserRestore(event, 'Sarah Jenkins')"
+                                        class="text-teal-600 hover:text-white hover:bg-teal-600 bg-teal-50 px-3 py-1.5 rounded transition-colors border border-teal-200 flex items-center justify-end w-full sm:w-auto ml-auto">
+                                        <span class="unicode-icon mr-1.5">&#x23EA;</span> Full Restore
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-teal-50 cursor-pointer transition-colors group"
+                                onclick="openUserVault('John Doe', 'j.doe@acme.com', 'Gmail')">
+                                <td class="px-6 py-4">
+                                    <div class="font-bold text-slate-900 text-sm group-hover:text-teal-700">John Doe
+                                    </div>
+                                    <div class="text-xs text-slate-500">j.doe@acme.com</div>
+                                </td>
+                                <td class="hidden px-6 py-4"><span
+                                        class="px-2 py-1 bg-stone-100 text-stone-600 rounded text-[10px] font-bold border border-stone-200 uppercase tracking-wider">@acme.com</span>
+                                </td>
+                                <td class="hidden px-6 py-4 text-sm text-slate-600 font-medium">Standard (Hourly)</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex gap-1">
+                                            <span title="Gmail" class="text-sm unicode-icon">&#x1F4E7;</span>
+                                            <span title="Drive" class="text-sm unicode-icon">&#x1F4C2;</span>
+                                        </div>
+                                        <button onclick="openUpdateSyncModal(event, 'John Doe')"
+                                            class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold flex items-center w-max">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></div> Not Syncing
+                                    </span>
+                                </td>
+                                <td class="hidden px-6 py-4 text-right text-sm text-slate-600 font-medium">8.5 GB</td>
+                                <td class="px-6 py-4 text-right text-sm font-medium">
+                                    <button onclick="executeFullUserRestore(event, 'John Doe')"
                                         class="text-teal-600 hover:text-white hover:bg-teal-600 bg-teal-50 px-3 py-1.5 rounded transition-colors border border-teal-200 flex items-center justify-end w-full sm:w-auto ml-auto">
                                         <span class="unicode-icon mr-1.5">&#x23EA;</span> Full Restore
                                     </button>
@@ -1260,12 +1311,47 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    <!-- Policy Card 1 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" id="autosync-cards-container">
+                    <!-- Corporate Policy Card -->
+                    <div
+                        class="bg-white border border-stone-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all relative">
+                        <div class="absolute top-0 right-0 mt-4 mr-4 flex flex-col items-end gap-2">
+                            <div
+                                class="text-[10px] font-bold text-teal-700 bg-teal-100 px-2 py-1 rounded uppercase tracking-wider">
+                                Admin</div>
+                            <span id="corporate-policy-alert"
+                                class="flex items-center text-[10px] font-bold text-rose-700 bg-rose-50 px-2 py-1 rounded uppercase tracking-wider border border-rose-200 shadow-sm"
+                                title="Action required: Accounts need reconnect"><span
+                                    class="w-1.5 h-1.5 bg-rose-500 rounded-full mr-1.5 animate-pulse"></span> 1
+                                Error</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-1">Corporate Tenant Policy</h3>
+                        <p class="text-xs text-slate-500 mb-4">Domain: @acme.com</p>
+
+                        <div class="space-y-3 mb-6">
+                            <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
+                                <span class="text-slate-500">Protected Users</span>
+                                <span class="font-bold text-emerald-600">123 / 124</span>
+                            </div>
+                            <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
+                                <span class="text-slate-500">Connection Errors</span>
+                                <span class="font-bold text-rose-600" id="corp-error-count">1 Account</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-500">Not Connected Accounts</span>
+                                <span class="font-bold text-slate-800">0 Accounts</span>
+                            </div>
+                        </div>
+                        <button onclick="showCorporatePolicies()"
+                            class="w-full bg-stone-100 hover:bg-stone-200 text-slate-700 text-sm font-bold py-2 rounded-lg transition-colors border border-stone-200">Manage
+                            Users Policies</button>
+                    </div>
+
+                    <!-- Personal Policy Card -->
                     <div
                         class="bg-white border border-stone-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all relative">
                         <h3 class="text-lg font-bold text-slate-900 mb-1">Sarah Jenkins</h3>
-                        <p class="text-xs text-slate-500 mb-4">Account: s.jenkins@acme.com</p>
+                        <p class="text-xs text-slate-500 mb-4">Personal Account: s.jenkins@acme.com</p>
 
                         <div class="space-y-3 mb-6">
                             <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
@@ -1276,53 +1362,225 @@
                                 <span class="text-slate-500">Next Backup</span><span class="font-bold text-slate-800">In
                                     42 mins</span>
                             </div>
-                            <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
+                            <div class="flex justify-between text-sm">
                                 <span class="text-slate-500">Retention</span><span
                                     class="font-bold text-slate-800">Infinite</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-slate-500">Services</span><span
-                                    class="font-medium text-slate-800 flex gap-1"><span title="Gmail"
-                                        class="unicode-icon">&#x1F4E7;</span><span title="Drive"
-                                        class="unicode-icon">&#x1F4C2;</span><span title="Contacts/Calendar"
-                                        class="unicode-icon">&#x1F464;</span></span>
                             </div>
                         </div>
                         <button onclick="openEditPolicyModal('Sarah Jenkins')"
                             class="w-full bg-stone-100 hover:bg-stone-200 text-slate-700 text-sm font-bold py-2 rounded-lg transition-colors border border-stone-200">Edit
                             Policy</button>
                     </div>
+                </div>
 
-                    <!-- Policy Card 2 -->
-                    <div
-                        class="bg-white border border-stone-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all">
-                        <h3 class="text-lg font-bold text-slate-900 mb-1">Executive Team</h3>
-                        <p class="text-xs text-slate-500 mb-4">Group: execs@acme.com</p>
-
-                        <div class="space-y-3 mb-6">
-                            <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
-                                <span class="text-slate-500">Sync Interval</span><span
-                                    class="font-bold text-teal-600">Real-Time (CDP)</span>
-                            </div>
-                            <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
-                                <span class="text-slate-500">Next Backup</span><span
-                                    class="font-bold text-teal-600">Continuous</span>
-                            </div>
-                            <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
-                                <span class="text-slate-500">Retention</span><span
-                                    class="font-bold text-slate-800">Infinite</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-slate-500">Services</span><span
-                                    class="font-medium text-slate-800 flex gap-1"><span title="Gmail"
-                                        class="unicode-icon">&#x1F4E7;</span><span title="Drive"
-                                        class="unicode-icon">&#x1F4C2;</span><span title="Contacts/Calendar"
-                                        class="unicode-icon">&#x1F464;</span></span>
-                            </div>
-                        </div>
-                        <button onclick="openEditPolicyModal('Executive Team')"
-                            class="w-full bg-stone-100 hover:bg-stone-200 text-slate-700 text-sm font-bold py-2 rounded-lg transition-colors border border-stone-200">Edit
-                            Policy</button>
+                <!-- Corporate Policies Table View (Hidden initially) -->
+                <div id="corporate-policies-table"
+                    class="hidden bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden">
+                    <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-stone-50">
+                        <h2 class="text-lg font-bold text-slate-900">Manage Corporate User Policies</h2>
+                        <button onclick="hideCorporatePolicies()"
+                            class="text-sm font-bold text-slate-500 hover:text-slate-800 transition-colors flex items-center">
+                            <span class="unicode-icon mr-1">&#x2B05;&#xFE0F;</span> Back to Policies
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-stone-200">
+                            <thead class="bg-stone-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">User /
+                                        Group</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Sync
+                                        Interval</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Retention
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Services
+                                    </th>
+                                    <th class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase">Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-stone-100">
+                                <tr class="hover:bg-stone-50">
+                                    <td class="px-6 py-4">
+                                        <div class="font-bold text-slate-900 text-sm">Executive Team</div>
+                                        <div class="text-xs text-slate-500">execs@acme.com</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <select
+                                            class="border border-stone-300 rounded text-xs bg-white px-2 py-1 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none">
+                                            <option>Real-Time (CDP)</option>
+                                            <option>Hourly</option>
+                                            <option>Daily</option>
+                                        </select>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <select
+                                            class="border border-stone-300 rounded text-xs bg-white px-2 py-1 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none">
+                                            <option>Infinite</option>
+                                            <option>7 Years</option>
+                                            <option>1 Year</option>
+                                        </select>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-2">
+                                            <div class="flex gap-1">
+                                                <span title="Gmail" class="text-sm unicode-icon">&#x1F4E7;</span>
+                                                <span title="Drive" class="text-sm unicode-icon">&#x1F4C2;</span>
+                                                <span title="Contacts & Calendar"
+                                                    class="text-sm unicode-icon">&#x1F464;</span>
+                                                <span title="Photos"
+                                                    class="text-sm unicode-icon">&#x1F3DD;&#xFE0F;</span>
+                                            </div>
+                                            <button onclick="openUpdateSyncModal(event, 'Executive Team')"
+                                                class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button onclick="openUserSyncLogs('Executive Team')" title="View Logs"
+                                                class="text-slate-400 hover:text-teal-600 transition-colors">
+                                                <span class="unicode-icon text-lg">&#x1F4DC;</span>
+                                            </button>
+                                            <button onclick="toggleUserSync(this, 'Executive Team')" title="Pause Sync"
+                                                data-paused="false"
+                                                class="text-slate-400 hover:text-amber-500 transition-colors">
+                                                <span class="unicode-icon text-lg">&#x23F8;&#xFE0F;</span>
+                                            </button>
+                                            <button onclick="showToast('Policy updated for Executive Team')"
+                                                class="status-btn text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-3 py-1.5 rounded border border-teal-100">Connected</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-stone-50">
+                                    <td class="px-6 py-4">
+                                        <div class="font-bold text-slate-900 text-sm">Sarah Jenkins</div>
+                                        <div class="text-xs text-slate-500">s.jenkins@acme.com</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <select
+                                            class="border border-stone-300 rounded text-xs bg-white px-2 py-1 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none">
+                                            <option>Real-Time (CDP)</option>
+                                            <option selected>Hourly</option>
+                                            <option>Daily</option>
+                                        </select>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <select
+                                            class="border border-stone-300 rounded text-xs bg-white px-2 py-1 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none">
+                                            <option selected>Infinite</option>
+                                            <option>7 Years</option>
+                                            <option>1 Year</option>
+                                        </select>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-2">
+                                            <div class="flex gap-1">
+                                                <span title="Gmail" class="text-sm unicode-icon">&#x1F4E7;</span>
+                                                <span title="Drive" class="text-sm unicode-icon">&#x1F4C2;</span>
+                                                <span title="Contacts & Calendar"
+                                                    class="text-sm unicode-icon">&#x1F464;</span>
+                                            </div>
+                                            <button onclick="openUpdateSyncModal(event, 'Sarah Jenkins')"
+                                                class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button onclick="openUserSyncLogs('Sarah Jenkins')" title="View Logs"
+                                                class="text-slate-400 hover:text-teal-600 transition-colors">
+                                                <span class="unicode-icon text-lg">&#x1F4DC;</span>
+                                            </button>
+                                            <button onclick="toggleUserSync(this, 'Sarah Jenkins')" title="Pause Sync"
+                                                data-paused="false"
+                                                class="text-slate-400 hover:text-amber-500 transition-colors">
+                                                <span class="unicode-icon text-lg">&#x23F8;&#xFE0F;</span>
+                                            </button>
+                                            <button onclick="showToast('Policy updated for Sarah Jenkins')"
+                                                class="status-btn text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-3 py-1.5 rounded border border-teal-100">Connected</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-stone-50">
+                                    <td class="px-6 py-4">
+                                        <div class="font-bold text-slate-900 text-sm">Marketing Shared Drive</div>
+                                        <div class="text-xs text-slate-500">marketing@acme.com</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <select
+                                            class="border border-stone-300 rounded text-xs bg-white px-2 py-1 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none">
+                                            <option selected>Real-Time (CDP)</option>
+                                            <option>Hourly</option>
+                                            <option>Daily</option>
+                                        </select>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <select
+                                            class="border border-stone-300 rounded text-xs bg-white px-2 py-1 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none">
+                                            <option>Infinite</option>
+                                            <option selected>7 Years</option>
+                                            <option>1 Year</option>
+                                        </select>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-2">
+                                            <div class="flex gap-1">
+                                                <span title="Drive" class="text-sm unicode-icon">&#x1F4C2;</span>
+                                            </div>
+                                            <button onclick="openUpdateSyncModal(event, 'Marketing Shared Drive')"
+                                                class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button onclick="openUserSyncLogs('Marketing Shared Drive')"
+                                                title="View Logs"
+                                                class="text-slate-400 hover:text-teal-600 transition-colors">
+                                                <span class="unicode-icon text-lg">&#x1F4DC;</span>
+                                            </button>
+                                            <button onclick="toggleUserSync(this, 'Marketing Shared Drive')"
+                                                title="Pause Sync" data-paused="false"
+                                                class="text-slate-400 hover:text-amber-500 transition-colors">
+                                                <span class="unicode-icon text-lg">&#x23F8;&#xFE0F;</span>
+                                            </button>
+                                            <button onclick="showToast('Policy updated for Marketing Shared Drive')"
+                                                class="status-btn text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-3 py-1.5 rounded border border-teal-100">Connected</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-stone-50 bg-rose-50/20">
+                                    <td class="px-6 py-4">
+                                        <div class="font-bold text-slate-900 text-sm">John Doe</div>
+                                        <div class="text-xs text-slate-500">j.doe@acme.com</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="text-xs font-bold text-rose-600 flex items-center"><span
+                                                class="unicode-icon mr-1.5">&#x26A0;&#xFE0F;</span> Auth Error</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="text-xs text-slate-500 font-medium">Suspended</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-2">
+                                            <!-- <div class="text-xs text-slate-400 italic">Sync disabled</div> -->
+                                            <button onclick="reconnectCorporateUser(event, 'John Doe', this)"
+                                                class="text-xs font-bold text-rose-600 hover:underline bg-rose-50 px-2 py-1 rounded border border-rose-200">Reconnect</button>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button onclick="openUserSyncLogs('John Doe')" title="View Logs"
+                                                class="text-slate-400 hover:text-teal-600 transition-colors">
+                                                <span class="unicode-icon text-lg">&#x1F4DC;</span>
+                                            </button>
+                                            <button onclick="reconnectCorporateUser(event, 'John Doe', this)"
+                                                class="bg-rose-600 text-white hover:bg-rose-700 px-3 py-1.5 rounded text-xs font-bold transition-colors border border-rose-700 flex items-center shadow-sm">
+                                                <span class="unicode-icon mr-1.5">&#x1F517;</span> Reconnect
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </main>
@@ -2167,6 +2425,52 @@
         </div>
     </div>
 
+    <!-- Update Sync Services Modal -->
+    <div id="update-sync-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-0">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeUpdateSyncModal()"></div>
+        <div class="bg-white rounded-xl shadow-2xl z-10 w-full max-w-md overflow-hidden border border-stone-200 flex flex-col transform transition-all scale-95 opacity-0"
+            id="update-sync-content">
+            <div class="p-5 border-b border-stone-100 bg-stone-50 flex justify-between items-center">
+                <h2 class="text-lg font-bold text-slate-900 flex items-center">
+                    <span class="unicode-icon mr-2 text-teal-600">&#x1F504;</span> Update Sync Services
+                </h2>
+                <button onclick="closeUpdateSyncModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <span class="unicode-icon">&#x274C;</span>
+                </button>
+            </div>
+            <div class="p-6 bg-white">
+                <p class="text-sm text-slate-500 mb-4">Select the services you want to synchronize for <strong
+                        id="update-sync-user" class="text-slate-800"></strong>.</p>
+                <div class="space-y-3 p-4 bg-stone-50 border border-stone-200 rounded-lg">
+                    <label class="flex items-center text-sm text-slate-700 font-medium cursor-pointer"><input
+                            type="checkbox" checked
+                            class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600">
+                        <span class="unicode-icon mr-2">&#x1F4E7;</span> Gmail</label>
+                    <label class="flex items-center text-sm text-slate-700 font-medium cursor-pointer"><input
+                            type="checkbox" checked
+                            class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600">
+                        <span class="unicode-icon mr-2">&#x1F4C2;</span> Google Drive</label>
+                    <label class="flex items-center text-sm text-slate-700 font-medium cursor-pointer"><input
+                            type="checkbox" checked
+                            class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600">
+                        <span class="unicode-icon mr-2">&#x1F464;</span> Contacts & Calendar</label>
+                    <label class="flex items-center text-sm text-slate-700 font-medium cursor-pointer"><input
+                            type="checkbox"
+                            class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600">
+                        <span class="unicode-icon mr-2">&#x1F3DD;&#xFE0F;</span> Google Photos</label>
+                </div>
+            </div>
+            <div class="p-4 border-t border-stone-100 bg-stone-50 flex justify-end gap-3">
+                <button onclick="closeUpdateSyncModal()"
+                    class="px-4 py-2 bg-white border border-stone-300 text-slate-700 rounded-lg text-sm font-bold shadow-sm hover:bg-stone-50 transition-colors">Cancel</button>
+                <button id="confirm-sync-btn" onclick="confirmUpdateSync()"
+                    class="px-5 py-2 bg-teal-600 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 transition-colors flex items-center">
+                    Confirm Sync
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Edit Policy Modal -->
     <div id="edit-policy-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-0">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeEditPolicyModal()"></div>
@@ -2231,6 +2535,38 @@
                     class="px-5 py-2 bg-teal-600 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 transition-colors flex items-center">
                     Save Changes
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Sync Logs Modal -->
+    <div id="user-sync-logs-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-0">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeUserSyncLogs()"></div>
+        <div class="bg-white rounded-xl shadow-2xl z-10 w-full max-w-2xl overflow-hidden border border-stone-200 flex flex-col transform transition-all scale-95 opacity-0"
+            id="user-sync-logs-content">
+            <div class="p-5 border-b border-stone-100 bg-stone-50 flex justify-between items-center">
+                <h2 class="text-lg font-bold text-slate-900 flex items-center">
+                    <span class="unicode-icon mr-2 text-teal-600">&#x1F4DC;</span> Google Sync Logs: <span
+                        id="sync-logs-user-name" class="ml-1 text-teal-700"></span>
+                </h2>
+                <button onclick="closeUserSyncLogs()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <span class="unicode-icon">&#x274C;</span>
+                </button>
+            </div>
+            <div class="bg-white max-h-[60vh] overflow-y-auto">
+                <table class="min-w-full divide-y divide-stone-200">
+                    <thead class="bg-stone-50 sticky top-0 shadow-sm">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Time</th>
+                            <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Service</th>
+                            <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-stone-100 text-sm" id="user-sync-logs-tbody">
+                        <!-- Dynamically populated -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -2427,7 +2763,7 @@
                 document.getElementById('sync-success-view').classList.add('hidden');
                 document.getElementById('success-icon').classList.replace('scale-100', 'scale-0');
 
-                navigateTo('view-login');
+                navigateTo('view-home');
             }, 1000);
         }
 
@@ -2644,6 +2980,125 @@
             }, 1000);
         }
 
+        /* --- AUTO-SYNC POLICIES LOGIC --- */
+        function showCorporatePolicies() {
+            document.getElementById('autosync-cards-container').classList.add('hidden');
+            document.getElementById('corporate-policies-table').classList.remove('hidden');
+        }
+
+        function hideCorporatePolicies() {
+            document.getElementById('autosync-cards-container').classList.remove('hidden');
+            document.getElementById('corporate-policies-table').classList.add('hidden');
+        }
+
+        /* --- UPDATE SYNC SERVICES MODAL LOGIC --- */
+        function openUpdateSyncModal(event, userName) {
+            event.stopPropagation();
+            document.getElementById('update-sync-user').innerText = userName;
+            const modal = document.getElementById('update-sync-modal');
+            const content = document.getElementById('update-sync-content');
+            modal.classList.remove('hidden');
+
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeUpdateSyncModal() {
+            const modal = document.getElementById('update-sync-modal');
+            const content = document.getElementById('update-sync-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        function confirmUpdateSync() {
+            const btn = document.getElementById('confirm-sync-btn');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<span class="unicode-icon animate-spin mr-2">&#x23F3;</span> Updating...';
+            btn.disabled = true;
+            setTimeout(() => {
+                closeUpdateSyncModal();
+                showToast("Sync services updated successfully.");
+                btn.innerHTML = orig;
+                btn.disabled = false;
+            }, 1000);
+        }
+
+        function toggleUserSync(btn, userName) {
+            if (event) event.stopPropagation();
+            const isPaused = btn.getAttribute('data-paused') === 'true';
+            const row = btn.closest('tr');
+            const statusBtn = row.querySelector('.status-btn');
+
+            if (isPaused) {
+                btn.setAttribute('data-paused', 'false');
+                btn.innerHTML = '<span class="unicode-icon text-lg">&#x23F8;&#xFE0F;</span>';
+                btn.title = "Pause Sync";
+                btn.className = "text-slate-400 hover:text-amber-500 transition-colors";
+                showToast(`Auto-sync resumed for ${userName}.`);
+                if (statusBtn) {
+                    statusBtn.innerHTML = 'Connected';
+                    statusBtn.className = 'status-btn text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-3 py-1.5 rounded border border-teal-100';
+                }
+            } else {
+                btn.setAttribute('data-paused', 'true');
+                btn.innerHTML = '<span class="unicode-icon text-lg">&#x25B6;&#xFE0F;</span>';
+                btn.title = "Resume Sync";
+                btn.className = "text-amber-500 hover:text-teal-600 transition-colors";
+                showToast(`Auto-sync paused for ${userName}.`);
+                if (statusBtn) {
+                    statusBtn.innerHTML = 'Paused';
+                    statusBtn.className = 'status-btn text-xs font-bold text-amber-700 bg-amber-50 px-3 py-1.5 rounded border border-amber-200 cursor-default hover:no-underline';
+                }
+            }
+        }
+
+        /* --- USER SYNC LOGS MODAL LOGIC --- */
+        function openUserSyncLogs(userName) {
+            document.getElementById('sync-logs-user-name').innerText = userName;
+            const modal = document.getElementById('user-sync-logs-modal');
+            const content = document.getElementById('user-sync-logs-content');
+            const tbody = document.getElementById('user-sync-logs-tbody');
+
+            // Mock log generation
+            tbody.innerHTML = `
+                <tr class="hover:bg-stone-50">
+                    <td class="px-6 py-4 text-slate-500 whitespace-nowrap">Just now</td>
+                    <td class="px-6 py-4"><span class="unicode-icon mr-2">&#x1F4E7;</span> Gmail</td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 bg-emerald-100 text-emerald-800 rounded text-[10px] font-bold uppercase">Success</span></td>
+                    <td class="px-6 py-4 text-slate-600">Synced 14 new emails (2.1 MB).</td>
+                </tr>
+                <tr class="hover:bg-stone-50">
+                    <td class="px-6 py-4 text-slate-500 whitespace-nowrap">1 hour ago</td>
+                    <td class="px-6 py-4"><span class="unicode-icon mr-2">&#x1F4C2;</span> Drive</td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 bg-emerald-100 text-emerald-800 rounded text-[10px] font-bold uppercase">Success</span></td>
+                    <td class="px-6 py-4 text-slate-600">Backed up 3 modified files (12 MB).</td>
+                </tr>
+                <tr class="hover:bg-stone-50">
+                    <td class="px-6 py-4 text-slate-500 whitespace-nowrap">2 hours ago</td>
+                    <td class="px-6 py-4"><span class="unicode-icon mr-2">&#x1F464;</span> Contacts</td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 bg-stone-100 text-stone-600 rounded text-[10px] font-bold uppercase">No Changes</span></td>
+                    <td class="px-6 py-4 text-slate-600">Directory scan complete. 0 items to sync.</td>
+                </tr>
+            `;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeUserSyncLogs() {
+            const modal = document.getElementById('user-sync-logs-modal');
+            const content = document.getElementById('user-sync-logs-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
         /* --- 2FA MODAL LOGIC --- */
         let isTwoFactorEnabled = false;
 
@@ -2729,16 +3184,25 @@
                                     David Miller <span class="ml-2 text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">New</span>
                                 </div>
                                 <div class="text-xs text-slate-500">d.miller@globex.com</div>
-                                <div class="flex gap-1.5 mt-1">
-                                    <span title="Gmail" class="text-xs unicode-icon">&#x1F4E7;</span>
-                                    <span title="Drive" class="text-xs unicode-icon">&#x1F4C2;</span>
-                                    <span title="Contacts & Calendar" class="text-xs unicode-icon">&#x1F464;</span>
+                            </td>
+                            <td class="hidden px-6 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-bold border border-blue-200 uppercase tracking-wider">@globex.com</span></td>
+                            <td class="hidden px-6 py-4 text-sm text-slate-600 font-medium">Standard (Hourly)</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="flex gap-1">
+                                        <span title="Gmail" class="text-sm unicode-icon">&#x1F4E7;</span>
+                                        <span title="Drive" class="text-sm unicode-icon">&#x1F4C2;</span>
+                                        <span title="Contacts & Calendar" class="text-sm unicode-icon">&#x1F464;</span>
+                                    </div>
+                                    <button onclick="openUpdateSyncModal(event, 'David Miller')" class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
                                 </div>
                             </td>
-                            <td class="px-6 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-bold border border-blue-200 uppercase tracking-wider">@globex.com</span></td>
-                            <td class="px-6 py-4 text-sm text-slate-600 font-medium">Standard (Hourly)</td>
-                            <td class="px-6 py-4"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-bold flex items-center w-max"><span class="unicode-icon mr-1.5 text-xs">&#x23F3;</span> Initial Syncing...</span></td>
-                            <td class="px-6 py-4 text-right text-sm text-slate-600 font-medium">0 B</td>
+                                <td class="px-6 py-4">
+                                    <span class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-full text-xs font-bold flex items-center w-max">
+                                        <span class="unicode-icon animate-spin mr-1.5 text-[10px]">&#x23F3;</span> Initial Syncing...
+                                    </span>
+                                </td>
+                            <td class="hidden px-6 py-4 text-right text-sm text-slate-600 font-medium">0 B</td>
                             <td class="px-6 py-4 text-right text-sm font-medium">
                                 <button class="text-teal-600 bg-stone-100 px-3 py-1.5 rounded transition-colors border border-stone-200 flex items-center justify-end w-full sm:w-auto ml-auto opacity-50 cursor-not-allowed" disabled>
                                     <span class="unicode-icon mr-1.5">&#x23EA;</span> Full Restore
@@ -2750,10 +3214,20 @@
                                 <div class="font-bold text-slate-900 text-sm">Globex Operations</div>
                                 <div class="text-xs text-slate-500">ops@globex.com</div>
                             </td>
-                            <td class="px-6 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-bold border border-blue-200 uppercase tracking-wider">@globex.com</span></td>
-                            <td class="px-6 py-4 text-sm text-slate-400 font-medium">None</td>
-                            <td class="px-6 py-4"><span class="px-2 py-1 bg-stone-100 text-stone-500 rounded-full text-xs font-bold flex items-center w-max"><div class="w-1.5 h-1.5 rounded-full bg-stone-400 mr-1.5"></div>Unprotected</span></td>
-                            <td class="px-6 py-4 text-right text-sm text-slate-600 font-medium">0 B</td>
+                            <td class="hidden px-6 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-bold border border-blue-200 uppercase tracking-wider">@globex.com</span></td>
+                            <td class="hidden px-6 py-4 text-sm text-slate-400 font-medium">None</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="text-xs text-slate-500 italic">No services</div>
+                                    <button onclick="openUpdateSyncModal(event, 'Globex Operations')" class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
+                                </div>
+                            </td>
+                                <td class="px-6 py-4">
+                                    <span class="px-2 py-1 bg-stone-100 text-stone-600 border border-stone-200 rounded-full text-xs font-bold flex items-center w-max">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-stone-400 mr-1.5"></div> Unprotected
+                                    </span>
+                                </td>
+                            <td class="hidden px-6 py-4 text-right text-sm text-slate-600 font-medium">0 B</td>
                             <td class="px-6 py-4 text-right text-sm font-medium">
                                 <button class="text-teal-600 bg-stone-100 px-3 py-1.5 rounded transition-colors border border-stone-200 flex items-center justify-end w-full sm:w-auto ml-auto opacity-50 cursor-not-allowed" disabled>
                                     <span class="unicode-icon mr-1.5">&#x23EA;</span> Full Restore
@@ -3205,6 +3679,117 @@
                 btn.innerHTML = orig;
                 btn.disabled = false;
             }, 1200);
+        }
+
+        function reconnectUser(event, userName) {
+            event.stopPropagation();
+            const btn = event.currentTarget;
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<span class="unicode-icon animate-spin mr-1.5">&#x23F3;</span> Re-authenticating...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                showToast(`Successfully re-authenticated ${userName}. Sync will resume shortly.`);
+
+                const row = btn.closest('tr');
+                if (row) {
+                    // Visually update the row to show it's fixed
+                    row.classList.remove('bg-rose-50/30', 'hover:bg-rose-50');
+                    row.classList.add('hover:bg-teal-50', 'cursor-pointer', 'group');
+                    row.setAttribute('onclick', `openUserVault('${userName}', 'j.doe@acme.com', 'Gmail')`);
+
+                    const statusCell = row.children[3];
+                    statusCell.innerHTML = `
+                        <div class="flex items-center gap-2">
+                            <div class="flex gap-1">
+                                <span title="Gmail" class="text-sm unicode-icon">&#x1F4E7;</span>
+                                <span title="Drive" class="text-sm unicode-icon">&#x1F4C2;</span>
+                            </div>
+                            <button onclick="openUpdateSyncModal(event, '${userName}')" class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
+                        </div>
+                    `;
+
+                    const syncStatusCell = row.children[4];
+                    syncStatusCell.innerHTML = `
+                        <span class="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold flex items-center w-max">
+                            <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></div> Protected
+                        </span>
+                    `;
+
+                    const actionCell = row.children[6];
+                    actionCell.innerHTML = `
+                        <button onclick="executeFullUserRestore(event, '${userName}')"
+                            class="text-teal-600 hover:text-white hover:bg-teal-600 bg-teal-50 px-3 py-1.5 rounded transition-colors border border-teal-200 flex items-center justify-end w-full sm:w-auto ml-auto">
+                            <span class="unicode-icon mr-1.5">&#x23EA;</span> Full Restore
+                        </button>
+                    `;
+                }
+            }, 1500);
+        }
+
+        function reconnectCorporateUser(event, userName, btn) {
+            event.stopPropagation();
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<span class="unicode-icon animate-spin mr-1.5">&#x23F3;</span> Re-authenticating...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                showToast(`Successfully re-authenticated ${userName}.`);
+
+                const row = btn.closest('tr');
+                if (row) {
+                    row.classList.remove('bg-rose-50/20');
+                    row.innerHTML = `
+                        <td class="px-6 py-4">
+                            <div class="font-bold text-slate-900 text-sm">${userName}</div>
+                            <div class="text-xs text-slate-500">j.doe@acme.com</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <select class="border border-stone-300 rounded text-xs bg-white px-2 py-1 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none">
+                                <option>Real-Time (CDP)</option>
+                                <option selected>Hourly</option>
+                                <option>Daily</option>
+                            </select>
+                        </td>
+                        <td class="px-6 py-4">
+                            <select class="border border-stone-300 rounded text-xs bg-white px-2 py-1 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none">
+                                <option>Infinite</option>
+                                <option selected>7 Years</option>
+                                <option>1 Year</option>
+                            </select>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <div class="flex gap-1">
+                                    <span title="Gmail" class="text-sm unicode-icon">&#x1F4E7;</span>
+                                    <span title="Drive" class="text-sm unicode-icon">&#x1F4C2;</span>
+                                </div>
+                                <button onclick="openUpdateSyncModal(event, '${userName}')" class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <button onclick="openUserSyncLogs('${userName}')" title="View Logs" class="text-slate-400 hover:text-teal-600 transition-colors">
+                                    <span class="unicode-icon text-lg">&#x1F4DC;</span>
+                                </button>
+                                <button onclick="toggleUserSync(this, '${userName}')" title="Pause Sync" data-paused="false" class="text-slate-400 hover:text-amber-500 transition-colors">
+                                    <span class="unicode-icon text-lg">&#x23F8;&#xFE0F;</span>
+                                </button>
+                                <button onclick="showToast('Policy updated for ${userName}')" class="status-btn text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-3 py-1.5 rounded border border-teal-100">Connected</button>
+                            </div>
+                        </td>
+                    `;
+                }
+
+                const alertBadge = document.getElementById('corporate-policy-alert');
+                if (alertBadge) alertBadge.classList.add('hidden');
+
+                const errorCount = document.getElementById('corp-error-count');
+                if (errorCount) {
+                    errorCount.innerText = '0 Accounts';
+                    errorCount.classList.replace('text-rose-600', 'text-slate-800');
+                }
+            }, 1500);
         }
 
         function executeFullUserRestore(event, userName) {
