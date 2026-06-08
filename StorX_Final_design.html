@@ -1175,10 +1175,6 @@
                                     Domain
                                 </th>
                                 <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Policy</th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Last Backup
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Next Backup
-                                </th>
                                 <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Sync Services
                                 </th>
                                 <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Sync Status
@@ -1203,8 +1199,6 @@
                                         class="px-2 py-1 bg-stone-100 text-stone-600 rounded text-[10px] font-bold border border-stone-200 uppercase tracking-wider">@acme.com</span>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-slate-600 font-medium">Real-Time (CDP)</td>
-                                <td class="px-6 py-4 text-sm text-slate-600">Just now</td>
-                                <td class="px-6 py-4 text-sm text-teal-600 font-medium">Continuous</td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-2">
                                         <div class="flex gap-1">
@@ -1233,23 +1227,6 @@
                                 <td class="hidden px-6 py-4 text-right text-sm text-slate-600 font-medium">450 GB</td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
-                                        <button onclick="openUserSyncLogs('Executive Team')" title="View Logs"
-                                            class="text-slate-400 hover:text-teal-600 transition-colors">
-                                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z">
-                                                </path>
-                                                <polyline points="14 2 14 8 20 8"></polyline>
-                                                <line x1="16" y1="13" x2="8" y2="13"></line>
-                                                <line x1="16" y1="17" x2="8" y2="17"></line>
-                                                <polyline points="10 9 9 9 8 9"></polyline>
-                                            </svg>
-                                        </button>
-                                        <button onclick="toggleUserSync(this, 'Executive Team')" title="Pause Sync"
-                                            data-paused="false"
-                                            class="text-slate-400 hover:text-amber-500 transition-colors">
-                                            <span class="unicode-icon text-lg">&#x23F8;&#xFE0F;</span>
-                                        </button>
                                         <button onclick="executeFullUserRestore(event, 'Executive Team')"
                                             title="Full Restore"
                                             class="text-slate-400 hover:text-teal-600 transition-colors">
@@ -1269,8 +1246,6 @@
                                         class="px-2 py-1 bg-stone-100 text-stone-600 rounded text-[10px] font-bold border border-stone-200 uppercase tracking-wider">@acme.com</span>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-slate-600 font-medium">Standard (Hourly)</td>
-                                <td class="px-6 py-4 text-sm text-slate-600">45 mins ago</td>
-                                <td class="px-6 py-4 text-sm text-slate-600">In 15 mins</td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-2">
                                         <div class="flex gap-1">
@@ -1297,23 +1272,6 @@
                                 <td class="hidden px-6 py-4 text-right text-sm text-slate-600 font-medium">14.2 GB</td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
-                                        <button onclick="openUserSyncLogs('Sarah Jenkins')" title="View Logs"
-                                            class="text-slate-400 hover:text-teal-600 transition-colors">
-                                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z">
-                                                </path>
-                                                <polyline points="14 2 14 8 20 8"></polyline>
-                                                <line x1="16" y1="13" x2="8" y2="13"></line>
-                                                <line x1="16" y1="17" x2="8" y2="17"></line>
-                                                <polyline points="10 9 9 9 8 9"></polyline>
-                                            </svg>
-                                        </button>
-                                        <button onclick="toggleUserSync(this, 'Sarah Jenkins')" title="Pause Sync"
-                                            data-paused="false"
-                                            class="text-slate-400 hover:text-amber-500 transition-colors">
-                                            <span class="unicode-icon text-lg">&#x23F8;&#xFE0F;</span>
-                                        </button>
                                         <button onclick="executeFullUserRestore(event, 'Sarah Jenkins')"
                                             title="Full Restore"
                                             class="text-slate-400 hover:text-teal-600 transition-colors">
@@ -1333,8 +1291,6 @@
                                         class="px-2 py-1 bg-stone-100 text-stone-600 rounded text-[10px] font-bold border border-stone-200 uppercase tracking-wider">@acme.com</span>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-slate-600 font-medium">Standard (Hourly)</td>
-                                <td class="px-6 py-4 text-sm text-slate-400">2 days ago</td>
-                                <td class="px-6 py-4 text-sm text-rose-500 font-medium">Suspended</td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-2">
                                         <div class="flex gap-1">
@@ -1356,23 +1312,6 @@
                                 <td class="hidden px-6 py-4 text-right text-sm text-slate-600 font-medium">8.5 GB</td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
-                                        <button onclick="openUserSyncLogs('John Doe')" title="View Logs"
-                                            class="text-slate-400 hover:text-teal-600 transition-colors">
-                                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z">
-                                                </path>
-                                                <polyline points="14 2 14 8 20 8"></polyline>
-                                                <line x1="16" y1="13" x2="8" y2="13"></line>
-                                                <line x1="16" y1="17" x2="8" y2="17"></line>
-                                                <polyline points="10 9 9 9 8 9"></polyline>
-                                            </svg>
-                                        </button>
-                                        <button onclick="reconnectUser(event, 'John Doe')" title="Resume Sync"
-                                            data-paused="true"
-                                            class="text-amber-500 hover:text-teal-600 transition-colors">
-                                            <span class="unicode-icon text-lg">&#x25B6;&#xFE0F;</span>
-                                        </button>
                                         <button onclick="executeFullUserRestore(event, 'John Doe')" title="Full Restore"
                                             class="text-slate-400 hover:text-teal-600 transition-colors">
                                             <span class="unicode-icon text-lg">&#x23EA;</span>
@@ -4199,8 +4138,6 @@
                             </td>
                             <td class="hidden px-6 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-bold border border-blue-200 uppercase tracking-wider">@globex.com</span></td>
                             <td class="px-6 py-4 text-sm text-slate-600 font-medium">Standard (Hourly)</td>
-                            <td class="px-6 py-4 text-sm text-slate-600">Just now</td>
-                            <td class="px-6 py-4 text-sm text-slate-600">In 1 hour</td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-2">
                                     <div class="flex gap-1">
@@ -4221,12 +4158,6 @@
                             <td class="hidden px-6 py-4 text-right text-sm text-slate-600 font-medium">0 B</td>
                             <td class="px-6 py-4 text-right">
                                 <div class="flex items-center justify-end gap-2">
-                                    <button title="View Logs" class="text-slate-400 transition-colors opacity-50 cursor-not-allowed" disabled>
-                                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                                    </button>
-                                    <button title="Pause Sync" class="text-slate-400 transition-colors opacity-50 cursor-not-allowed" disabled>
-                                        <span class="unicode-icon text-lg">&#x23F8;&#xFE0F;</span>
-                                    </button>
                                     <button title="Full Restore" class="text-slate-400 transition-colors opacity-50 cursor-not-allowed" disabled>
                                         <span class="unicode-icon text-lg">&#x23EA;</span>
                                     </button>
@@ -4240,8 +4171,6 @@
                             </td>
                             <td class="hidden px-6 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-bold border border-blue-200 uppercase tracking-wider">@globex.com</span></td>
                             <td class="px-6 py-4 text-sm text-slate-400 font-medium">None</td>
-                            <td class="px-6 py-4 text-sm text-slate-400">--</td>
-                            <td class="px-6 py-4 text-sm text-slate-400">--</td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-2">
                                     <div class="text-xs text-slate-500 italic">No services</div>
@@ -4256,12 +4185,6 @@
                             <td class="hidden px-6 py-4 text-right text-sm text-slate-600 font-medium">0 B</td>
                             <td class="px-6 py-4 text-right">
                                 <div class="flex items-center justify-end gap-2">
-                                    <button title="View Logs" class="text-slate-400 transition-colors opacity-50 cursor-not-allowed" disabled>
-                                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                                    </button>
-                                    <button title="Pause Sync" class="text-slate-400 transition-colors opacity-50 cursor-not-allowed" disabled>
-                                        <span class="unicode-icon text-lg">&#x23F8;&#xFE0F;</span>
-                                    </button>
                                     <button title="Full Restore" class="text-slate-400 transition-colors opacity-50 cursor-not-allowed" disabled>
                                         <span class="unicode-icon text-lg">&#x23EA;</span>
                                     </button>
@@ -4738,12 +4661,7 @@
                     row.classList.add('hover:bg-teal-50', 'cursor-pointer', 'group');
                     row.setAttribute('onclick', `openUserVault('${userName}', 'j.doe@acme.com', 'Gmail')`);
 
-                    row.children[3].innerHTML = 'Just now';
-                    row.children[3].className = 'px-6 py-4 text-sm text-slate-600';
-                    row.children[4].innerHTML = 'In 1 hour';
-                    row.children[4].className = 'px-6 py-4 text-sm text-slate-600';
-
-                    const statusCell = row.children[5];
+                    const statusCell = row.children[3];
                     statusCell.innerHTML = `
                         <div class="flex items-center gap-2">
                             <div class="flex gap-1">
@@ -4754,22 +4672,16 @@
                         </div>
                     `;
 
-                    const syncStatusCell = row.children[6];
+                    const syncStatusCell = row.children[4];
                     syncStatusCell.innerHTML = `
                         <span class="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold flex items-center w-max">
                             <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></div> Protected
                         </span>
                     `;
 
-                    const actionCell = row.children[8];
+                    const actionCell = row.children[6];
                     actionCell.innerHTML = `
                         <div class="flex items-center justify-end gap-2">
-                            <button onclick="openUserSyncLogs('${userName}')" title="View Logs" class="text-slate-400 hover:text-teal-600 transition-colors">
-                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                            </button>
-                            <button onclick="toggleUserSync(this, '${userName}')" title="Pause Sync" data-paused="false" class="text-slate-400 hover:text-amber-500 transition-colors">
-                                <span class="unicode-icon text-lg">&#x23F8;&#xFE0F;</span>
-                            </button>
                             <button onclick="executeFullUserRestore(event, '${userName}')" title="Full Restore" class="text-slate-400 hover:text-teal-600 transition-colors">
                                 <span class="unicode-icon text-lg">&#x23EA;</span>
                             </button>
