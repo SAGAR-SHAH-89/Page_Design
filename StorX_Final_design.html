@@ -4444,61 +4444,11 @@
 
                 // 3. Inject the new users into the table with a slight delay
                 setTimeout(() => {
-                    const tbody = document.getElementById('users-table-body');
-                    const newRows = `
-                        <tr class="bg-blue-50/30 hover:bg-blue-50 transition-colors animate-[slideInLog_0.4s_forwards] user-row" data-name="david miller" data-email="d.miller@globex.com">
-                            <td class="px-6 py-4">
-                                <div class="font-bold text-slate-900 text-sm flex items-center">
-                                    David Miller <span class="ml-2 text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">New</span>
-                                </div>
-                                <div class="text-xs text-slate-500">d.miller@globex.com</div>
-                            </td>
-                            <td class="hidden px-6 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-bold border border-blue-200 uppercase tracking-wider">@globex.com</span></td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-2">
-                                    <div class="flex gap-1">
-                                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" title="Gmail" alt="Gmail" class="w-4 h-4 object-contain">
-                                        <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" title="Drive" alt="Drive" class="w-4 h-4 object-contain">
-                                        <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg" title="Contacts" alt="Contacts" class="w-4 h-4 object-contain">
-                                        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" title="Calendar" alt="Calendar" class="w-4 h-4 object-contain">
-                                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg" title="Photos" alt="Photos" class="w-4 h-4 object-contain">
-                                    </div>
-                                    <button onclick="openUpdateSyncModal(event, 'David Miller')" class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
-                                </div>
-                            </td>
-                            <td class="hidden px-6 py-4 text-right text-sm text-slate-600 font-medium">0 B</td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-2">
-                                    <button title="Full Restore" class="text-slate-400 transition-colors opacity-50 cursor-not-allowed" disabled>
-                                        <span class="unicode-icon text-lg">&#x23EA;</span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="bg-blue-50/30 hover:bg-blue-50 transition-colors animate-[slideInLog_0.4s_forwards] user-row" style="animation-delay: 100ms" data-name="globex operations" data-email="ops@globex.com">
-                            <td class="px-6 py-4">
-                                <div class="font-bold text-slate-900 text-sm">Globex Operations</div>
-                                <div class="text-xs text-slate-500">ops@globex.com</div>
-                            </td>
-                            <td class="hidden px-6 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-bold border border-blue-200 uppercase tracking-wider">@globex.com</span></td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-2">
-                                    <div class="text-xs text-slate-500 italic">No services</div>
-                                    <button onclick="openUpdateSyncModal(event, 'Globex Operations')" class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
-                                </div>
-                            </td>
-                            <td class="hidden px-6 py-4 text-right text-sm text-slate-600 font-medium">0 B</td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-2">
-                                    <button title="Full Restore" class="text-slate-400 transition-colors opacity-50 cursor-not-allowed" disabled>
-                                        <span class="unicode-icon text-lg">&#x23EA;</span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                    // Insert at top of table
-                    tbody.insertAdjacentHTML('afterbegin', newRows);
+                    allUsersData.unshift(
+                        { name: 'David Miller', email: 'd.miller@globex.com', size: '0 B', services: ['Gmail', 'Drive', 'Contacts', 'Calendar', 'Photos'], isNew: true },
+                        { name: 'Globex Operations', email: 'ops@globex.com', size: '0 B', services: [], isNew: true }
+                    );
+                    applyUsersFilters();
                     showToast("Successfully added 2 new entities from @globex.com");
                 }, 1500);
 
