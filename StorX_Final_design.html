@@ -1145,7 +1145,7 @@
                     <div class="p-4 border-b border-stone-100 flex gap-4 bg-stone-50">
                         <input type="text"
                             class="flex-1 pl-4 pr-3 py-2 border border-stone-300 rounded-lg text-sm bg-white focus:ring-teal-500 focus:border-teal-500 shadow-inner"
-                            placeholder="Search by name, email, or group...">
+                            placeholder="Search by name, email, or group..." onkeyup="filterUsersGroups(this.value)">
                         <select class="border border-stone-300 rounded-lg text-sm bg-white px-3 py-2 shadow-sm">
                             <option>All Accounts/Domains</option>
                             <option>acme.com (Current)</option>
@@ -1176,118 +1176,19 @@
                             </tr>
                         </thead>
                         <tbody id="users-table-body" class="bg-white divide-y divide-stone-100">
-                            <tr class="hover:bg-teal-50 cursor-pointer transition-colors group"
-                                onclick="openUserVault('Executive Team', 'execs@acme.com', 'Gmail')">
-                                <td class="px-6 py-4">
-                                    <div
-                                        class="font-bold text-slate-900 text-sm group-hover:text-teal-700 flex items-center">
-                                        Executive Team
-                                    </div>
-                                    <div class="text-xs text-slate-500">execs@acme.com</div>
-                                </td>
-                                <td class="hidden px-6 py-4"><span
-                                        class="px-2 py-1 bg-stone-100 text-stone-600 rounded text-[10px] font-bold border border-stone-200 uppercase tracking-wider">@acme.com</span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-2">
-                                        <div class="flex gap-1">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
-                                                title="Gmail" alt="Gmail" class="w-4 h-4 object-contain">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg"
-                                                title="Drive" alt="Drive" class="w-4 h-4 object-contain">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg"
-                                                title="Contacts" alt="Contacts" class="w-4 h-4 object-contain">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg"
-                                                title="Calendar" alt="Calendar" class="w-4 h-4 object-contain">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg"
-                                                title="Photos" alt="Photos" class="w-4 h-4 object-contain">
-                                        </div>
-                                        <button onclick="openUpdateSyncModal(event, 'Executive Team')"
-                                            class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
-                                    </div>
-                                </td>
-                                <td class="hidden px-6 py-4 text-right text-sm text-slate-600 font-medium">450 GB</td>
-                                <td class="px-6 py-4 text-right">
-                                    <div class="flex items-center justify-end gap-2">
-                                        <button onclick="executeFullUserRestore(event, 'Executive Team')"
-                                            title="Full Restore"
-                                            class="text-slate-400 hover:text-teal-600 transition-colors">
-                                            <span class="unicode-icon text-lg">&#x23EA;</span>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-teal-50 cursor-pointer transition-colors group"
-                                onclick="openUserVault('Sarah Jenkins', 's.jenkins@acme.com', 'Gmail')">
-                                <td class="px-6 py-4">
-                                    <div class="font-bold text-slate-900 text-sm group-hover:text-teal-700">Sarah
-                                        Jenkins</div>
-                                    <div class="text-xs text-slate-500">s.jenkins@acme.com</div>
-                                </td>
-                                <td class="hidden px-6 py-4"><span
-                                        class="px-2 py-1 bg-stone-100 text-stone-600 rounded text-[10px] font-bold border border-stone-200 uppercase tracking-wider">@acme.com</span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-2">
-                                        <div class="flex gap-1">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
-                                                title="Gmail" alt="Gmail" class="w-4 h-4 object-contain">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg"
-                                                title="Drive" alt="Drive" class="w-4 h-4 object-contain">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg"
-                                                title="Contacts" alt="Contacts" class="w-4 h-4 object-contain">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg"
-                                                title="Calendar" alt="Calendar" class="w-4 h-4 object-contain">
-                                        </div>
-                                        <button onclick="openUpdateSyncModal(event, 'Sarah Jenkins')"
-                                            class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
-                                    </div>
-                                </td>
-                                <td class="hidden px-6 py-4 text-right text-sm text-slate-600 font-medium">14.2 GB</td>
-                                <td class="px-6 py-4 text-right">
-                                    <div class="flex items-center justify-end gap-2">
-                                        <button onclick="executeFullUserRestore(event, 'Sarah Jenkins')"
-                                            title="Full Restore"
-                                            class="text-slate-400 hover:text-teal-600 transition-colors">
-                                            <span class="unicode-icon text-lg">&#x23EA;</span>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-teal-50 cursor-pointer transition-colors group"
-                                onclick="openUserVault('John Doe', 'j.doe@acme.com', 'Gmail')">
-                                <td class="px-6 py-4">
-                                    <div class="font-bold text-slate-900 text-sm group-hover:text-teal-700">John Doe
-                                    </div>
-                                    <div class="text-xs text-slate-500">j.doe@acme.com</div>
-                                </td>
-                                <td class="hidden px-6 py-4"><span
-                                        class="px-2 py-1 bg-stone-100 text-stone-600 rounded text-[10px] font-bold border border-stone-200 uppercase tracking-wider">@acme.com</span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-2">
-                                        <div class="flex gap-1">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
-                                                title="Gmail" alt="Gmail" class="w-4 h-4 object-contain">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg"
-                                                title="Drive" alt="Drive" class="w-4 h-4 object-contain">
-                                        </div>
-                                        <button onclick="openUpdateSyncModal(event, 'John Doe')"
-                                            class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
-                                    </div>
-                                </td>
-                                <td class="hidden px-6 py-4 text-right text-sm text-slate-600 font-medium">8.5 GB</td>
-                                <td class="px-6 py-4 text-right">
-                                    <div class="flex items-center justify-end gap-2">
-                                        <button onclick="executeFullUserRestore(event, 'John Doe')" title="Full Restore"
-                                            class="text-slate-400 hover:text-teal-600 transition-colors">
-                                            <span class="unicode-icon text-lg">&#x23EA;</span>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                            <!-- Populated dynamically by JS -->
                         </tbody>
                     </table>
+                    <!-- Pagination Container -->
+                    <div
+                        class="px-6 py-4 border-t border-stone-200 bg-white flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="text-sm text-slate-500 font-medium" id="users-pagination-info">
+                            <!-- Populated dynamically -->
+                        </div>
+                        <div class="flex items-center gap-1.5" id="users-pagination-controls">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
                 </div>
             </main>
 
@@ -3197,112 +3098,18 @@
 
                     <!-- Search and Select All -->
                     <div class="mb-4 p-2 bg-stone-100 border border-stone-200 rounded-lg flex items-center gap-3">
-                        <input type="text" placeholder="Search accounts..."
+                        <input type="text" placeholder="Search accounts..." onkeyup="filterUpdateUsers(this.value)"
                             class="flex-1 bg-transparent border-none focus:ring-0 text-sm outline-none">
                         <label
                             class="flex items-center text-xs font-bold text-slate-500 cursor-pointer whitespace-nowrap">
-                            <input type="checkbox"
+                            <input type="checkbox" id="select-all-users-cb" onchange="toggleAllUpdateUsers(this)"
                                 class="mr-2 w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500">
                             Select All
                         </label>
                     </div>
 
-                    <div class="space-y-2 max-h-[40vh] overflow-y-auto pr-2">
-                        <label
-                            class="flex justify-between items-center p-3 bg-white border border-stone-200 rounded-lg cursor-pointer hover:border-teal-300 hover:shadow-sm transition-all">
-                            <div class="flex items-center">
-                                <input type="checkbox"
-                                    class="update-user-cb mr-4 w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500"
-                                    value="execs@acme.com">
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-500 font-bold text-xs">
-                                        ET</div>
-                                    <div>
-                                        <div class="font-bold text-sm text-slate-800">Executive Team</div>
-                                        <div class="text-xs text-slate-500 mt-0.5">execs@acme.com</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex gap-1.5">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
-                                    title="Gmail" alt="Gmail" class="w-4 h-4 object-contain">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg"
-                                    title="Drive" alt="Drive" class="w-4 h-4 object-contain">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg"
-                                    title="Photos" alt="Photos" class="w-4 h-4 object-contain opacity-20">
-                            </div>
-                        </label>
-                        <label
-                            class="flex justify-between items-center p-3 bg-white border border-stone-200 rounded-lg cursor-pointer hover:border-teal-300 hover:shadow-sm transition-all">
-                            <div class="flex items-center">
-                                <input type="checkbox"
-                                    class="update-user-cb mr-4 w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500"
-                                    value="s.jenkins@acme.com">
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs">
-                                        SJ</div>
-                                    <div>
-                                        <div class="font-bold text-sm text-slate-800">Sarah Jenkins</div>
-                                        <div class="text-xs text-slate-500 mt-0.5">s.jenkins@acme.com</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex gap-1.5">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
-                                    title="Gmail" alt="Gmail" class="w-4 h-4 object-contain">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg"
-                                    title="Drive" alt="Drive" class="w-4 h-4 object-contain">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg"
-                                    title="Photos" alt="Photos" class="w-4 h-4 object-contain">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg"
-                                    title="Contacts" alt="Contacts" class="w-4 h-4 object-contain">
-                            </div>
-                        </label>
-                        <label
-                            class="flex justify-between items-center p-3 bg-white border border-stone-200 rounded-lg cursor-pointer hover:border-teal-300 hover:shadow-sm transition-all">
-                            <div class="flex items-center">
-                                <input type="checkbox"
-                                    class="update-user-cb mr-4 w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500"
-                                    value="marketing@acme.com">
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-8 h-8 rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-lg">
-                                        <span class="unicode-icon">&#x1F4C2;</span>
-                                    </div>
-                                    <div>
-                                        <div class="font-bold text-sm text-slate-800">Marketing Shared Drive</div>
-                                        <div class="text-xs text-slate-500 mt-0.5">marketing@acme.com</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex gap-1.5">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg"
-                                    title="Drive" alt="Drive" class="w-4 h-4 object-contain">
-                            </div>
-                        </label>
-                        <label
-                            class="flex justify-between items-center p-3 bg-white border border-stone-200 rounded-lg cursor-pointer hover:border-teal-300 hover:shadow-sm transition-all">
-                            <div class="flex items-center">
-                                <input type="checkbox"
-                                    class="update-user-cb mr-4 w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500"
-                                    value="j.doe@acme.com">
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-500 font-bold text-xs">
-                                        JD</div>
-                                    <div>
-                                        <div class="font-bold text-sm text-slate-800">John Doe</div>
-                                        <div class="text-xs text-slate-500 mt-0.5">j.doe@acme.com</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex gap-1.5">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
-                                    title="Gmail" alt="Gmail" class="w-4 h-4 object-contain">
-                            </div>
-                        </label>
+                    <div id="update-users-list" class="space-y-2 max-h-[40vh] overflow-y-auto pr-2">
+                        <!-- Populated dynamically by JS -->
                     </div>
                 </div>
                 <div class="p-4 border-t border-stone-100 bg-stone-50 flex justify-end gap-3">
@@ -3559,6 +3366,142 @@
             }
         }
 
+        /* --- USERS & GROUPS LISTING LOGIC --- */
+        let isUsersListRendered = false;
+        let allUsersData = [];
+        let currentUsersPage = 1;
+        const usersPerPage = 10;
+        let filteredUsersData = [];
+
+        function renderUsersGroupsList() {
+            const tbody = document.getElementById('users-table-body');
+            if (!tbody) return;
+
+            const specificUsers = [
+                { name: 'Executive Team', email: 'execs@acme.com', size: '450 GB' },
+                { name: 'Sarah Jenkins', email: 's.jenkins@acme.com', size: '14.2 GB' },
+                { name: 'John Doe', email: 'j.doe@acme.com', size: '8.5 GB' }
+            ];
+
+            allUsersData = [...specificUsers];
+
+            for (let i = 1; i <= 97; i++) {
+                allUsersData.push({ name: `Mock User ${i}`, email: `user${i}@acme.com`, size: '0 B' });
+            }
+
+            filteredUsersData = [...allUsersData];
+            displayUsersPage(1);
+        }
+
+        function displayUsersPage(page) {
+            currentUsersPage = page;
+            const tbody = document.getElementById('users-table-body');
+            if (!tbody) return;
+
+            let html = '';
+
+            const startIndex = (page - 1) * usersPerPage;
+            const endIndex = Math.min(startIndex + usersPerPage, filteredUsersData.length);
+
+            const servicesHtml = `
+                <div class="flex gap-1">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" title="Gmail" alt="Gmail" class="w-4 h-4 object-contain">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" title="Drive" alt="Drive" class="w-4 h-4 object-contain">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg" title="Contacts" alt="Contacts" class="w-4 h-4 object-contain">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" title="Calendar" alt="Calendar" class="w-4 h-4 object-contain">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg" title="Photos" alt="Photos" class="w-4 h-4 object-contain">
+                </div>`;
+
+            const generateRow = (name, email, size) => `
+                <tr class="hover:bg-teal-50 cursor-pointer transition-colors group user-row" onclick="openUserVault('${name}', '${email}', 'Gmail')" data-name="${name.toLowerCase()}" data-email="${email.toLowerCase()}">
+                    <td class="px-6 py-4">
+                        <div class="font-bold text-slate-900 text-sm group-hover:text-teal-700 flex items-center">${name}</div>
+                        <div class="text-xs text-slate-500">${email}</div>
+                    </td>
+                    <td class="hidden px-6 py-4"><span class="px-2 py-1 bg-stone-100 text-stone-600 rounded text-[10px] font-bold border border-stone-200 uppercase tracking-wider">@acme.com</span></td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-2">
+                            ${servicesHtml}
+                            <button onclick="openUpdateSyncModal(event, '${name}')" class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
+                        </div>
+                    </td>
+                    <td class="hidden px-6 py-4 text-right text-sm text-slate-600 font-medium">${size}</td>
+                    <td class="px-6 py-4 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            <button onclick="executeFullUserRestore(event, '${name}')" title="Full Restore" class="text-slate-400 hover:text-teal-600 transition-colors">
+                                <span class="unicode-icon text-lg">&#x23EA;</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>`;
+
+            for (let i = startIndex; i < endIndex; i++) {
+                html += generateRow(filteredUsersData[i].name, filteredUsersData[i].email, filteredUsersData[i].size);
+            }
+
+            if (filteredUsersData.length === 0) {
+                html = `<tr><td colspan="5" class="px-6 py-8 text-center text-slate-500 font-medium">No users or groups found.</td></tr>`;
+            }
+
+            tbody.innerHTML = html;
+            updateUsersPaginationInfo();
+        }
+
+        function updateUsersPaginationInfo() {
+            const infoEl = document.getElementById('users-pagination-info');
+            const controlsEl = document.getElementById('users-pagination-controls');
+            if (!infoEl || !controlsEl) return;
+
+            const total = filteredUsersData.length;
+            const startIndex = (currentUsersPage - 1) * usersPerPage;
+            const endIndex = Math.min(startIndex + usersPerPage, total);
+            const totalPages = Math.ceil(total / usersPerPage);
+
+            if (total === 0) {
+                infoEl.innerText = 'Showing 0 entries';
+                controlsEl.innerHTML = '';
+                return;
+            }
+
+            infoEl.innerText = `Showing ${startIndex + 1} to ${endIndex} of ${total} entries`;
+
+            let controlsHtml = `
+                <button onclick="changeUsersPage(${currentUsersPage - 1})" class="px-3 py-1.5 border border-stone-300 rounded-lg text-sm font-medium text-slate-600 bg-white hover:bg-stone-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm" ${currentUsersPage === 1 ? 'disabled' : ''}>Previous</button>
+            `;
+
+            let startPage = Math.max(1, currentUsersPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                if (i === currentUsersPage) {
+                    controlsHtml += `<button class="w-8 h-8 flex items-center justify-center border border-teal-600 bg-teal-50 text-teal-700 rounded-lg text-sm font-bold shadow-sm">${i}</button>`;
+                } else {
+                    controlsHtml += `<button onclick="changeUsersPage(${i})" class="w-8 h-8 flex items-center justify-center border border-stone-300 bg-white text-slate-600 hover:bg-stone-50 rounded-lg text-sm font-medium transition-colors shadow-sm">${i}</button>`;
+                }
+            }
+
+            controlsHtml += `
+                <button onclick="changeUsersPage(${currentUsersPage + 1})" class="px-3 py-1.5 border border-stone-300 rounded-lg text-sm font-medium text-slate-600 bg-white hover:bg-stone-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm" ${currentUsersPage === totalPages ? 'disabled' : ''}>Next</button>
+            `;
+
+            controlsEl.innerHTML = controlsHtml;
+        }
+
+        function changeUsersPage(page) {
+            displayUsersPage(page);
+        }
+
+        function filterUsersGroups(query) {
+            const term = query.toLowerCase();
+            filteredUsersData = allUsersData.filter(u =>
+                u.name.toLowerCase().includes(term) || u.email.toLowerCase().includes(term)
+            );
+            displayUsersPage(1);
+        }
+
         function showDashboard() {
             document.querySelectorAll('main').forEach(m => { m.classList.remove('block'); m.classList.add('hidden'); });
             document.getElementById('view-dashboard').classList.remove('hidden');
@@ -3581,6 +3524,11 @@
 
             document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
             document.getElementById('nav-users').classList.add('active');
+
+            if (!isUsersListRendered) {
+                renderUsersGroupsList();
+                isUsersListRendered = true;
+            }
         }
 
         function showLocalVaults() {
@@ -3907,12 +3855,105 @@
 
         /* --- UPDATE USERS SCOPE LOGIC --- */
         let currentUpdatePolicy = '';
+        let isUpdateUsersListRendered = false;
+
+        function renderUpdateUsersList() {
+            const listContainer = document.getElementById('update-users-list');
+            if (!listContainer) return;
+
+            let html = '';
+
+            const specificUsers = [
+                { name: 'Executive Team', email: 'execs@acme.com', initials: 'ET', color: 'stone', isGroup: false },
+                { name: 'Sarah Jenkins', email: 's.jenkins@acme.com', initials: 'SJ', color: 'indigo', isGroup: false },
+                { name: 'Marketing Shared Drive', email: 'marketing@acme.com', initials: '📁', color: 'stone', isGroup: true },
+                { name: 'John Doe', email: 'j.doe@acme.com', initials: 'JD', color: 'stone', isGroup: false }
+            ];
+
+            const servicesHtml = `
+                <div class="flex gap-1.5">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" title="Gmail" alt="Gmail" class="w-4 h-4 object-contain">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" title="Drive" alt="Drive" class="w-4 h-4 object-contain">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg" title="Photos" alt="Photos" class="w-4 h-4 object-contain opacity-20">
+                </div>`;
+
+            specificUsers.forEach(u => {
+                const avatar = u.isGroup
+                    ? `<div class="w-8 h-8 rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-lg"><span class="unicode-icon">&#x1F4C2;</span></div>`
+                    : `<div class="w-8 h-8 rounded-full bg-${u.color}-100 text-${u.color}-700 flex items-center justify-center font-bold text-xs">${u.initials}</div>`;
+
+                html += `
+                    <label class="update-user-row flex justify-between items-center p-3 bg-white border border-stone-200 rounded-lg cursor-pointer hover:border-teal-300 hover:shadow-sm transition-all" data-name="${u.name.toLowerCase()}" data-email="${u.email.toLowerCase()}">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="update-user-cb mr-4 w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500" value="${u.email}">
+                            <div class="flex items-center gap-3">
+                                ${avatar}
+                                <div>
+                                    <div class="font-bold text-sm text-slate-800">${u.name}</div>
+                                    <div class="text-xs text-slate-500 mt-0.5">${u.email}</div>
+                                </div>
+                            </div>
+                        </div>
+                        ${servicesHtml}
+                    </label>`;
+            });
+
+            for (let i = 1; i <= 96; i++) {
+                html += `
+                    <label class="update-user-row flex justify-between items-center p-3 bg-white border border-stone-200 rounded-lg cursor-pointer hover:border-teal-300 hover:shadow-sm transition-all" data-name="mock user ${i}" data-email="user${i}@acme.com">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="update-user-cb mr-4 w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500" value="user${i}@acme.com">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-stone-100 text-stone-500 flex items-center justify-center font-bold text-xs">U${i}</div>
+                                <div>
+                                    <div class="font-bold text-sm text-slate-800">Mock User ${i}</div>
+                                    <div class="text-xs text-slate-500 mt-0.5">user${i}@acme.com</div>
+                                </div>
+                            </div>
+                        </div>
+                        ${servicesHtml}
+                    </label>`;
+            }
+
+            listContainer.innerHTML = html;
+        }
+
+        function toggleAllUpdateUsers(source) {
+            const checkboxes = document.querySelectorAll('.update-user-cb');
+            checkboxes.forEach(cb => {
+                const row = cb.closest('.update-user-row');
+                if (!row.classList.contains('hidden')) {
+                    cb.checked = source.checked;
+                }
+            });
+        }
+
+        function filterUpdateUsers(query) {
+            const term = query.toLowerCase();
+            const rows = document.querySelectorAll('.update-user-row');
+            rows.forEach(row => {
+                const name = row.getAttribute('data-name');
+                const email = row.getAttribute('data-email');
+                if (name.includes(term) || email.includes(term)) {
+                    row.classList.remove('hidden');
+                    row.classList.add('flex');
+                } else {
+                    row.classList.add('hidden');
+                    row.classList.remove('flex');
+                }
+            });
+        }
 
         function openUpdateUsersModal(policyName) {
             currentUpdatePolicy = policyName;
             document.getElementById('update-users-policy-name').innerText = policyName;
             const modal = document.getElementById('update-users-modal');
             const content = document.getElementById('update-users-content');
+
+            if (!isUpdateUsersListRendered) {
+                renderUpdateUsersList();
+                isUpdateUsersListRendered = true;
+            }
 
             const isPersonal = policyName === 'Sarah Jenkins';
 
@@ -4404,7 +4445,7 @@
                 setTimeout(() => {
                     const tbody = document.getElementById('users-table-body');
                     const newRows = `
-                        <tr class="bg-blue-50/30 hover:bg-blue-50 transition-colors animate-[slideInLog_0.4s_forwards]">
+                        <tr class="bg-blue-50/30 hover:bg-blue-50 transition-colors animate-[slideInLog_0.4s_forwards] user-row" data-name="david miller" data-email="d.miller@globex.com">
                             <td class="px-6 py-4">
                                 <div class="font-bold text-slate-900 text-sm flex items-center">
                                     David Miller <span class="ml-2 text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">New</span>
@@ -4433,7 +4474,7 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr class="bg-blue-50/30 hover:bg-blue-50 transition-colors animate-[slideInLog_0.4s_forwards]" style="animation-delay: 100ms">
+                        <tr class="bg-blue-50/30 hover:bg-blue-50 transition-colors animate-[slideInLog_0.4s_forwards] user-row" style="animation-delay: 100ms" data-name="globex operations" data-email="ops@globex.com">
                             <td class="px-6 py-4">
                                 <div class="font-bold text-slate-900 text-sm">Globex Operations</div>
                                 <div class="text-xs text-slate-500">ops@globex.com</div>
