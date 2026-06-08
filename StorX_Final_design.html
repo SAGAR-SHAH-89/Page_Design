@@ -3378,15 +3378,16 @@
             if (!tbody) return;
 
             const specificUsers = [
-                { name: 'Executive Team', email: 'execs@acme.com', size: '450 GB' },
-                { name: 'Sarah Jenkins', email: 's.jenkins@acme.com', size: '14.2 GB' },
-                { name: 'John Doe', email: 'j.doe@acme.com', size: '8.5 GB' }
+                { name: 'Executive Team', email: 'execs@acme.com', size: '450 GB', services: ['Gmail', 'Drive', 'Contacts', 'Calendar', 'Photos'] },
+                { name: 'Sarah Jenkins', email: 's.jenkins@acme.com', size: '14.2 GB', services: ['Gmail', 'Drive', 'Contacts', 'Calendar'] },
+                { name: 'John Doe', email: 'j.doe@acme.com', size: '8.5 GB', services: ['Gmail', 'Drive'] }
             ];
 
             allUsersData = [...specificUsers];
 
             for (let i = 1; i <= 97; i++) {
-                allUsersData.push({ name: `Mock User ${i}`, email: `user${i}@acme.com`, size: '0 B' });
+                const mockServices = i % 3 === 0 ? ['Gmail', 'Drive'] : i % 2 === 0 ? ['Photos', 'Contacts'] : ['Gmail', 'Drive', 'Calendar', 'Photos'];
+                allUsersData.push({ name: `Mock User ${i}`, email: `user${i}@acme.com`, size: '0 B', services: mockServices });
             }
 
             filteredUsersData = [...allUsersData];
@@ -4668,7 +4669,16 @@
                         <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal">Drafts</button>
                     </div>
                 </div>
-                <div class="flex-1 overflow-y-auto">
+                <div class="flex-1 overflow-y-auto flex flex-col">
+                    <div class="flex justify-between items-center mb-4 gap-2">
+                        <div class="relative flex-1 max-w-md">
+                            <input type="text" class="w-full pl-9 pr-3 py-2 border border-stone-300 rounded-lg text-sm bg-white focus:ring-teal-500 focus:border-teal-500 shadow-sm outline-none" placeholder="Search emails...">
+                            <span class="absolute left-3 top-2.5 unicode-icon text-slate-400 text-sm">&#x1F50D;</span>
+                        </div>
+                        <button class="text-slate-500 hover:text-teal-600 transition-colors p-2 bg-white border border-stone-200 rounded-lg shadow-sm" title="Filter emails">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+                        </button>
+                    </div>
                     <div class="space-y-2">`;
             const emails = [
                 { s: "Invoice #4021 - APPROVED", f: "billing@vendor.com", d: "Oct 24" },
@@ -4771,7 +4781,16 @@
                         <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal">Trash</button>
                     </div>
                 </div>
-                <div class="flex-1 overflow-y-auto">
+                <div class="flex-1 overflow-y-auto flex flex-col">
+                    <div class="flex justify-between items-center mb-4 gap-2">
+                        <div class="relative flex-1 max-w-md">
+                            <input type="text" class="w-full pl-9 pr-3 py-2 border border-stone-300 rounded-lg text-sm bg-white focus:ring-teal-500 focus:border-teal-500 shadow-sm outline-none" placeholder="Search files...">
+                            <span class="absolute left-3 top-2.5 unicode-icon text-slate-400 text-sm">&#x1F50D;</span>
+                        </div>
+                        <button class="text-slate-500 hover:text-teal-600 transition-colors p-2 bg-white border border-stone-200 rounded-lg shadow-sm" title="Filter files">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+                        </button>
+                    </div>
                     <table class="w-full text-left text-sm bg-white rounded-lg border border-stone-200 overflow-hidden shadow-sm">
                             <thead class="bg-stone-50 border-b border-stone-100">
                                 <tr>
@@ -4810,7 +4829,16 @@
                         <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal">Favorites</button>
                     </div>
                 </div>
-                <div class="flex-1 overflow-y-auto">
+                <div class="flex-1 overflow-y-auto flex flex-col">
+                    <div class="flex justify-between items-center mb-4 gap-2">
+                        <div class="relative flex-1 max-w-md">
+                            <input type="text" class="w-full pl-9 pr-3 py-2 border border-stone-300 rounded-lg text-sm bg-white focus:ring-teal-500 focus:border-teal-500 shadow-sm outline-none" placeholder="Search photos...">
+                            <span class="absolute left-3 top-2.5 unicode-icon text-slate-400 text-sm">&#x1F50D;</span>
+                        </div>
+                        <button class="text-slate-500 hover:text-teal-600 transition-colors p-2 bg-white border border-stone-200 rounded-lg shadow-sm" title="Filter photos">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+                        </button>
+                    </div>
                     <div class="photo-grid">`;
             const colors = ['#fca5a5', '#93c5fd', '#86efac', '#fde047', '#d8b4fe', '#fdba74'];
             for (let i = 0; i < 6; i++) {
@@ -4831,7 +4859,16 @@
                         <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal">Starred</button>
                     </div>
                 </div>
-                <div class="flex-1 overflow-y-auto">
+                <div class="flex-1 overflow-y-auto flex flex-col">
+                    <div class="flex justify-between items-center mb-4 gap-2">
+                        <div class="relative flex-1 max-w-md">
+                            <input type="text" class="w-full pl-9 pr-3 py-2 border border-stone-300 rounded-lg text-sm bg-white focus:ring-teal-500 focus:border-teal-500 shadow-sm outline-none" placeholder="Search contacts...">
+                            <span class="absolute left-3 top-2.5 unicode-icon text-slate-400 text-sm">&#x1F50D;</span>
+                        </div>
+                        <button class="text-slate-500 hover:text-teal-600 transition-colors p-2 bg-white border border-stone-200 rounded-lg shadow-sm" title="Filter contacts">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+                        </button>
+                    </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">`;
             const contacts = ["Client Contact A", "Vendor Support", "Marketing Agency", "Board Member D"];
             contacts.forEach((c, i) => {
@@ -4861,7 +4898,16 @@
                         <button onclick="switchSidebarFilter(this)" class="w-full text-left px-3 py-2 bg-transparent text-slate-600 rounded-lg text-sm font-medium hover:bg-stone-200 transition-colors whitespace-nowrap sm:whitespace-normal">Other Calendars</button>
                     </div>
                 </div>
-                <div class="flex-1 overflow-y-auto">
+                <div class="flex-1 overflow-y-auto flex flex-col">
+                    <div class="flex justify-between items-center mb-4 gap-2">
+                        <div class="relative flex-1 max-w-md">
+                            <input type="text" class="w-full pl-9 pr-3 py-2 border border-stone-300 rounded-lg text-sm bg-white focus:ring-teal-500 focus:border-teal-500 shadow-sm outline-none" placeholder="Search events...">
+                            <span class="absolute left-3 top-2.5 unicode-icon text-slate-400 text-sm">&#x1F50D;</span>
+                        </div>
+                        <button class="text-slate-500 hover:text-teal-600 transition-colors p-2 bg-white border border-stone-200 rounded-lg shadow-sm" title="Filter events">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+                        </button>
+                    </div>
                     <div class="space-y-3">`;
             const events = [
                 { t: "Q4 Planning Onsite", d: "Oct 25, 10:00 AM - 11:30 AM", c: "bg-teal-500" },
