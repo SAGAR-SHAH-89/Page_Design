@@ -1313,12 +1313,12 @@
                             </div>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="openEditPolicyModal('Sarah Jenkins')"
-                                class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Update
-                                Policy</button>
-                            <button onclick="reconnectCorporateCard(this)"
-                                class="flex-1 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold py-2 rounded-lg transition-colors border border-rose-700 flex items-center justify-center shadow-sm">
-                                <span class="unicode-icon mr-1.5">&#x1F517;</span> Reconnect
+                            <button onclick="openAssignPolicyPage('Sarah Jenkins')"
+                                class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Create
+                                & Assign Policy</button>
+                            <button onclick="reconnectCorporateCard(this)" title="Reconnect Account"
+                                class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 rounded-lg transition-colors border border-rose-700 flex items-center justify-center shadow-sm shrink-0">
+                                <span class="unicode-icon">&#x1F517;</span>
                             </button>
                         </div>
                     </div>
@@ -1349,9 +1349,6 @@
                             </div>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="openEditPolicyModal('Contractors Policy')"
-                                class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Update
-                                Policy</button>
                             <button onclick="openAssignPolicyPage('Contractors Policy')"
                                 class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Create
                                 & Assign Policy</button>
@@ -1388,9 +1385,6 @@
                             </div>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="openEditPolicyModal('Legal Hold Policy')"
-                                class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Update
-                                Policy</button>
                             <button onclick="openAssignPolicyPage('Legal Hold Policy')"
                                 class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Create
                                 & Assign Policy</button>
@@ -1427,9 +1421,6 @@
                             </div>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="openEditPolicyModal('Creative Assets Policy')"
-                                class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Update
-                                Policy</button>
                             <button onclick="openAssignPolicyPage('Creative Assets Policy')"
                                 class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Create
                                 & Assign Policy</button>
@@ -1844,10 +1835,6 @@
                         </div>
                         <div class="flex items-center gap-3">
                             <button onclick="savePolicyAssignments(event)"
-                                class="bg-white border border-stone-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-stone-50 flex items-center transition-colors">
-                                Update
-                            </button>
-                            <button onclick="savePolicyAssignments(event)"
                                 class="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 flex items-center transition-colors">
                                 Create & Update Policy
                             </button>
@@ -1909,16 +1896,11 @@
                                                 onchange="applyBulkAssignOptions('service')"
                                                 class="border border-stone-300 rounded text-xs bg-white px-1.5 py-1 shadow-sm focus:ring-teal-500 outline-none font-normal normal-case w-full max-w-[160px]">
                                                 <option value="">Bulk Update...</option>
-                                                <option value="enable_Gmail">Enable Gmail</option>
-                                                <option value="disable_Gmail">Disable Gmail</option>
-                                                <option value="enable_Drive">Enable Drive</option>
-                                                <option value="disable_Drive">Disable Drive</option>
-                                                <option value="enable_Photos">Enable Photos</option>
-                                                <option value="disable_Photos">Disable Photos</option>
-                                                <option value="enable_Contacts">Enable Contacts</option>
-                                                <option value="disable_Contacts">Disable Contacts</option>
-                                                <option value="enable_Calendar">Enable Calendar</option>
-                                                <option value="disable_Calendar">Disable Calendar</option>
+                                                <option value="Gmail">Gmail</option>
+                                                <option value="Drive">Drive</option>
+                                                <option value="Photos">Photos</option>
+                                                <option value="Contacts">Contacts</option>
+                                                <option value="Calendar">Calendar</option>
                                             </select>
                                         </div>
                                     </th>
@@ -4073,16 +4055,10 @@
                     row.querySelector('.assign-sync-select').value = val;
                     applied = true;
                 } else if (type === 'service') {
-                    const parts = val.split('_');
-                    const action = parts[0];
-                    const svc = parts[1];
-                    const svcImg = row.querySelector(`.assign-services-list img[data-service="${svc}"]`);
+                    const svcImg = row.querySelector(`.assign-services-list img[data-service="${val}"]`);
                     if (svcImg) {
-                        if (action === 'enable') {
-                            svcImg.classList.remove('opacity-30', 'grayscale');
-                        } else {
-                            svcImg.classList.add('opacity-30', 'grayscale');
-                        }
+                        svcImg.classList.toggle('opacity-30');
+                        svcImg.classList.toggle('grayscale');
                         applied = true;
                     }
                 }
