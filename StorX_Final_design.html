@@ -1142,37 +1142,39 @@
                 </div>
 
                 <div class="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden mb-6">
-                    <div class="p-4 border-b border-stone-100 flex gap-4 bg-stone-50">
+                    <div class="p-4 border-b border-stone-100 flex flex-wrap gap-4 bg-stone-50">
                         <input type="text"
-                            class="flex-1 pl-4 pr-3 py-2 border border-stone-300 rounded-lg text-sm bg-white focus:ring-teal-500 focus:border-teal-500 shadow-inner"
+                            class="flex-1 min-w-[200px] pl-4 pr-3 py-2 border border-stone-300 rounded-lg text-sm bg-white focus:ring-teal-500 focus:border-teal-500 shadow-inner"
                             placeholder="Search by name, email, or group..." onkeyup="filterUsersGroups(this.value)">
                         <select class="border border-stone-300 rounded-lg text-sm bg-white px-3 py-2 shadow-sm">
                             <option>All Accounts/Domains</option>
                             <option>acme.com (Current)</option>
                             <option>Newly Connected</option>
                         </select>
-                        <select class="border border-stone-300 rounded-lg text-sm bg-white px-3 py-2 shadow-sm">
-                            <option>All Services</option>
-                            <option>Gmail</option>
-                            <option>Google Drive</option>
-                            <option>Google Photos</option>
-                            <option>Google Contacts</option>
-                            <option>Google Calendar</option>
-                        </select>
                     </div>
                     <table class="min-w-full divide-y divide-stone-200">
                         <thead class="bg-stone-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Entity</th>
-                                <th class="hidden px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Source
-                                    Domain
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase w-10 align-top">
+                                    <div class="mt-1.5">
+                                        <input type="checkbox" onchange="toggleAllCorpUsers(this)"
+                                            class="w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500">
+                                    </div>
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Sync Services
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase align-top">
+                                    <div class="mt-1.5">Entity</div>
                                 </th>
-                                <th class="hidden px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase">
-                                    Storage Used
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase align-top">
+                                    <div class="mt-1.5">Sync Services</div>
                                 </th>
-                                <th class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase">Actions</th>
+                                <th
+                                    class="hidden px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase align-top">
+                                    <div class="mt-1.5">Storage Used</div>
+                                </th>
+                                <th class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase align-top">
+                                    <div class="mt-1.5">Actions</div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="users-table-body" class="bg-white divide-y divide-stone-100">
@@ -1256,39 +1258,43 @@
                             class="bg-white border border-stone-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-stone-50 flex items-center transition-colors">
                             <span class="unicode-icon mr-2">&#x1F500;</span> Merge Policies
                         </button>
-                        <div class="flex items-center gap-2 hidden md:flex" id="policy-service-filters">
-                            <!-- <button onclick="filterPolicies('All')" id="filter-All"
-                            class="bg-teal-50 border border-teal-200 text-teal-700 px-3 py-1.5 rounded-lg text-sm font-bold transition-colors shadow-sm filter-btn">
-                            All
-                        </button> -->
-                            <!-- <button onclick="filterPolicies('Gmail')" id="filter-Gmail"
-                            class="bg-white border border-stone-200 text-slate-600 px-3 py-1.5 rounded-lg text-sm font-bold hover:bg-stone-50 transition-colors shadow-sm flex items-center filter-btn">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
-                                class="w-4 h-4 object-contain" title="Gmail" alt="Gmail">
-                        </button>
-                        <button onclick="filterPolicies('Drive')" id="filter-Drive"
-                            class="bg-white border border-stone-200 text-slate-600 px-3 py-1.5 rounded-lg text-sm font-bold hover:bg-stone-50 transition-colors shadow-sm flex items-center filter-btn">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg"
-                                class="w-4 h-4 object-contain" title="Drive" alt="Drive">
-                        </button>
-                        <button onclick="filterPolicies('Photos')" id="filter-Photos"
-                            class="bg-white border border-stone-200 text-slate-600 px-3 py-1.5 rounded-lg text-sm font-bold hover:bg-stone-50 transition-colors shadow-sm flex items-center filter-btn">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg"
-                                class="w-4 h-4 object-contain" title="Photos" alt="Photos">
-                        </button>
-                        <button onclick="filterPolicies('Contacts')" id="filter-Contacts"
-                            class="bg-white border border-stone-200 text-slate-600 px-3 py-1.5 rounded-lg text-sm font-bold hover:bg-stone-50 transition-colors shadow-sm flex items-center filter-btn">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg"
-                                class="w-4 h-4 object-contain" title="Contacts" alt="Contacts">
-                        </button>
-                        <button onclick="filterPolicies('Calendar')" id="filter-Calendar"
-                            class="bg-white border border-stone-200 text-slate-600 px-3 py-1.5 rounded-lg text-sm font-bold hover:bg-stone-50 transition-colors shadow-sm flex items-center filter-btn">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg"
-                                class="w-4 h-4 object-contain" title="Calendar" alt="Calendar">
-                        </button> -->
-                        </div>
                     </div>
                 </div>
+
+                <!-- <div class="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden mb-6">
+                    <div class="px-4 border-b border-stone-200 bg-white flex space-x-6 shrink-0 overflow-x-auto">
+                        <button
+                            class="policy-tab active py-3 text-sm font-bold text-teal-600 border-b-2 border-teal-600 whitespace-nowrap transition-colors"
+                            data-service="All" onclick="switchPolicyServiceTab('All')">All Policies</button>
+                        <button
+                            class="policy-tab py-3 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent whitespace-nowrap transition-colors"
+                            data-service="Gmail" onclick="switchPolicyServiceTab('Gmail')"><img
+                                src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
+                                class="w-4 h-4 mr-1.5 -ml-1 inline-block object-contain" alt="Gmail"> Gmail</button>
+                        <button
+                            class="policy-tab py-3 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent whitespace-nowrap transition-colors"
+                            data-service="Drive" onclick="switchPolicyServiceTab('Drive')"><img
+                                src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg"
+                                class="w-4 h-4 mr-1.5 -ml-1 inline-block object-contain" alt="Drive"> Drive</button>
+                        <button
+                            class="policy-tab py-3 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent whitespace-nowrap transition-colors"
+                            data-service="Photos" onclick="switchPolicyServiceTab('Photos')"><img
+                                src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg"
+                                class="w-4 h-4 mr-1.5 -ml-1 inline-block object-contain" alt="Photos"> Photos</button>
+                        <button
+                            class="policy-tab py-3 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent whitespace-nowrap transition-colors"
+                            data-service="Contacts" onclick="switchPolicyServiceTab('Contacts')"><img
+                                src="https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg"
+                                class="w-4 h-4 mr-1.5 -ml-1 inline-block object-contain" alt="Contacts">
+                            Contacts</button>
+                        <button
+                            class="policy-tab py-3 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent whitespace-nowrap transition-colors"
+                            data-service="Calendar" onclick="switchPolicyServiceTab('Calendar')"><img
+                                src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg"
+                                class="w-4 h-4 mr-1.5 -ml-1 inline-block object-contain" alt="Calendar">
+                            Calendar</button>
+                    </div>
+                </div> -->
 
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" id="autosync-cards-container">
 
@@ -1529,8 +1535,6 @@
                                                 <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg"
                                                     title="Photos" alt="Photos" class="w-4 h-4 object-contain">
                                             </div>
-                                            <button onclick="openUpdateSyncModal(event, 'Executive Team')"
-                                                class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 text-right">
@@ -1599,8 +1603,6 @@
                                                 <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg"
                                                     title="Calendar" alt="Calendar" class="w-4 h-4 object-contain">
                                             </div>
-                                            <button onclick="openUpdateSyncModal(event, 'Sarah Jenkins')"
-                                                class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 text-right">
@@ -1665,8 +1667,6 @@
                                                 <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg"
                                                     title="Drive" alt="Drive" class="w-4 h-4 object-contain">
                                             </div>
-                                            <button onclick="openUpdateSyncModal(event, 'Marketing Shared Drive')"
-                                                class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 text-right">
@@ -1732,8 +1732,6 @@
                                                 <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg"
                                                     title="Photos" alt="Photos" class="w-4 h-4 object-contain">
                                             </div>
-                                            <button onclick="openUpdateSyncModal(event, 'Design Team')"
-                                                class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 text-right">
@@ -1840,23 +1838,43 @@
                             </button>
                         </div>
                     </div>
-                    <div class="p-4 border-b border-stone-100 bg-white flex flex-col gap-3">
+                    <div class="px-4 border-b border-stone-200 bg-white flex space-x-6 shrink-0 overflow-x-auto">
+                        <button
+                            class="assign-tab active py-3 text-sm font-bold text-teal-600 border-b-2 border-teal-600 whitespace-nowrap transition-colors"
+                            data-service="Gmail" onclick="switchAssignServiceTab('Gmail')"><img
+                                src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
+                                class="w-4 h-4 mr-1.5 -ml-1 inline-block object-contain" alt="Gmail"> Gmail</button>
+                        <button
+                            class="assign-tab py-3 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent whitespace-nowrap transition-colors"
+                            data-service="Drive" onclick="switchAssignServiceTab('Drive')"><img
+                                src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg"
+                                class="w-4 h-4 mr-1.5 -ml-1 inline-block object-contain" alt="Drive"> Drive</button>
+                        <button
+                            class="assign-tab py-3 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent whitespace-nowrap transition-colors"
+                            data-service="Photos" onclick="switchAssignServiceTab('Photos')"><img
+                                src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg"
+                                class="w-4 h-4 mr-1.5 -ml-1 inline-block object-contain" alt="Photos"> Photos</button>
+                        <button
+                            class="assign-tab py-3 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent whitespace-nowrap transition-colors"
+                            data-service="Contacts" onclick="switchAssignServiceTab('Contacts')"><img
+                                src="https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg"
+                                class="w-4 h-4 mr-1.5 -ml-1 inline-block object-contain" alt="Contacts">
+                            Contacts</button>
+                        <button
+                            class="assign-tab py-3 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent whitespace-nowrap transition-colors"
+                            data-service="Calendar" onclick="switchAssignServiceTab('Calendar')"><img
+                                src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg"
+                                class="w-4 h-4 mr-1.5 -ml-1 inline-block object-contain" alt="Calendar">
+                            Calendar</button>
+                    </div>
+                    <div class="p-4 border-b border-stone-100 bg-stone-50 flex flex-col gap-3">
                         <!-- Search and Filter Bar -->
                         <div class="flex flex-wrap items-center gap-3">
                             <input type="text" id="assign-policy-search"
                                 placeholder="Search accounts by name or email..." onkeyup="applyAssignPolicyFilters()"
                                 class="flex-1 min-w-[200px] bg-stone-50 border border-stone-200 rounded-lg px-3 py-2 focus:ring-teal-500 text-sm outline-none">
-                            <select id="assign-policy-filter-service" onchange="applyAssignPolicyFilters()"
-                                class="border border-stone-200 rounded-lg text-sm bg-stone-50 px-3 py-2 focus:ring-teal-500 outline-none">
-                                <option value="">All Services</option>
-                                <option value="Gmail">Gmail</option>
-                                <option value="Drive">Drive</option>
-                                <option value="Photos">Photos</option>
-                                <option value="Contacts">Contacts</option>
-                                <option value="Calendar">Calendar</option>
-                            </select>
                             <select id="assign-policy-filter-retention" onchange="applyAssignPolicyFilters()"
-                                class="border border-stone-200 rounded-lg text-sm bg-stone-50 px-3 py-2 focus:ring-teal-500 outline-none">
+                                class="border border-stone-200 rounded-lg text-sm bg-white px-3 py-2 focus:ring-teal-500 outline-none">
                                 <option value="">All Retentions</option>
                                 <option value="Infinite (Never Delete)">Infinite (Never Delete)</option>
                                 <option value="7 Years (Compliance)">7 Years (Compliance)</option>
@@ -1864,7 +1882,7 @@
                                 <option value="30 Days">30 Days</option>
                             </select>
                             <select id="assign-policy-filter-sync" onchange="applyAssignPolicyFilters()"
-                                class="border border-stone-200 rounded-lg text-sm bg-stone-50 px-3 py-2 focus:ring-teal-500 outline-none">
+                                class="border border-stone-200 rounded-lg text-sm bg-white px-3 py-2 focus:ring-teal-500 outline-none">
                                 <option value="">All Sync Intervals</option>
                                 <option value="Real-Time (CDP)">Real-Time (CDP)</option>
                                 <option value="Every 1 Hour">Every 1 Hour</option>
@@ -1890,19 +1908,7 @@
                                     </th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase align-top">
-                                        <div class="flex flex-col gap-1.5">
-                                            <span>Services</span>
-                                            <select id="bulk-assign-service-action"
-                                                onchange="applyBulkAssignOptions('service')"
-                                                class="border border-stone-300 rounded text-xs bg-white px-1.5 py-1 shadow-sm focus:ring-teal-500 outline-none font-normal normal-case w-full max-w-[160px]">
-                                                <option value="">Bulk Update...</option>
-                                                <option value="Gmail">Gmail</option>
-                                                <option value="Drive">Drive</option>
-                                                <option value="Photos">Photos</option>
-                                                <option value="Contacts">Contacts</option>
-                                                <option value="Calendar">Calendar</option>
-                                            </select>
-                                        </div>
+                                        <div class="mt-1.5">Services</div>
                                     </th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase align-top">
@@ -3370,26 +3376,27 @@
         let currentUsersPage = 1;
         const usersPerPage = 10;
         let filteredUsersData = [];
+        let currentUsersSearchTerm = '';
 
         function renderUsersGroupsList() {
             const tbody = document.getElementById('users-table-body');
             if (!tbody) return;
 
             const specificUsers = [
-                { name: 'Executive Team', email: 'execs@acme.com', size: '450 GB', services: ['Gmail', 'Drive', 'Contacts', 'Calendar', 'Photos'] },
-                { name: 'Sarah Jenkins', email: 's.jenkins@acme.com', size: '14.2 GB', services: ['Gmail', 'Drive', 'Contacts', 'Calendar'] },
-                { name: 'John Doe', email: 'j.doe@acme.com', size: '8.5 GB', services: ['Gmail', 'Drive'] }
+                { name: 'Executive Team', email: 'execs@acme.com', size: '450 GB', services: ['Gmail', 'Drive', 'Contacts', 'Calendar', 'Photos'], policy: 'Legal Hold Policy' },
+                { name: 'Sarah Jenkins', email: 's.jenkins@acme.com', size: '14.2 GB', services: ['Gmail', 'Drive', 'Contacts', 'Calendar'], policy: 'Custom Override' },
+                { name: 'John Doe', email: 'j.doe@acme.com', size: '8.5 GB', services: ['Gmail', 'Drive'], policy: 'Corporate Default' }
             ];
 
             allUsersData = [...specificUsers];
 
             for (let i = 1; i <= 97; i++) {
                 const mockServices = i % 3 === 0 ? ['Gmail', 'Drive'] : i % 2 === 0 ? ['Photos', 'Contacts'] : ['Gmail', 'Drive', 'Calendar', 'Photos'];
-                allUsersData.push({ name: `Mock User ${i}`, email: `user${i}@acme.com`, size: '0 B', services: mockServices });
+                const mockPolicy = i % 4 === 0 ? 'Contractors Policy' : 'Corporate Default';
+                allUsersData.push({ name: `Mock User ${i}`, email: `user${i}@acme.com`, size: '0 B', services: mockServices, policy: mockPolicy });
             }
 
-            filteredUsersData = [...allUsersData];
-            displayUsersPage(1);
+            applyUsersFilters();
         }
 
         function displayUsersPage(page) {
@@ -3402,30 +3409,40 @@
             const startIndex = (page - 1) * usersPerPage;
             const endIndex = Math.min(startIndex + usersPerPage, filteredUsersData.length);
 
-            const servicesHtml = `
-                <div class="flex gap-1">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" title="Gmail" alt="Gmail" class="w-4 h-4 object-contain">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" title="Drive" alt="Drive" class="w-4 h-4 object-contain">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg" title="Contacts" alt="Contacts" class="w-4 h-4 object-contain">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" title="Calendar" alt="Calendar" class="w-4 h-4 object-contain">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg" title="Photos" alt="Photos" class="w-4 h-4 object-contain">
-                </div>`;
+            const getCorpServicesHtml = (services, name) => {
+                const allServices = ['Gmail', 'Drive', 'Photos', 'Contacts', 'Calendar'];
+                let imgs = '';
+                allServices.forEach(s => {
+                    let src = '';
+                    if (s === 'Gmail') src = 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg';
+                    if (s === 'Drive') src = 'https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg';
+                    if (s === 'Photos') src = 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg';
+                    if (s === 'Contacts') src = 'https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg';
+                    if (s === 'Calendar') src = 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg';
 
-            const generateRow = (name, email, size) => `
+                    const activeClass = services.includes(s) ? '' : 'opacity-30 grayscale';
+                    imgs += `<img src="${src}" class="w-4 h-4 object-contain transition-all ${activeClass}" title="${s}" data-service="${s}">`;
+                });
+                return `<div class="flex items-center gap-2">
+                            <div class="flex gap-1 flex-wrap max-w-[120px] corp-services-list">${imgs}</div>
+                            <button onclick="openUpdateSyncModal(event, '${name}')" class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100 shrink-0">Update</button>
+                        </div>`;
+            };
+
+            const generateRow = (name, email, size, services) => `
                 <tr class="hover:bg-teal-50 cursor-pointer transition-colors group user-row" onclick="openUserVault('${name}', '${email}', 'Gmail')" data-name="${name.toLowerCase()}" data-email="${email.toLowerCase()}">
+                    <td class="px-6 py-4" onclick="event.stopPropagation()">
+                        <input type="checkbox" class="corp-user-cb w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500">
+                    </td>
                     <td class="px-6 py-4">
                         <div class="font-bold text-slate-900 text-sm group-hover:text-teal-700 flex items-center">${name}</div>
                         <div class="text-xs text-slate-500">${email}</div>
                     </td>
-                    <td class="hidden px-6 py-4"><span class="px-2 py-1 bg-stone-100 text-stone-600 rounded text-[10px] font-bold border border-stone-200 uppercase tracking-wider">@acme.com</span></td>
-                    <td class="px-6 py-4">
-                        <div class="flex items-center gap-2">
-                            ${servicesHtml}
-                            <button onclick="openUpdateSyncModal(event, '${name}')" class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
-                        </div>
+                    <td class="px-6 py-4" onclick="event.stopPropagation()">
+                        ${getCorpServicesHtml(services, name)}
                     </td>
                     <td class="hidden px-6 py-4 text-right text-sm text-slate-600 font-medium">${size}</td>
-                    <td class="px-6 py-4 text-right">
+                    <td class="px-6 py-4 text-right" onclick="event.stopPropagation()">
                         <div class="flex items-center justify-end gap-2">
                             <button onclick="executeFullUserRestore(event, '${name}')" title="Full Restore" class="text-slate-400 hover:text-teal-600 transition-colors">
                                 <span class="unicode-icon text-lg">&#x23EA;</span>
@@ -3435,7 +3452,8 @@
                 </tr>`;
 
             for (let i = startIndex; i < endIndex; i++) {
-                html += generateRow(filteredUsersData[i].name, filteredUsersData[i].email, filteredUsersData[i].size);
+                const u = filteredUsersData[i];
+                html += generateRow(u.name, u.email, u.size, u.services);
             }
 
             if (filteredUsersData.length === 0) {
@@ -3491,14 +3509,28 @@
 
         function changeUsersPage(page) {
             displayUsersPage(page);
+            const masterCb = document.querySelector('input[onchange="toggleAllCorpUsers(this)"]');
+            if (masterCb) masterCb.checked = false;
+        }
+
+        function toggleAllCorpUsers(source) {
+            const checkboxes = document.querySelectorAll('.corp-user-cb');
+            checkboxes.forEach(cb => {
+                cb.checked = source.checked;
+            });
         }
 
         function filterUsersGroups(query) {
-            const term = query.toLowerCase();
+            currentUsersSearchTerm = query.toLowerCase();
+            currentUsersPage = 1;
+            applyUsersFilters();
+        }
+
+        function applyUsersFilters() {
             filteredUsersData = allUsersData.filter(u =>
-                u.name.toLowerCase().includes(term) || u.email.toLowerCase().includes(term)
+                u.name.toLowerCase().includes(currentUsersSearchTerm) || u.email.toLowerCase().includes(currentUsersSearchTerm)
             );
-            displayUsersPage(1);
+            displayUsersPage(currentUsersPage);
         }
 
         function showDashboard() {
@@ -3862,6 +3894,21 @@
         /* --- ASSIGN POLICY PAGE LOGIC --- */
         let currentAssignPolicy = '';
         let isAssignPolicyListRendered = false;
+        let currentAssignServiceTab = 'Gmail';
+
+        function switchAssignServiceTab(service) {
+            currentAssignServiceTab = service;
+            document.querySelectorAll('.assign-tab').forEach(tab => {
+                if (tab.getAttribute('data-service') === service) {
+                    tab.classList.add('active', 'text-teal-600', 'border-teal-600');
+                    tab.classList.remove('text-slate-500', 'border-transparent');
+                } else {
+                    tab.classList.remove('active', 'text-teal-600', 'border-teal-600');
+                    tab.classList.add('text-slate-500', 'border-transparent');
+                }
+            });
+            applyAssignPolicyFilters();
+        }
 
         function openAssignPolicyPage(policyName) {
             currentAssignPolicy = policyName;
@@ -3873,13 +3920,13 @@
             if (!isAssignPolicyListRendered) {
                 renderAssignPolicyList();
                 isAssignPolicyListRendered = true;
+                switchAssignServiceTab('Gmail');
             } else {
                 // Reset inputs inside the filter toolbar
                 document.getElementById('assign-policy-search').value = "";
-                document.getElementById('assign-policy-filter-service').value = "";
                 document.getElementById('assign-policy-filter-retention').value = "";
                 document.getElementById('assign-policy-filter-sync').value = "";
-                applyAssignPolicyFilters(); // Resets visibility logic
+                switchAssignServiceTab('Gmail'); // Resets visibility logic
 
                 // Reset selections
                 document.querySelectorAll('.assign-policy-cb').forEach(cb => cb.checked = false);
@@ -3900,23 +3947,11 @@
             let html = '';
 
             const specificUsers = [
-                { name: 'Executive Team', email: 'execs@acme.com', initials: 'ET', color: 'stone', isGroup: false },
-                { name: 'Sarah Jenkins', email: 's.jenkins@acme.com', initials: 'SJ', color: 'indigo', isGroup: false },
-                { name: 'Marketing Shared Drive', email: 'marketing@acme.com', initials: '📁', color: 'stone', isGroup: true },
-                { name: 'John Doe', email: 'j.doe@acme.com', initials: 'JD', color: 'stone', isGroup: false }
+                { name: 'Executive Team', email: 'execs@acme.com', initials: 'ET', color: 'stone', isGroup: false, services: ['Gmail', 'Drive', 'Contacts', 'Calendar', 'Photos'] },
+                { name: 'Sarah Jenkins', email: 's.jenkins@acme.com', initials: 'SJ', color: 'indigo', isGroup: false, services: ['Gmail', 'Drive', 'Contacts', 'Calendar'] },
+                { name: 'Marketing Shared Drive', email: 'marketing@acme.com', initials: '📁', color: 'stone', isGroup: true, services: ['Drive'] },
+                { name: 'John Doe', email: 'j.doe@acme.com', initials: 'JD', color: 'stone', isGroup: false, services: ['Gmail', 'Drive'] }
             ];
-
-            const getServicesHtml = (name) => `
-                <div class="flex items-center gap-2">
-                    <div class="flex gap-1 flex-wrap max-w-[120px] assign-services-list">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" class="w-4 h-4 object-contain transition-all" title="Gmail" data-service="Gmail">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" class="w-4 h-4 object-contain transition-all" title="Drive" data-service="Drive">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg" class="w-4 h-4 object-contain transition-all" title="Photos" data-service="Photos">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg" class="w-4 h-4 object-contain transition-all" title="Contacts" data-service="Contacts">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" class="w-4 h-4 object-contain transition-all" title="Calendar" data-service="Calendar">
-                    </div>
-                    <button onclick="openUpdateSyncModal(event, '${name}')" class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100 shrink-0">Update</button>
-                </div>`;
 
             const retentionSelect = `
                 <select onchange="applyAssignPolicyFilters()" class="assign-retention-select border border-stone-300 rounded text-xs bg-white px-2 py-1.5 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none w-full max-w-[160px]">
@@ -3934,13 +3969,32 @@
                     <option>Nightly</option>
                 </select>`;
 
+            const getAssignServicesHtml = (services) => {
+                const allServices = ['Gmail', 'Drive', 'Photos', 'Contacts', 'Calendar'];
+                let imgs = '';
+                allServices.forEach(s => {
+                    let src = '';
+                    if (s === 'Gmail') src = 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg';
+                    if (s === 'Drive') src = 'https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg';
+                    if (s === 'Photos') src = 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg';
+                    if (s === 'Contacts') src = 'https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg';
+                    if (s === 'Calendar') src = 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg';
+
+                    const activeClass = services.includes(s) ? '' : 'opacity-30 grayscale';
+                    imgs += `<img src="${src}" class="w-4 h-4 object-contain transition-all ${activeClass}" title="${s}" data-service="${s}">`;
+                });
+                return `<div class="flex items-center gap-2">
+                            <div class="flex gap-1 flex-wrap max-w-[120px] assign-services-list">${imgs}</div>
+                        </div>`;
+            };
+
             specificUsers.forEach(u => {
                 const avatar = u.isGroup
                     ? `<div class="w-8 h-8 rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-lg"><span class="unicode-icon">&#x1F4C2;</span></div>`
                     : `<div class="w-8 h-8 rounded-full bg-${u.color}-100 text-${u.color}-700 flex items-center justify-center font-bold text-xs">${u.initials}</div>`;
 
                 html += `
-                    <tr class="assign-policy-row hover:bg-stone-50 transition-colors" data-name="${u.name.toLowerCase()}" data-email="${u.email.toLowerCase()}">
+                    <tr class="assign-policy-row hover:bg-stone-50 transition-colors" data-services="${u.services.join(',')}" data-name="${u.name.toLowerCase()}" data-email="${u.email.toLowerCase()}">
                         <td class="px-6 py-4">
                             <input type="checkbox" class="assign-policy-cb w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500">
                         </td>
@@ -3953,15 +4007,16 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4">${getServicesHtml(u.name)}</td>
+                        <td class="px-6 py-4">${getAssignServicesHtml(u.services)}</td>
                         <td class="px-6 py-4">${retentionSelect}</td>
                         <td class="px-6 py-4">${syncSelect}</td>
                     </tr>`;
             });
 
             for (let i = 1; i <= 20; i++) {
+                const mockServices = i % 3 === 0 ? ['Gmail', 'Drive'] : i % 2 === 0 ? ['Photos', 'Contacts'] : ['Gmail', 'Drive', 'Calendar', 'Photos'];
                 html += `
-                    <tr class="assign-policy-row hover:bg-stone-50 transition-colors" data-name="mock user ${i}" data-email="user${i}@acme.com">
+                    <tr class="assign-policy-row hover:bg-stone-50 transition-colors" data-services="${mockServices.join(',')}" data-name="mock user ${i}" data-email="user${i}@acme.com">
                         <td class="px-6 py-4">
                             <input type="checkbox" class="assign-policy-cb w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500">
                         </td>
@@ -3974,7 +4029,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4">${getServicesHtml(`Mock User ${i}`)}</td>
+                        <td class="px-6 py-4">${getAssignServicesHtml(mockServices)}</td>
                         <td class="px-6 py-4">${retentionSelect}</td>
                         <td class="px-6 py-4">${syncSelect}</td>
                     </tr>`;
@@ -3995,7 +4050,6 @@
 
         function applyAssignPolicyFilters() {
             const query = (document.getElementById('assign-policy-search').value || '').toLowerCase();
-            const service = document.getElementById('assign-policy-filter-service').value;
             const retention = document.getElementById('assign-policy-filter-retention').value;
             const sync = document.getElementById('assign-policy-filter-sync').value;
 
@@ -4003,19 +4057,27 @@
             rows.forEach(row => {
                 const name = row.getAttribute('data-name');
                 const email = row.getAttribute('data-email');
+                const services = row.getAttribute('data-services') || '';
 
                 const retentionSelect = row.querySelector('.assign-retention-select').value;
                 const syncSelect = row.querySelector('.assign-sync-select').value;
-                const checkedServices = Array.from(row.querySelectorAll('.assign-services-list img:not(.opacity-30)')).map(img => img.getAttribute('data-service'));
 
                 let match = true;
                 if (query && !name.includes(query) && !email.includes(query)) match = false;
-                if (service && !checkedServices.includes(service)) match = false;
                 if (retention && retentionSelect !== retention) match = false;
                 if (sync && syncSelect !== sync) match = false;
+                if (currentAssignServiceTab && !services.includes(currentAssignServiceTab)) match = false;
 
                 if (match) {
                     row.classList.remove('hidden');
+                    const icons = row.querySelectorAll('.assign-services-list img');
+                    icons.forEach(icon => {
+                        if (currentAssignServiceTab === '' || icon.getAttribute('data-service') === currentAssignServiceTab) {
+                            icon.style.display = '';
+                        } else {
+                            icon.style.display = 'none';
+                        }
+                    });
                 } else {
                     row.classList.add('hidden');
                 }
@@ -4030,8 +4092,6 @@
                 selectId = 'bulk-assign-retention';
             } else if (type === 'sync') {
                 selectId = 'bulk-assign-sync';
-            } else if (type === 'service') {
-                selectId = 'bulk-assign-service-action';
             }
 
             val = document.getElementById(selectId).value;
@@ -4054,13 +4114,6 @@
                 } else if (type === 'sync') {
                     row.querySelector('.assign-sync-select').value = val;
                     applied = true;
-                } else if (type === 'service') {
-                    const svcImg = row.querySelector(`.assign-services-list img[data-service="${val}"]`);
-                    if (svcImg) {
-                        svcImg.classList.toggle('opacity-30');
-                        svcImg.classList.toggle('grayscale');
-                        applied = true;
-                    }
                 }
             });
 
@@ -5025,7 +5078,6 @@
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" title="Gmail" alt="Gmail" class="w-4 h-4 object-contain">
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" title="Drive" alt="Drive" class="w-4 h-4 object-contain">
                             </div>
-                            <button onclick="openUpdateSyncModal(event, '${userName}')" class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
                         </div>
                     `;
 
@@ -5103,7 +5155,6 @@
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" title="Gmail" alt="Gmail" class="w-4 h-4 object-contain">
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" title="Drive" alt="Drive" class="w-4 h-4 object-contain">
                                 </div>
-                                <button onclick="openUpdateSyncModal(event, '${userName}')" class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100">Update</button>
                             </div>
                         </td>
                         <td class="px-6 py-4 text-right">
@@ -5210,17 +5261,20 @@
             setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
         }
 
-        function filterPolicies(service) {
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                if (btn.id === 'filter-' + service) {
-                    btn.classList.remove('bg-white', 'text-slate-600', 'border-stone-200', 'hover:bg-stone-50');
-                    btn.classList.add('bg-teal-50', 'text-teal-700', 'border-teal-200');
+        function switchPolicyServiceTab(service) {
+            document.querySelectorAll('.policy-tab').forEach(tab => {
+                if (tab.getAttribute('data-service') === service) {
+                    tab.classList.add('active', 'text-teal-600', 'border-teal-600');
+                    tab.classList.remove('text-slate-500', 'border-transparent');
                 } else {
-                    btn.classList.remove('bg-teal-50', 'text-teal-700', 'border-teal-200');
-                    btn.classList.add('bg-white', 'text-slate-600', 'border-stone-200', 'hover:bg-stone-50');
+                    tab.classList.remove('active', 'text-teal-600', 'border-teal-600');
+                    tab.classList.add('text-slate-500', 'border-transparent');
                 }
             });
+            filterPolicies(service);
+        }
 
+        function filterPolicies(service) {
             document.querySelectorAll('.policy-card').forEach(card => {
                 if (service === 'All') {
                     card.classList.remove('hidden');
