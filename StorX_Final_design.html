@@ -2616,25 +2616,17 @@
                         <input type="text" id="service-config-search" placeholder="Search accounts..."
                             onkeyup="filterServiceConfigAccounts()"
                             class="flex-1 min-w-[200px] bg-stone-50 border border-stone-200 rounded-lg px-3 py-2 focus:ring-teal-500 text-sm outline-none">
-                        <select id="service-config-filter-status" onchange="filterServiceConfigAccounts()"
+                        <select id="service-config-filter-action" onchange="filterServiceConfigAccounts()"
                             class="border border-stone-200 rounded-lg text-sm bg-stone-50 px-3 py-2 focus:ring-teal-500 outline-none">
-                            <option value="">All Statuses</option>
+                            <option value="">All Actions</option>
                             <option value="active">Active</option>
                             <option value="inactive">Inactive</option>
                         </select>
-                        <select id="service-config-filter-last-backup" onchange="filterServiceConfigAccounts()"
+                        <select id="service-config-filter-status" onchange="filterServiceConfigAccounts()"
                             class="border border-stone-200 rounded-lg text-sm bg-stone-50 px-3 py-2 focus:ring-teal-500 outline-none">
-                            <option value="">Any Last Backup</option>
-                            <option value="today">Today</option>
-                            <option value="older">Older than a day</option>
-                            <option value="na">Never</option>
-                        </select>
-                        <select id="service-config-filter-next-backup" onchange="filterServiceConfigAccounts()"
-                            class="border border-stone-200 rounded-lg text-sm bg-stone-50 px-3 py-2 focus:ring-teal-500 outline-none">
-                            <option value="">Any Next Backup</option>
-                            <option value="continuous">Continuous</option>
-                            <option value="scheduled">Scheduled</option>
-                            <option value="suspended">Suspended / N/A</option>
+                            <option value="">All Statuses</option>
+                            <option value="success">Success</option>
+                            <option value="failed">Failed</option>
                         </select>
                     </div>
                     <div class="overflow-x-auto">
@@ -4213,12 +4205,10 @@
             // Reset filters
             const searchInput = document.getElementById('service-config-search');
             if (searchInput) searchInput.value = '';
+            const actionFilter = document.getElementById('service-config-filter-action');
+            if (actionFilter) actionFilter.value = '';
             const statusFilter = document.getElementById('service-config-filter-status');
             if (statusFilter) statusFilter.value = '';
-            const lastBackupFilter = document.getElementById('service-config-filter-last-backup');
-            if (lastBackupFilter) lastBackupFilter.value = '';
-            const nextBackupFilter = document.getElementById('service-config-filter-next-backup');
-            if (nextBackupFilter) nextBackupFilter.value = '';
 
             const tbody = document.getElementById('service-config-tbody');
 
@@ -4274,18 +4264,18 @@
         }
 
         function filterServiceConfigAccounts() {
-            const query = document.getElementById('service-config-search').value.toLowerCase();
-            const status = document.getElementById('service-config-filter-status').value;
-            const lastBackup = document.getElementById('service-config-filter-last-backup').value;
-            const nextBackup = document.getElementById('service-config-filter-next-backup').value;
+            const query = (document.getElementById('service-config-search').value || '').toLowerCase();
+            const actionFilter = document.getElementById('service-config-filter-action').value;
+            const statusFilter = document.getElementById('service-config-filter-status').value;
 
             const rows = document.querySelectorAll('#service-config-tbody tr');
 
             rows.forEach(row => {
                 const accountCell = row.cells[0].textContent.toLowerCase();
-                const lastBackupCell = row.cells[1].textContent.toLowerCase();
-                const nextBackupCell = row.cells[2].textContent.toLowerCase();
-                const statusCell = row.cells[3].textContent.trim();
+                const statusCell = row.cells[3].textContent.toLowerCase();
+
+                const pauseBtn = row.querySelector('button[data-paused]');
+                const isPaused = pauseBtn ? pauseBtn.getAttribute('data-paused') === 'true' : false;
 
                 let match = true;
 
@@ -4293,30 +4283,13 @@
                     match = false;
                 }
 
-                if (status) {
-                    const isActive = statusCell.includes('Success');
-                    if (status === 'active' && !isActive) match = false;
-                    if (status === 'inactive' && isActive) match = false;
+                if (actionFilter) {
+                    if (actionFilter === 'active' && isPaused) match = false;
+                    if (actionFilter === 'inactive' && !isPaused) match = false;
                 }
 
-                if (lastBackup) {
-                    const isToday = lastBackupCell.includes('just now') || lastBackupCell.includes('min') || lastBackupCell.includes('hour');
-                    const isOlder = lastBackupCell.includes('day') || lastBackupCell.includes('week') || lastBackupCell.includes('month');
-                    const isNA = lastBackupCell.includes('--');
-
-                    if (lastBackup === 'today' && !isToday) match = false;
-                    if (lastBackup === 'older' && !isOlder) match = false;
-                    if (lastBackup === 'na' && !isNA) match = false;
-                }
-
-                if (nextBackup) {
-                    const isScheduled = nextBackupCell.includes('in ');
-                    const isContinuous = nextBackupCell.includes('continuous');
-                    const isSuspended = nextBackupCell.includes('suspended') || nextBackupCell.includes('--');
-
-                    if (nextBackup === 'scheduled' && !isScheduled) match = false;
-                    if (nextBackup === 'continuous' && !isContinuous) match = false;
-                    if (nextBackup === 'suspended' && !isSuspended) match = false;
+                if (statusFilter) {
+                    if (!statusCell.includes(statusFilter)) match = false;
                 }
 
                 row.style.display = match ? '' : 'none';
