@@ -1316,7 +1316,7 @@
                             <button onclick="openEditPolicyModal('Sarah Jenkins')"
                                 class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Update
                                 Policy</button>
-                            <button onclick="openUpdateUsersModal('Sarah Jenkins')"
+                            <button onclick="openAssignPolicyPage('Sarah Jenkins')"
                                 class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Create
                                 & Assign Policy</button>
                             <button onclick="reconnectCorporateCard(this)" title="Reconnect Account"
@@ -1355,7 +1355,7 @@
                             <button onclick="openEditPolicyModal('Contractors Policy')"
                                 class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Update
                                 Policy</button>
-                            <button onclick="openUpdateUsersModal('Contractors Policy')"
+                            <button onclick="openAssignPolicyPage('Contractors Policy')"
                                 class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Create
                                 & Assign Policy</button>
                             <button onclick="reconnectCorporateCard(this)" title="Reconnect Users"
@@ -1394,7 +1394,7 @@
                             <button onclick="openEditPolicyModal('Legal Hold Policy')"
                                 class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Update
                                 Policy</button>
-                            <button onclick="openUpdateUsersModal('Legal Hold Policy')"
+                            <button onclick="openAssignPolicyPage('Legal Hold Policy')"
                                 class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Create
                                 & Assign Policy</button>
                             <button onclick="reconnectCorporateCard(this)" title="Reconnect Users"
@@ -1433,7 +1433,7 @@
                             <button onclick="openEditPolicyModal('Creative Assets Policy')"
                                 class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Update
                                 Policy</button>
-                            <button onclick="openUpdateUsersModal('Creative Assets Policy')"
+                            <button onclick="openAssignPolicyPage('Creative Assets Policy')"
                                 class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Create
                                 & Assign Policy</button>
                             <button onclick="reconnectCorporateCard(this)" title="Reconnect Users"
@@ -1819,6 +1819,124 @@
                                         </div>
                                     </td>
                                 </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Assign Policy Page View (Hidden initially) -->
+                <div id="assign-policy-page"
+                    class="hidden bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden">
+                    <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-stone-50">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-900">Assign Policy: <span id="assign-policy-name"
+                                    class="text-teal-700"></span></h2>
+                            <p class="text-xs text-slate-500 mt-1">Select users and configure their retention and sync
+                                intervals directly.</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button onclick="savePolicyAssignments(event)"
+                                class="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 flex items-center transition-colors">
+                                Save Assignments
+                            </button>
+                            <button onclick="hideAssignPolicyPage()"
+                                class="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors flex items-center bg-white border border-stone-200 px-3 py-2 rounded-lg shadow-sm hover:bg-stone-50">
+                                <span class="unicode-icon mr-1">&#x2B05;&#xFE0F;</span> Back
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-4 border-b border-stone-100 bg-white flex flex-col gap-3">
+                        <!-- Search and Filter Bar -->
+                        <div class="flex flex-wrap items-center gap-3">
+                            <input type="text" id="assign-policy-search"
+                                placeholder="Search accounts by name or email..." onkeyup="applyAssignPolicyFilters()"
+                                class="flex-1 min-w-[200px] bg-stone-50 border border-stone-200 rounded-lg px-3 py-2 focus:ring-teal-500 text-sm outline-none">
+                            <select id="assign-policy-filter-service" onchange="applyAssignPolicyFilters()"
+                                class="border border-stone-200 rounded-lg text-sm bg-stone-50 px-3 py-2 focus:ring-teal-500 outline-none">
+                                <option value="">All Services</option>
+                                <option value="Gmail">Gmail</option>
+                                <option value="Drive">Drive</option>
+                                <option value="Photos">Photos</option>
+                                <option value="Contacts">Contacts</option>
+                                <option value="Calendar">Calendar</option>
+                            </select>
+                            <select id="assign-policy-filter-retention" onchange="applyAssignPolicyFilters()"
+                                class="border border-stone-200 rounded-lg text-sm bg-stone-50 px-3 py-2 focus:ring-teal-500 outline-none">
+                                <option value="">All Retentions</option>
+                                <option value="Infinite (Never Delete)">Infinite (Never Delete)</option>
+                                <option value="7 Years (Compliance)">7 Years (Compliance)</option>
+                                <option value="1 Year">1 Year</option>
+                                <option value="30 Days">30 Days</option>
+                            </select>
+                            <select id="assign-policy-filter-sync" onchange="applyAssignPolicyFilters()"
+                                class="border border-stone-200 rounded-lg text-sm bg-stone-50 px-3 py-2 focus:ring-teal-500 outline-none">
+                                <option value="">All Sync Intervals</option>
+                                <option value="Real-Time (CDP)">Real-Time (CDP)</option>
+                                <option value="Every 1 Hour">Every 1 Hour</option>
+                                <option value="Every 6 Hours">Every 6 Hours</option>
+                                <option value="Nightly">Nightly</option>
+                            </select>
+                        </div>
+                        <!-- Bulk Action Bar -->
+                        <div
+                            class="flex flex-wrap items-center gap-3 bg-stone-50 p-2.5 rounded-lg border border-stone-200">
+                            <span class="text-sm font-bold text-slate-700 ml-1 flex items-center"><span
+                                    class="unicode-icon mr-1.5">&#x2699;&#xFE0F;</span> Bulk Update:</span>
+                            <select id="bulk-assign-service-action"
+                                class="border border-stone-300 rounded text-xs bg-white px-2 py-1.5 shadow-sm focus:ring-teal-500 outline-none">
+                                <option value="">-- Modify Service --</option>
+                                <option value="enable_Gmail">Enable Gmail</option>
+                                <option value="disable_Gmail">Disable Gmail</option>
+                                <option value="enable_Drive">Enable Drive</option>
+                                <option value="disable_Drive">Disable Drive</option>
+                                <option value="enable_Photos">Enable Photos</option>
+                                <option value="disable_Photos">Disable Photos</option>
+                                <option value="enable_Contacts">Enable Contacts</option>
+                                <option value="disable_Contacts">Disable Contacts</option>
+                                <option value="enable_Calendar">Enable Calendar</option>
+                                <option value="disable_Calendar">Disable Calendar</option>
+                            </select>
+                            <select id="bulk-assign-retention"
+                                class="border border-stone-300 rounded text-xs bg-white px-2 py-1.5 shadow-sm focus:ring-teal-500 outline-none">
+                                <option value="">-- Set Retention --</option>
+                                <option>Infinite (Never Delete)</option>
+                                <option>7 Years (Compliance)</option>
+                                <option>1 Year</option>
+                                <option>30 Days</option>
+                            </select>
+                            <select id="bulk-assign-sync"
+                                class="border border-stone-300 rounded text-xs bg-white px-2 py-1.5 shadow-sm focus:ring-teal-500 outline-none">
+                                <option value="">-- Set Sync --</option>
+                                <option>Real-Time (CDP)</option>
+                                <option>Every 1 Hour</option>
+                                <option>Every 6 Hours</option>
+                                <option>Nightly</option>
+                            </select>
+                            <button onclick="applyBulkAssignOptions()"
+                                class="bg-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm hover:bg-slate-700 transition-colors">Apply
+                                to Selected</button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto max-h-[60vh] overflow-y-auto">
+                        <table class="min-w-full divide-y divide-stone-200">
+                            <thead class="bg-stone-50 sticky top-0 z-10 shadow-sm">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase w-10">
+                                        <input type="checkbox" onchange="toggleAllAssignPolicyUsers(this)"
+                                            class="w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500">
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">User /
+                                        Mail</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Services
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Retention
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Sync
+                                        Interval</th>
+                                </tr>
+                            </thead>
+                            <tbody id="assign-policy-tbody" class="bg-white divide-y divide-stone-100">
+                                <!-- Populated dynamically -->
                             </tbody>
                         </table>
                     </div>
@@ -3075,138 +3193,6 @@
         </div>
     </div>
 
-    <!-- Update Users Scope Modal -->
-    <div id="update-users-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-0">
-        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeUpdateUsersModal()"></div>
-        <div class="bg-white rounded-xl shadow-2xl z-10 w-full max-w-lg overflow-hidden border border-stone-200 flex flex-col transform transition-all scale-95 opacity-0"
-            id="update-users-content">
-            <div class="p-5 border-b border-stone-100 bg-stone-50 flex justify-between items-center">
-                <h2 class="text-lg font-bold text-slate-900 flex items-center">
-                    <span class="unicode-icon mr-2 text-teal-600">&#x1F465;</span> Update Users: <span
-                        id="update-users-policy-name" class="ml-1 text-teal-700"></span>
-                </h2>
-                <button onclick="closeUpdateUsersModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
-                    <span class="unicode-icon">&#x274C;</span>
-                </button>
-            </div>
-
-            <!-- Step 1: Select Accounts -->
-            <div id="update-users-step-1">
-                <div class="p-6">
-                    <p class="text-sm text-slate-500 mb-4">Select the accounts you want to reassign or update within
-                        this policy.</p>
-
-                    <!-- Search and Select All -->
-                    <div class="mb-4 p-2 bg-stone-100 border border-stone-200 rounded-lg flex items-center gap-3">
-                        <input type="text" placeholder="Search accounts..." onkeyup="filterUpdateUsers(this.value)"
-                            class="flex-1 bg-transparent border-none focus:ring-0 text-sm outline-none">
-                        <label
-                            class="flex items-center text-xs font-bold text-slate-500 cursor-pointer whitespace-nowrap">
-                            <input type="checkbox" id="select-all-users-cb" onchange="toggleAllUpdateUsers(this)"
-                                class="mr-2 w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500">
-                            Select All
-                        </label>
-                    </div>
-
-                    <div id="update-users-list" class="space-y-2 max-h-[40vh] overflow-y-auto pr-2">
-                        <!-- Populated dynamically by JS -->
-                    </div>
-                </div>
-                <div class="p-4 border-t border-stone-100 bg-stone-50 flex justify-end gap-3">
-                    <button onclick="closeUpdateUsersModal()"
-                        class="px-4 py-2 bg-white border border-stone-300 text-slate-700 rounded-lg text-sm font-bold shadow-sm hover:bg-stone-50 transition-colors">Cancel</button>
-                    <button onclick="goToUpdateUsersStep2()"
-                        class="px-5 py-2 bg-teal-600 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 transition-colors flex items-center">
-                        Edit
-                    </button>
-                </div>
-            </div>
-
-            <!-- Step 2: Configure Policy -->
-            <div id="update-users-step-2" class="hidden">
-                <div class="p-6 space-y-5 bg-white">
-                    <div id="update-users-info-banner"
-                        class="bg-indigo-50 border border-indigo-100 text-indigo-800 text-xs font-bold px-3 py-2 rounded-lg flex items-center mb-2">
-                        <span class="unicode-icon mr-2">&#x2139;&#xFE0F;</span> Updating <span id="selected-users-count"
-                            class="mx-1 font-extrabold text-indigo-900">0</span> accounts
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-slate-700 mb-2">Retention time setting</label>
-                        <select
-                            class="w-full border border-stone-300 rounded-lg text-sm bg-stone-50 px-3 py-2.5 focus:ring-teal-500 focus:border-teal-500 shadow-sm outline-none">
-                            <option>Infinite (Never Delete)</option>
-                            <option>7 Years (Compliance)</option>
-                            <option>1 Year</option>
-                            <option>30 Days</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-slate-700 mb-2">Sync interval update</label>
-                        <select
-                            class="w-full border border-stone-300 rounded-lg text-sm bg-stone-50 px-3 py-2.5 focus:ring-teal-500 focus:border-teal-500 shadow-sm outline-none">
-                            <option>Real-Time (CDP)</option>
-                            <option>Every 1 Hour</option>
-                            <option>Every 6 Hours</option>
-                            <option>Nightly</option>
-                        </select>
-                    </div>
-                    <div>
-                        <div class="flex justify-between items-center mb-2" id="advanced-mode-toggle-container">
-                            <label class="block text-sm font-bold text-slate-700">Protected Services</label>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" id="advanced-mode-toggle" class="sr-only peer"
-                                    onchange="toggleAdvancedMode()">
-                                <div
-                                    class="w-7 h-4 bg-stone-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-teal-500">
-                                </div>
-                                <span class="ml-2 text-xs font-medium text-slate-600">Advanced Mode</span>
-                            </label>
-                        </div>
-                        <div id="global-services-container"
-                            class="space-y-3 p-4 bg-stone-50 border border-stone-200 rounded-lg flex flex-wrap gap-4">
-                            <label
-                                class="flex items-center text-sm text-slate-700 font-medium cursor-pointer w-[45%]"><input
-                                    type="checkbox" checked
-                                    class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600"><img
-                                    src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
-                                    class="w-4 h-4 mr-2 object-contain" alt="Gmail"> Gmail</label>
-                            <label
-                                class="flex items-center text-sm text-slate-700 font-medium cursor-pointer w-[45%]"><input
-                                    type="checkbox" checked
-                                    class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600"><img
-                                    src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg"
-                                    class="w-4 h-4 mr-2 object-contain" alt="Drive"> Drive</label>
-                            <label
-                                class="flex items-center text-sm text-slate-700 font-medium cursor-pointer w-[45%]"><input
-                                    type="checkbox" checked
-                                    class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600"><img
-                                    src="https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg"
-                                    class="w-4 h-4 mr-1 object-contain" alt="Contacts"> Contacts</label>
-                            <label
-                                class="flex items-center text-sm text-slate-700 font-medium cursor-pointer w-[45%]"><input
-                                    type="checkbox"
-                                    class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600"><img
-                                    src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg"
-                                    class="w-4 h-4 mr-2 object-contain" alt="Photos"> Photos</label>
-                        </div>
-                        <div id="advanced-services-container"
-                            class="hidden space-y-2 p-3 bg-stone-50 border border-stone-200 rounded-lg max-h-48 overflow-y-auto">
-                            <!-- Populated dynamically by JS -->
-                        </div>
-                    </div>
-                </div>
-                <div class="p-4 border-t border-stone-100 bg-stone-50 flex justify-between items-center">
-                    <button onclick="goToUpdateUsersStep1()" id="update-users-back-btn"
-                        class="text-sm font-bold text-slate-500 hover:text-slate-800 transition-colors">Back</button>
-                    <button id="update-users-confirm-btn" onclick="submitUpdateUsers()"
-                        class="ml-auto px-5 py-2 bg-teal-600 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 transition-colors flex items-center">
-                        Confirm
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Service Configuration Modal -->
     <div id="service-config-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-0">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeServiceConfigModal()"></div>
@@ -3854,13 +3840,43 @@
             }, 1000);
         }
 
-        /* --- UPDATE USERS SCOPE LOGIC --- */
-        let currentUpdatePolicy = '';
-        let isUpdateUsersListRendered = false;
+        /* --- ASSIGN POLICY PAGE LOGIC --- */
+        let currentAssignPolicy = '';
+        let isAssignPolicyListRendered = false;
 
-        function renderUpdateUsersList() {
-            const listContainer = document.getElementById('update-users-list');
-            if (!listContainer) return;
+        function openAssignPolicyPage(policyName) {
+            currentAssignPolicy = policyName;
+            document.getElementById('assign-policy-name').innerText = policyName;
+            document.getElementById('autosync-cards-container').classList.add('hidden');
+            document.getElementById('corporate-policies-table').classList.add('hidden');
+            document.getElementById('assign-policy-page').classList.remove('hidden');
+
+            if (!isAssignPolicyListRendered) {
+                renderAssignPolicyList();
+                isAssignPolicyListRendered = true;
+            } else {
+                // Reset inputs inside the filter toolbar
+                document.getElementById('assign-policy-search').value = "";
+                document.getElementById('assign-policy-filter-service').value = "";
+                document.getElementById('assign-policy-filter-retention').value = "";
+                document.getElementById('assign-policy-filter-sync').value = "";
+                applyAssignPolicyFilters(); // Resets visibility logic
+
+                // Reset selections
+                document.querySelectorAll('.assign-policy-cb').forEach(cb => cb.checked = false);
+                const selectAllCb = document.querySelector('input[onchange="toggleAllAssignPolicyUsers(this)"]');
+                if (selectAllCb) selectAllCb.checked = false;
+            }
+        }
+
+        function hideAssignPolicyPage() {
+            document.getElementById('assign-policy-page').classList.add('hidden');
+            document.getElementById('autosync-cards-container').classList.remove('hidden');
+        }
+
+        function renderAssignPolicyList() {
+            const tbody = document.getElementById('assign-policy-tbody');
+            if (!tbody) return;
 
             let html = '';
 
@@ -3871,12 +3887,33 @@
                 { name: 'John Doe', email: 'j.doe@acme.com', initials: 'JD', color: 'stone', isGroup: false }
             ];
 
-            const servicesHtml = `
-                <div class="flex gap-1.5">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" title="Gmail" alt="Gmail" class="w-4 h-4 object-contain">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" title="Drive" alt="Drive" class="w-4 h-4 object-contain">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg" title="Photos" alt="Photos" class="w-4 h-4 object-contain opacity-20">
+            const getServicesHtml = (name) => `
+                <div class="flex items-center gap-2">
+                    <div class="flex gap-1 flex-wrap max-w-[120px] assign-services-list">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" class="w-4 h-4 object-contain transition-all" title="Gmail" data-service="Gmail">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" class="w-4 h-4 object-contain transition-all" title="Drive" data-service="Drive">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg" class="w-4 h-4 object-contain transition-all" title="Photos" data-service="Photos">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg" class="w-4 h-4 object-contain transition-all" title="Contacts" data-service="Contacts">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" class="w-4 h-4 object-contain transition-all" title="Calendar" data-service="Calendar">
+                    </div>
+                    <button onclick="openUpdateSyncModal(event, '${name}')" class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100 shrink-0">Update</button>
                 </div>`;
+
+            const retentionSelect = `
+                <select onchange="applyAssignPolicyFilters()" class="assign-retention-select border border-stone-300 rounded text-xs bg-white px-2 py-1.5 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none w-full max-w-[160px]">
+                    <option>Infinite (Never Delete)</option>
+                    <option>7 Years (Compliance)</option>
+                    <option>1 Year</option>
+                    <option>30 Days</option>
+                </select>`;
+
+            const syncSelect = `
+                <select onchange="applyAssignPolicyFilters()" class="assign-sync-select border border-stone-300 rounded text-xs bg-white px-2 py-1.5 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none w-full max-w-[160px]">
+                    <option>Real-Time (CDP)</option>
+                    <option>Every 1 Hour</option>
+                    <option>Every 6 Hours</option>
+                    <option>Nightly</option>
+                </select>`;
 
             specificUsers.forEach(u => {
                 const avatar = u.isGroup
@@ -3884,9 +3921,11 @@
                     : `<div class="w-8 h-8 rounded-full bg-${u.color}-100 text-${u.color}-700 flex items-center justify-center font-bold text-xs">${u.initials}</div>`;
 
                 html += `
-                    <label class="update-user-row flex justify-between items-center p-3 bg-white border border-stone-200 rounded-lg cursor-pointer hover:border-teal-300 hover:shadow-sm transition-all" data-name="${u.name.toLowerCase()}" data-email="${u.email.toLowerCase()}">
-                        <div class="flex items-center">
-                            <input type="checkbox" class="update-user-cb mr-4 w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500" value="${u.email}">
+                    <tr class="assign-policy-row hover:bg-stone-50 transition-colors" data-name="${u.name.toLowerCase()}" data-email="${u.email.toLowerCase()}">
+                        <td class="px-6 py-4">
+                            <input type="checkbox" class="assign-policy-cb w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500">
+                        </td>
+                        <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 ${avatar}
                                 <div>
@@ -3894,16 +3933,20 @@
                                     <div class="text-xs text-slate-500 mt-0.5">${u.email}</div>
                                 </div>
                             </div>
-                        </div>
-                        ${servicesHtml}
-                    </label>`;
+                        </td>
+                        <td class="px-6 py-4">${getServicesHtml(u.name)}</td>
+                        <td class="px-6 py-4">${retentionSelect}</td>
+                        <td class="px-6 py-4">${syncSelect}</td>
+                    </tr>`;
             });
 
-            for (let i = 1; i <= 96; i++) {
+            for (let i = 1; i <= 20; i++) {
                 html += `
-                    <label class="update-user-row flex justify-between items-center p-3 bg-white border border-stone-200 rounded-lg cursor-pointer hover:border-teal-300 hover:shadow-sm transition-all" data-name="mock user ${i}" data-email="user${i}@acme.com">
-                        <div class="flex items-center">
-                            <input type="checkbox" class="update-user-cb mr-4 w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500" value="user${i}@acme.com">
+                    <tr class="assign-policy-row hover:bg-stone-50 transition-colors" data-name="mock user ${i}" data-email="user${i}@acme.com">
+                        <td class="px-6 py-4">
+                            <input type="checkbox" class="assign-policy-cb w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500">
+                        </td>
+                        <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div class="w-8 h-8 rounded-full bg-stone-100 text-stone-500 flex items-center justify-center font-bold text-xs">U${i}</div>
                                 <div>
@@ -3911,158 +3954,118 @@
                                     <div class="text-xs text-slate-500 mt-0.5">user${i}@acme.com</div>
                                 </div>
                             </div>
-                        </div>
-                        ${servicesHtml}
-                    </label>`;
+                        </td>
+                        <td class="px-6 py-4">${getServicesHtml(`Mock User ${i}`)}</td>
+                        <td class="px-6 py-4">${retentionSelect}</td>
+                        <td class="px-6 py-4">${syncSelect}</td>
+                    </tr>`;
             }
 
-            listContainer.innerHTML = html;
+            tbody.innerHTML = html;
         }
 
-        function toggleAllUpdateUsers(source) {
-            const checkboxes = document.querySelectorAll('.update-user-cb');
+        function toggleAllAssignPolicyUsers(source) {
+            const checkboxes = document.querySelectorAll('.assign-policy-cb');
             checkboxes.forEach(cb => {
-                const row = cb.closest('.update-user-row');
+                const row = cb.closest('tr');
                 if (!row.classList.contains('hidden')) {
                     cb.checked = source.checked;
                 }
             });
         }
 
-        function filterUpdateUsers(query) {
-            const term = query.toLowerCase();
-            const rows = document.querySelectorAll('.update-user-row');
+        function applyAssignPolicyFilters() {
+            const query = (document.getElementById('assign-policy-search').value || '').toLowerCase();
+            const service = document.getElementById('assign-policy-filter-service').value;
+            const retention = document.getElementById('assign-policy-filter-retention').value;
+            const sync = document.getElementById('assign-policy-filter-sync').value;
+
+            const rows = document.querySelectorAll('.assign-policy-row');
             rows.forEach(row => {
                 const name = row.getAttribute('data-name');
                 const email = row.getAttribute('data-email');
-                if (name.includes(term) || email.includes(term)) {
+
+                const retentionSelect = row.querySelector('.assign-retention-select').value;
+                const syncSelect = row.querySelector('.assign-sync-select').value;
+                const checkedServices = Array.from(row.querySelectorAll('.assign-services-list img:not(.opacity-30)')).map(img => img.getAttribute('data-service'));
+
+                let match = true;
+                if (query && !name.includes(query) && !email.includes(query)) match = false;
+                if (service && !checkedServices.includes(service)) match = false;
+                if (retention && retentionSelect !== retention) match = false;
+                if (sync && syncSelect !== sync) match = false;
+
+                if (match) {
                     row.classList.remove('hidden');
-                    row.classList.add('flex');
                 } else {
                     row.classList.add('hidden');
-                    row.classList.remove('flex');
                 }
             });
         }
 
-        function openUpdateUsersModal(policyName) {
-            currentUpdatePolicy = policyName;
-            document.getElementById('update-users-policy-name').innerText = policyName;
-            const modal = document.getElementById('update-users-modal');
-            const content = document.getElementById('update-users-content');
+        function applyBulkAssignOptions() {
+            const retention = document.getElementById('bulk-assign-retention').value;
+            const sync = document.getElementById('bulk-assign-sync').value;
+            const serviceAction = document.getElementById('bulk-assign-service-action').value;
+            const selectedRows = document.querySelectorAll('.assign-policy-cb:checked');
 
-            if (!isUpdateUsersListRendered) {
-                renderUpdateUsersList();
-                isUpdateUsersListRendered = true;
+            if (selectedRows.length === 0) {
+                showToast("Please select at least one account to apply bulk settings.");
+                return;
             }
-
-            const isPersonal = policyName === 'Sarah Jenkins';
-
-            if (isPersonal) {
-                // Skip Step 1 for personal accounts
-                document.getElementById('update-users-step-1').classList.add('hidden');
-                document.getElementById('update-users-step-2').classList.remove('hidden');
-                document.getElementById('update-users-back-btn').classList.add('hidden');
-                document.getElementById('update-users-info-banner').classList.add('hidden');
-                document.getElementById('advanced-mode-toggle-container').classList.add('hidden');
-            } else {
-                // Reset view to Step 1 and uncheck all boxes
-                document.getElementById('update-users-step-1').classList.remove('hidden');
-                document.getElementById('update-users-step-2').classList.add('hidden');
-                document.getElementById('update-users-back-btn').classList.remove('hidden');
-                document.getElementById('update-users-info-banner').classList.remove('hidden');
-                document.getElementById('advanced-mode-toggle-container').classList.remove('hidden');
-                document.querySelectorAll('.update-user-cb').forEach(cb => cb.checked = false);
-            }
-
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                content.classList.remove('scale-95', 'opacity-0');
-                content.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-
-        function closeUpdateUsersModal() {
-            const modal = document.getElementById('update-users-modal');
-            const content = document.getElementById('update-users-content');
-            content.classList.remove('scale-100', 'opacity-100');
-            content.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => modal.classList.add('hidden'), 200);
-        }
-
-        function goToUpdateUsersStep2() {
-            const selectedCbs = document.querySelectorAll('.update-user-cb:checked');
-            const selectedCount = selectedCbs.length;
-            if (selectedCount === 0) {
-                showToast('Please select at least one account to edit.');
+            if (!retention && !sync && !serviceAction) {
+                showToast("Please select a setting to apply.");
                 return;
             }
 
-            // Populate Advanced Mode
-            const advContainer = document.getElementById('advanced-services-container');
-            let advHtml = '';
-            selectedCbs.forEach(cb => {
-                const nameContainer = cb.closest('label').querySelector('.font-bold');
-                const name = nameContainer ? nameContainer.innerText : 'Unknown User';
-                advHtml += `
-                    <div class="flex flex-col lg:flex-row justify-between lg:items-center p-2 border-b border-stone-200 last:border-0 gap-2">
-                        <div class="text-sm font-bold text-slate-800 truncate lg:w-1/3">${name}</div>
-                        <div class="flex flex-wrap items-center gap-3 flex-1 lg:justify-end">
-                            <label class="flex items-center text-xs text-slate-600 cursor-pointer"><input type="checkbox" checked class="w-3 h-3 text-teal-600 border-stone-300 rounded mr-1"> <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" class="w-3 h-3 mx-1" alt="Gmail"> Gmail</label>
-                            <label class="flex items-center text-xs text-slate-600 cursor-pointer"><input type="checkbox" checked class="w-3 h-3 text-teal-600 border-stone-300 rounded mr-1"> <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" class="w-3 h-3 mx-1" alt="Drive"> Drive</label>
-                            <label class="flex items-center text-xs text-slate-600 cursor-pointer"><input type="checkbox" checked class="w-3 h-3 text-teal-600 border-stone-300 rounded mr-1"> <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg" class="w-3 h-3 mx-1" alt="Contacts"> Contacts</label>
-                            <label class="flex items-center text-xs text-slate-600 cursor-pointer"><input type="checkbox" checked class="w-3 h-3 text-teal-600 border-stone-300 rounded mr-1"> <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg" class="w-3 h-3 mx-1" alt="Photos"> Photos</label>
-                        </div>
-                    </div>
-                `;
+            selectedRows.forEach(cb => {
+                const row = cb.closest('tr');
+                if (retention) {
+                    row.querySelector('.assign-retention-select').value = retention;
+                }
+                if (sync) {
+                    row.querySelector('.assign-sync-select').value = sync;
+                }
+                if (serviceAction) {
+                    const parts = serviceAction.split('_');
+                    const action = parts[0];
+                    const svc = parts[1];
+                    const svcImg = row.querySelector(`.assign-services-list img[data-service="${svc}"]`);
+                    if (svcImg) {
+                        if (action === 'enable') {
+                            svcImg.classList.remove('opacity-30', 'grayscale');
+                        } else {
+                            svcImg.classList.add('opacity-30', 'grayscale');
+                        }
+                    }
+                }
             });
-            advContainer.innerHTML = advHtml;
 
-            // Reset advanced mode toggle to false
-            document.getElementById('advanced-mode-toggle').checked = false;
-            toggleAdvancedMode();
+            showToast(`Bulk settings applied to ${selectedRows.length} accounts.`);
+            applyAssignPolicyFilters();
 
-            document.getElementById('selected-users-count').innerText = selectedCount;
-            document.getElementById('update-users-step-1').classList.add('hidden');
-            document.getElementById('update-users-step-2').classList.remove('hidden');
+            // Reset dropdowns
+            document.getElementById('bulk-assign-retention').value = "";
+            document.getElementById('bulk-assign-sync').value = "";
+            document.getElementById('bulk-assign-service-action').value = "";
         }
 
-        function goToUpdateUsersStep1() {
-            document.getElementById('update-users-step-2').classList.add('hidden');
-            document.getElementById('update-users-step-1').classList.remove('hidden');
-        }
-
-        function toggleAdvancedMode() {
-            const isChecked = document.getElementById('advanced-mode-toggle').checked;
-            const globalContainer = document.getElementById('global-services-container');
-            const advancedContainer = document.getElementById('advanced-services-container');
-            if (isChecked) {
-                globalContainer.classList.add('hidden');
-                globalContainer.classList.remove('flex');
-                advancedContainer.classList.remove('hidden');
-            } else {
-                globalContainer.classList.remove('hidden');
-                globalContainer.classList.add('flex');
-                advancedContainer.classList.add('hidden');
+        function savePolicyAssignments(event) {
+            const selected = document.querySelectorAll('.assign-policy-cb:checked');
+            if (selected.length === 0) {
+                showToast('Please select at least one account to assign the policy.');
+                return;
             }
-        }
-
-        function submitUpdateUsers() {
-            const btn = document.getElementById('update-users-confirm-btn');
+            const btn = event.currentTarget;
             const orig = btn.innerText;
-            btn.innerHTML = '<span class="unicode-icon animate-spin mr-2">&#x23F3;</span> Processing...';
+            btn.innerHTML = '<span class="unicode-icon animate-spin mr-2">&#x23F3;</span> Saving...';
             btn.disabled = true;
 
             setTimeout(() => {
-                closeUpdateUsersModal();
                 btn.innerText = orig;
                 btn.disabled = false;
-                const count = document.getElementById('selected-users-count').innerText;
-                if (currentUpdatePolicy === 'Sarah Jenkins') {
-                    showToast(`Policy updated successfully for Sarah Jenkins.`);
-                } else {
-                    showToast(`Policy updated successfully for ${count} selected accounts.`);
-                }
+                showToast(`Policy "${currentAssignPolicy}" assigned to ${selected.length} accounts.`);
+                hideAssignPolicyPage();
             }, 800);
         }
 
