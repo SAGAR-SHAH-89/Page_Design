@@ -1316,12 +1316,9 @@
                             <button onclick="openEditPolicyModal('Sarah Jenkins')"
                                 class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Update
                                 Policy</button>
-                            <button onclick="openAssignPolicyPage('Sarah Jenkins')"
-                                class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Create
-                                & Assign Policy</button>
-                            <button onclick="reconnectCorporateCard(this)" title="Reconnect Account"
-                                class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 rounded-lg transition-colors border border-rose-700 flex items-center justify-center shadow-sm shrink-0">
-                                <span class="unicode-icon">&#x1F517;</span>
+                            <button onclick="reconnectCorporateCard(this)"
+                                class="flex-1 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold py-2 rounded-lg transition-colors border border-rose-700 flex items-center justify-center shadow-sm">
+                                <span class="unicode-icon mr-1.5">&#x1F517;</span> Reconnect
                             </button>
                         </div>
                     </div>
@@ -1448,11 +1445,19 @@
                 <div id="corporate-policies-table"
                     class="hidden bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden">
                     <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-stone-50">
-                        <div>
-                            <h2 class="text-lg font-bold text-slate-900" id="manage-users-title">Manage User Policies
-                            </h2>
-                            <p class="text-xs text-slate-500 mt-1">Assign users to specific policy groups or override
-                                individual settings.</p>
+                        <div class="flex items-center gap-4">
+                            <button onclick="hideCorporatePolicies()"
+                                class="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors flex items-center bg-white border border-stone-200 px-3 py-2 rounded-lg shadow-sm hover:bg-stone-50 shrink-0">
+                                <span class="unicode-icon mr-1">&#x2B05;&#xFE0F;</span> Back
+                            </button>
+                            <div>
+                                <h2 class="text-lg font-bold text-slate-900" id="manage-users-title">Manage User
+                                    Policies
+                                </h2>
+                                <p class="text-xs text-slate-500 mt-1 hidden sm:block">Assign users to specific policy
+                                    groups or override
+                                    individual settings.</p>
+                            </div>
                         </div>
                         <div class="flex items-center gap-3">
                             <select
@@ -1463,10 +1468,6 @@
                                 <option>Legal Hold Policy</option>
                                 <option>Creative Assets Policy</option>
                             </select>
-                            <button onclick="hideCorporatePolicies()"
-                                class="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors flex items-center bg-white border border-stone-200 px-3 py-2 rounded-lg shadow-sm hover:bg-stone-50">
-                                <span class="unicode-icon mr-1">&#x2B05;&#xFE0F;</span> Back
-                            </button>
                         </div>
                     </div>
                     <div class="overflow-x-auto">
@@ -1828,20 +1829,27 @@
                 <div id="assign-policy-page"
                     class="hidden bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden">
                     <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-stone-50">
-                        <div>
-                            <h2 class="text-lg font-bold text-slate-900">Assign Policy: <span id="assign-policy-name"
-                                    class="text-teal-700"></span></h2>
-                            <p class="text-xs text-slate-500 mt-1">Select users and configure their retention and sync
-                                intervals directly.</p>
+                        <div class="flex items-center gap-4">
+                            <button onclick="hideAssignPolicyPage()"
+                                class="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors flex items-center bg-white border border-stone-200 px-3 py-2 rounded-lg shadow-sm hover:bg-stone-50 shrink-0">
+                                <span class="unicode-icon mr-1">&#x2B05;&#xFE0F;</span> Back
+                            </button>
+                            <div>
+                                <h2 class="text-lg font-bold text-slate-900">Assign Policy: <span
+                                        id="assign-policy-name" class="text-teal-700"></span></h2>
+                                <p class="text-xs text-slate-500 mt-1 hidden sm:block">Select users and configure their
+                                    retention and sync
+                                    intervals directly.</p>
+                            </div>
                         </div>
                         <div class="flex items-center gap-3">
                             <button onclick="savePolicyAssignments(event)"
-                                class="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 flex items-center transition-colors">
-                                Save Assignments
+                                class="bg-white border border-stone-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-stone-50 flex items-center transition-colors">
+                                Update
                             </button>
-                            <button onclick="hideAssignPolicyPage()"
-                                class="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors flex items-center bg-white border border-stone-200 px-3 py-2 rounded-lg shadow-sm hover:bg-stone-50">
-                                <span class="unicode-icon mr-1">&#x2B05;&#xFE0F;</span> Back
+                            <button onclick="savePolicyAssignments(event)"
+                                class="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 flex items-center transition-colors">
+                                Create & Update Policy
                             </button>
                         </div>
                     </div>
@@ -1877,62 +1885,72 @@
                                 <option value="Nightly">Nightly</option>
                             </select>
                         </div>
-                        <!-- Bulk Action Bar -->
-                        <div
-                            class="flex flex-wrap items-center gap-3 bg-stone-50 p-2.5 rounded-lg border border-stone-200">
-                            <span class="text-sm font-bold text-slate-700 ml-1 flex items-center"><span
-                                    class="unicode-icon mr-1.5">&#x2699;&#xFE0F;</span> Bulk Update:</span>
-                            <select id="bulk-assign-service-action"
-                                class="border border-stone-300 rounded text-xs bg-white px-2 py-1.5 shadow-sm focus:ring-teal-500 outline-none">
-                                <option value="">-- Modify Service --</option>
-                                <option value="enable_Gmail">Enable Gmail</option>
-                                <option value="disable_Gmail">Disable Gmail</option>
-                                <option value="enable_Drive">Enable Drive</option>
-                                <option value="disable_Drive">Disable Drive</option>
-                                <option value="enable_Photos">Enable Photos</option>
-                                <option value="disable_Photos">Disable Photos</option>
-                                <option value="enable_Contacts">Enable Contacts</option>
-                                <option value="disable_Contacts">Disable Contacts</option>
-                                <option value="enable_Calendar">Enable Calendar</option>
-                                <option value="disable_Calendar">Disable Calendar</option>
-                            </select>
-                            <select id="bulk-assign-retention"
-                                class="border border-stone-300 rounded text-xs bg-white px-2 py-1.5 shadow-sm focus:ring-teal-500 outline-none">
-                                <option value="">-- Set Retention --</option>
-                                <option>Infinite (Never Delete)</option>
-                                <option>7 Years (Compliance)</option>
-                                <option>1 Year</option>
-                                <option>30 Days</option>
-                            </select>
-                            <select id="bulk-assign-sync"
-                                class="border border-stone-300 rounded text-xs bg-white px-2 py-1.5 shadow-sm focus:ring-teal-500 outline-none">
-                                <option value="">-- Set Sync --</option>
-                                <option>Real-Time (CDP)</option>
-                                <option>Every 1 Hour</option>
-                                <option>Every 6 Hours</option>
-                                <option>Nightly</option>
-                            </select>
-                            <button onclick="applyBulkAssignOptions()"
-                                class="bg-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm hover:bg-slate-700 transition-colors">Apply
-                                to Selected</button>
-                        </div>
                     </div>
                     <div class="overflow-x-auto max-h-[60vh] overflow-y-auto">
                         <table class="min-w-full divide-y divide-stone-200">
                             <thead class="bg-stone-50 sticky top-0 z-10 shadow-sm">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase w-10">
-                                        <input type="checkbox" onchange="toggleAllAssignPolicyUsers(this)"
-                                            class="w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500">
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase w-10 align-top">
+                                        <div class="mt-1.5">
+                                            <input type="checkbox" onchange="toggleAllAssignPolicyUsers(this)"
+                                                class="w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500">
+                                        </div>
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">User /
-                                        Mail</th>
-                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Services
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase align-top">
+                                        <div class="mt-1.5">User / Mail</div>
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Retention
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase align-top">
+                                        <div class="flex flex-col gap-1.5">
+                                            <span>Services</span>
+                                            <select id="bulk-assign-service-action"
+                                                onchange="applyBulkAssignOptions('service')"
+                                                class="border border-stone-300 rounded text-xs bg-white px-1.5 py-1 shadow-sm focus:ring-teal-500 outline-none font-normal normal-case w-full max-w-[160px]">
+                                                <option value="">Bulk Update...</option>
+                                                <option value="enable_Gmail">Enable Gmail</option>
+                                                <option value="disable_Gmail">Disable Gmail</option>
+                                                <option value="enable_Drive">Enable Drive</option>
+                                                <option value="disable_Drive">Disable Drive</option>
+                                                <option value="enable_Photos">Enable Photos</option>
+                                                <option value="disable_Photos">Disable Photos</option>
+                                                <option value="enable_Contacts">Enable Contacts</option>
+                                                <option value="disable_Contacts">Disable Contacts</option>
+                                                <option value="enable_Calendar">Enable Calendar</option>
+                                                <option value="disable_Calendar">Disable Calendar</option>
+                                            </select>
+                                        </div>
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Sync
-                                        Interval</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase align-top">
+                                        <div class="flex flex-col gap-1.5">
+                                            <span>Retention</span>
+                                            <select id="bulk-assign-retention"
+                                                onchange="applyBulkAssignOptions('retention')"
+                                                class="border border-stone-300 rounded text-xs bg-white px-1.5 py-1 shadow-sm focus:ring-teal-500 outline-none font-normal normal-case w-full max-w-[160px]">
+                                                <option value="">Bulk Update...</option>
+                                                <option>Infinite (Never Delete)</option>
+                                                <option>7 Years (Compliance)</option>
+                                                <option>1 Year</option>
+                                                <option>30 Days</option>
+                                            </select>
+                                        </div>
+                                    </th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase align-top">
+                                        <div class="flex flex-col gap-1.5">
+                                            <span>Sync Interval</span>
+                                            <select id="bulk-assign-sync" onchange="applyBulkAssignOptions('sync')"
+                                                class="border border-stone-300 rounded text-xs bg-white px-1.5 py-1 shadow-sm focus:ring-teal-500 outline-none font-normal normal-case w-full max-w-[160px]">
+                                                <option value="">Bulk Update...</option>
+                                                <option>Real-Time (CDP)</option>
+                                                <option>Every 1 Hour</option>
+                                                <option>Every 6 Hours</option>
+                                                <option>Nightly</option>
+                                            </select>
+                                        </div>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody id="assign-policy-tbody" class="bg-white divide-y divide-stone-100">
@@ -4003,31 +4021,40 @@
             });
         }
 
-        function applyBulkAssignOptions() {
-            const retention = document.getElementById('bulk-assign-retention').value;
-            const sync = document.getElementById('bulk-assign-sync').value;
-            const serviceAction = document.getElementById('bulk-assign-service-action').value;
+        function applyBulkAssignOptions(type) {
+            let val = "";
+            let selectId = "";
+
+            if (type === 'retention') {
+                selectId = 'bulk-assign-retention';
+            } else if (type === 'sync') {
+                selectId = 'bulk-assign-sync';
+            } else if (type === 'service') {
+                selectId = 'bulk-assign-service-action';
+            }
+
+            val = document.getElementById(selectId).value;
+            if (!val) return;
+
             const selectedRows = document.querySelectorAll('.assign-policy-cb:checked');
 
             if (selectedRows.length === 0) {
                 showToast("Please select at least one account to apply bulk settings.");
-                return;
-            }
-            if (!retention && !sync && !serviceAction) {
-                showToast("Please select a setting to apply.");
+                document.getElementById(selectId).value = "";
                 return;
             }
 
+            let applied = false;
             selectedRows.forEach(cb => {
                 const row = cb.closest('tr');
-                if (retention) {
-                    row.querySelector('.assign-retention-select').value = retention;
-                }
-                if (sync) {
-                    row.querySelector('.assign-sync-select').value = sync;
-                }
-                if (serviceAction) {
-                    const parts = serviceAction.split('_');
+                if (type === 'retention') {
+                    row.querySelector('.assign-retention-select').value = val;
+                    applied = true;
+                } else if (type === 'sync') {
+                    row.querySelector('.assign-sync-select').value = val;
+                    applied = true;
+                } else if (type === 'service') {
+                    const parts = val.split('_');
                     const action = parts[0];
                     const svc = parts[1];
                     const svcImg = row.querySelector(`.assign-services-list img[data-service="${svc}"]`);
@@ -4037,17 +4064,18 @@
                         } else {
                             svcImg.classList.add('opacity-30', 'grayscale');
                         }
+                        applied = true;
                     }
                 }
             });
 
-            showToast(`Bulk settings applied to ${selectedRows.length} accounts.`);
-            applyAssignPolicyFilters();
+            if (applied) {
+                showToast(`Bulk settings applied to ${selectedRows.length} accounts.`);
+                applyAssignPolicyFilters();
+            }
 
-            // Reset dropdowns
-            document.getElementById('bulk-assign-retention').value = "";
-            document.getElementById('bulk-assign-sync').value = "";
-            document.getElementById('bulk-assign-service-action').value = "";
+            // Reset dropdown
+            document.getElementById(selectId).value = "";
         }
 
         function savePolicyAssignments(event) {
@@ -4058,7 +4086,7 @@
             }
             const btn = event.currentTarget;
             const orig = btn.innerText;
-            btn.innerHTML = '<span class="unicode-icon animate-spin mr-2">&#x23F3;</span> Saving...';
+            btn.innerHTML = '<span class="unicode-icon animate-spin mr-2">&#x23F3;</span> Updating...';
             btn.disabled = true;
 
             setTimeout(() => {
