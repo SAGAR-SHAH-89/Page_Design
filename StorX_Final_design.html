@@ -2457,7 +2457,7 @@
 
             <!-- Services Update Content -->
             <main id="view-services" class="flex-1 overflow-y-auto bg-stone-50 p-4 sm:p-6 lg:p-8 w-full h-full hidden">
-                <div class="max-w-5xl mx-auto">
+                <div class="max-w-5xl mx-auto" id="services-cards-container">
                     <h1 class="text-2xl font-bold text-slate-900 mb-2">Services Update</h1>
                     <p class="text-sm text-slate-500 mb-8">Manage, update, and configure your connected workspace
                         services.</p>
@@ -2485,7 +2485,7 @@
                                         Inactive</span>
                                 </div>
                                 <button class="text-teal-600 hover:text-teal-800 font-bold transition-colors"
-                                    onclick="openServiceConfigModal('Gmail')">Configure</button>
+                                    onclick="openServiceConfigPage('Gmail')">Configure</button>
                             </div>
                         </div>
 
@@ -2511,7 +2511,7 @@
                                         Inactive</span>
                                 </div>
                                 <button class="text-teal-600 hover:text-teal-800 font-bold transition-colors"
-                                    onclick="openServiceConfigModal('Google Drive')">Configure</button>
+                                    onclick="openServiceConfigPage('Google Drive')">Configure</button>
                             </div>
                         </div>
 
@@ -2537,7 +2537,7 @@
                                         Inactive</span>
                                 </div>
                                 <button class="text-teal-600 hover:text-teal-800 font-bold transition-colors"
-                                    onclick="openServiceConfigModal('Google Photos')">Configure</button>
+                                    onclick="openServiceConfigPage('Google Photos')">Configure</button>
                             </div>
                         </div>
 
@@ -2563,7 +2563,7 @@
                                         Inactive</span>
                                 </div>
                                 <button class="text-teal-600 hover:text-teal-800 font-bold transition-colors"
-                                    onclick="openServiceConfigModal('Google Contacts')">Configure</button>
+                                    onclick="openServiceConfigPage('Google Contacts')">Configure</button>
                             </div>
                         </div>
 
@@ -2589,9 +2589,74 @@
                                         Inactive</span>
                                 </div>
                                 <button class="text-teal-600 hover:text-teal-800 font-bold transition-colors"
-                                    onclick="openServiceConfigModal('Google Calendar')">Configure</button>
+                                    onclick="openServiceConfigPage('Google Calendar')">Configure</button>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Service Configuration Page -->
+                <div id="service-config-page"
+                    class="hidden bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden">
+                    <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-stone-50">
+                        <div class="flex items-center gap-4">
+                            <button onclick="hideServiceConfigPage()"
+                                class="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors flex items-center bg-white border border-stone-200 px-3 py-2 rounded-lg shadow-sm hover:bg-stone-50 shrink-0">
+                                <span class="unicode-icon mr-1">&#x2B05;&#xFE0F;</span> Back
+                            </button>
+                            <div>
+                                <h2 class="text-lg font-bold text-slate-900">Configure: <span id="config-service-name"
+                                        class="text-teal-700"></span></h2>
+                                <p class="text-xs text-slate-500 mt-1 hidden sm:block">The following accounts are
+                                    currently authorized and syncing data.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 border-b border-stone-100 bg-white flex flex-wrap items-center gap-3">
+                        <input type="text" id="service-config-search" placeholder="Search accounts..."
+                            onkeyup="filterServiceConfigAccounts()"
+                            class="flex-1 min-w-[200px] bg-stone-50 border border-stone-200 rounded-lg px-3 py-2 focus:ring-teal-500 text-sm outline-none">
+                        <select id="service-config-filter-status" onchange="filterServiceConfigAccounts()"
+                            class="border border-stone-200 rounded-lg text-sm bg-stone-50 px-3 py-2 focus:ring-teal-500 outline-none">
+                            <option value="">All Statuses</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                        <select id="service-config-filter-last-backup" onchange="filterServiceConfigAccounts()"
+                            class="border border-stone-200 rounded-lg text-sm bg-stone-50 px-3 py-2 focus:ring-teal-500 outline-none">
+                            <option value="">Any Last Backup</option>
+                            <option value="today">Today</option>
+                            <option value="older">Older than a day</option>
+                            <option value="na">Never</option>
+                        </select>
+                        <select id="service-config-filter-next-backup" onchange="filterServiceConfigAccounts()"
+                            class="border border-stone-200 rounded-lg text-sm bg-stone-50 px-3 py-2 focus:ring-teal-500 outline-none">
+                            <option value="">Any Next Backup</option>
+                            <option value="continuous">Continuous</option>
+                            <option value="scheduled">Scheduled</option>
+                            <option value="suspended">Suspended / N/A</option>
+                        </select>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-stone-200 text-left">
+                            <thead class="bg-stone-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Account
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Last
+                                        Backup</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Next
+                                        Backup</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Status
+                                    </th>
+                                    <th class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase">Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-stone-100" id="service-config-tbody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </main>
@@ -3211,51 +3276,6 @@
         </div>
     </div>
 
-    <!-- Service Configuration Modal -->
-    <div id="service-config-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-0">
-        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeServiceConfigModal()"></div>
-        <div class="bg-white rounded-xl shadow-2xl z-10 w-full max-w-3xl overflow-hidden border border-stone-200 flex flex-col transform transition-all scale-95 opacity-0"
-            id="service-config-content">
-            <div class="p-5 border-b border-stone-100 bg-stone-50 flex justify-between items-center">
-                <h2 class="text-lg font-bold text-slate-900 flex items-center">
-                    <span class="unicode-icon mr-2 text-teal-600">&#x2699;&#xFE0F;</span> Configure <span
-                        id="config-service-name" class="ml-1"></span>
-                </h2>
-                <button onclick="closeServiceConfigModal()"
-                    class="text-slate-400 hover:text-slate-600 transition-colors">
-                    <span class="unicode-icon">&#x274C;</span>
-                </button>
-            </div>
-            <div class="p-6 bg-white overflow-y-auto max-h-[60vh]">
-                <p class="text-sm text-slate-500 mb-4">The following accounts are currently authorized and syncing
-                    <strong id="config-service-name-bold" class="text-slate-800"></strong> data.
-                </p>
-                <div class="overflow-x-auto border border-stone-200 rounded-lg shadow-sm">
-                    <table class="min-w-full divide-y divide-stone-200 text-left">
-                        <thead class="bg-stone-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Account</th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Last Backup
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Next Backup
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Status</th>
-                                <th class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-stone-100" id="service-config-tbody">
-                            <!-- Populated dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="p-4 border-t border-stone-100 bg-stone-50 flex justify-end gap-3">
-                <button onclick="closeServiceConfigModal()"
-                    class="px-5 py-2 bg-white border border-stone-300 text-slate-700 rounded-lg text-sm font-bold shadow-sm hover:bg-stone-50 transition-colors">Done</button>
-            </div>
-        </div>
-    </div>
-
     <!-- User Sync Logs Modal -->
     <div id="user-sync-logs-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-0">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeUserSyncLogs()"></div>
@@ -3600,6 +3620,13 @@
             document.getElementById('topbar-breadcrumb').innerHTML = 'Services Update';
             document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
             document.getElementById('nav-services').classList.add('active');
+
+            const cardsContainer = document.getElementById('services-cards-container');
+            const configPage = document.getElementById('service-config-page');
+            if (cardsContainer && configPage) {
+                cardsContainer.classList.remove('hidden');
+                configPage.classList.add('hidden');
+            }
         }
 
         function showResources() {
@@ -4179,10 +4206,19 @@
             }, 1200);
         }
 
-        /* --- SERVICE CONFIGURATION MODAL --- */
-        function openServiceConfigModal(serviceName) {
+        /* --- SERVICE CONFIGURATION PAGE --- */
+        function openServiceConfigPage(serviceName) {
             document.getElementById('config-service-name').innerText = serviceName;
-            document.getElementById('config-service-name-bold').innerText = serviceName;
+
+            // Reset filters
+            const searchInput = document.getElementById('service-config-search');
+            if (searchInput) searchInput.value = '';
+            const statusFilter = document.getElementById('service-config-filter-status');
+            if (statusFilter) statusFilter.value = '';
+            const lastBackupFilter = document.getElementById('service-config-filter-last-backup');
+            if (lastBackupFilter) lastBackupFilter.value = '';
+            const nextBackupFilter = document.getElementById('service-config-filter-next-backup');
+            if (nextBackupFilter) nextBackupFilter.value = '';
 
             const tbody = document.getElementById('service-config-tbody');
 
@@ -4233,22 +4269,63 @@
             `;
             }).join('');
 
-            const modal = document.getElementById('service-config-modal');
-            const content = document.getElementById('service-config-content');
-            modal.classList.remove('hidden');
-
-            setTimeout(() => {
-                content.classList.remove('scale-95', 'opacity-0');
-                content.classList.add('scale-100', 'opacity-100');
-            }, 10);
+            document.getElementById('services-cards-container').classList.add('hidden');
+            document.getElementById('service-config-page').classList.remove('hidden');
         }
 
-        function closeServiceConfigModal() {
-            const modal = document.getElementById('service-config-modal');
-            const content = document.getElementById('service-config-content');
-            content.classList.remove('scale-100', 'opacity-100');
-            content.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => modal.classList.add('hidden'), 200);
+        function filterServiceConfigAccounts() {
+            const query = document.getElementById('service-config-search').value.toLowerCase();
+            const status = document.getElementById('service-config-filter-status').value;
+            const lastBackup = document.getElementById('service-config-filter-last-backup').value;
+            const nextBackup = document.getElementById('service-config-filter-next-backup').value;
+
+            const rows = document.querySelectorAll('#service-config-tbody tr');
+
+            rows.forEach(row => {
+                const accountCell = row.cells[0].textContent.toLowerCase();
+                const lastBackupCell = row.cells[1].textContent.toLowerCase();
+                const nextBackupCell = row.cells[2].textContent.toLowerCase();
+                const statusCell = row.cells[3].textContent.trim();
+
+                let match = true;
+
+                if (query && !accountCell.includes(query)) {
+                    match = false;
+                }
+
+                if (status) {
+                    const isActive = statusCell.includes('Success');
+                    if (status === 'active' && !isActive) match = false;
+                    if (status === 'inactive' && isActive) match = false;
+                }
+
+                if (lastBackup) {
+                    const isToday = lastBackupCell.includes('just now') || lastBackupCell.includes('min') || lastBackupCell.includes('hour');
+                    const isOlder = lastBackupCell.includes('day') || lastBackupCell.includes('week') || lastBackupCell.includes('month');
+                    const isNA = lastBackupCell.includes('--');
+
+                    if (lastBackup === 'today' && !isToday) match = false;
+                    if (lastBackup === 'older' && !isOlder) match = false;
+                    if (lastBackup === 'na' && !isNA) match = false;
+                }
+
+                if (nextBackup) {
+                    const isScheduled = nextBackupCell.includes('in ');
+                    const isContinuous = nextBackupCell.includes('continuous');
+                    const isSuspended = nextBackupCell.includes('suspended') || nextBackupCell.includes('--');
+
+                    if (nextBackup === 'scheduled' && !isScheduled) match = false;
+                    if (nextBackup === 'continuous' && !isContinuous) match = false;
+                    if (nextBackup === 'suspended' && !isSuspended) match = false;
+                }
+
+                row.style.display = match ? '' : 'none';
+            });
+        }
+
+        function hideServiceConfigPage() {
+            document.getElementById('service-config-page').classList.add('hidden');
+            document.getElementById('services-cards-container').classList.remove('hidden');
         }
 
         /* --- UPDATE SYNC SERVICES MODAL LOGIC --- */
