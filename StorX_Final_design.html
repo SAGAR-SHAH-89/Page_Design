@@ -117,6 +117,39 @@
             }
         }
 
+        /* Connected Accounts */
+        .account-filter-tab.active {
+            background-color: #f0fdfa;
+            color: #0d9488;
+            border-color: #14b8a6;
+            font-weight: 700;
+        }
+
+        .account-drawer {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .account-drawer.open {
+            transform: translateX(0);
+        }
+
+        .drawer-tab.active {
+            color: #0d9488;
+            border-bottom-color: #14b8a6;
+            font-weight: 700;
+        }
+
+        .connect-type-card input[type="radio"] {
+            display: none;
+        }
+
+        .connect-type-card input[type="radio"]:checked+label {
+            border-color: #14b8a6;
+            background-color: #f0fdfa;
+            box-shadow: 0 0 0 1px #14b8a6;
+        }
+
         /* Dashboard & Vault Specific */
         .sidebar-item {
             transition: all 0.2s ease;
@@ -344,7 +377,7 @@
                     </div>
                     <div>
                         <div class="text-3xl font-bold text-slate-900">Auto</div>
-                        <div class="text-xs font-medium text-slate-500 uppercase">Hourly Syncs</div>
+                        <div class="text-xs font-medium text-slate-500 uppercase">Scheduled Syncs</div>
                     </div>
                     <div>
                         <div class="text-3xl font-bold text-slate-900">1-Click</div>
@@ -398,7 +431,7 @@
                                 class="w-8 h-8 rounded-full bg-stone-200 text-slate-500 flex items-center justify-center font-bold text-sm">
                                 3</div>
                             <span
-                                class="text-xs font-medium text-slate-400 mt-2 absolute -bottom-6 w-24 text-center">Auto-Sync</span>
+                                class="text-xs font-medium text-slate-400 mt-2 absolute -bottom-6 w-20 text-center">Schedule</span>
                         </div>
                         <div class="relative z-10 flex flex-col items-center step-indicator" data-step="4">
                             <div
@@ -411,27 +444,65 @@
                 </div>
 
                 <div class="p-8 sm:p-12 relative min-h-[400px]">
-                    <!-- Step 1: Auth -->
-                    <div id="step-1" class="step-container active fade-in text-center">
-                        <div
-                            class="w-16 h-16 bg-teal-50 rounded-2xl flex items-center justify-center text-3xl unicode-icon mx-auto mb-6 text-teal-600">
-                            &#x1F464;</div>
-                        <h2 class="text-3xl font-bold text-slate-900 mb-3">Connect Workspace Admin</h2>
-                        <p class="text-slate-500 mb-8 max-w-md mx-auto">Authenticate with a Google Workspace Super Admin
-                            account to deploy the StorX enterprise app and backup all users in your tenant.</p>
+                    <!-- Step 1: Google + Password -->
+                    <div id="step-1" class="step-container active fade-in max-w-md mx-auto">
+                        <div class="text-center mb-8">
+                            <div
+                                class="w-16 h-16 bg-teal-50 rounded-2xl flex items-center justify-center text-3xl unicode-icon mx-auto mb-6 text-teal-600">
+                                &#x1F464;</div>
+                            <h2 class="text-3xl font-bold text-slate-900 mb-3">Create Your Account</h2>
+                            <p class="text-slate-500 text-sm">Connect your Google account, then set a StorX password for your admin dashboard.</p>
+                        </div>
 
-                        <button onclick="simulateAuth()" id="auth-btn"
-                            class="w-full sm:w-auto mx-auto flex items-center justify-center px-8 py-4 border border-stone-300 rounded-xl bg-white text-slate-700 font-bold hover:bg-stone-50 transition-all">
-                            <span class="unicode-icon mr-3 text-xl">&#x1F1EC;</span> Continue with Google
-                        </button>
+                        <div id="onboard-google-connect">
+                            <button onclick="simulateOnboardGoogleAuth()" id="onboard-google-auth-btn"
+                                class="w-full flex items-center justify-center px-8 py-3.5 border border-stone-300 rounded-xl bg-white text-slate-700 font-bold hover:bg-stone-50 transition-all">
+                                <span class="unicode-icon mr-3 text-xl">&#x1F1EC;</span> Continue with Google
+                            </button>
+                        </div>
+
+                        <div id="onboard-password-setup" class="hidden space-y-4">
+                            <div id="onboard-google-connected-badge"
+                                class="flex items-center justify-center gap-2 bg-green-50 text-green-800 text-sm font-bold px-4 py-3 rounded-xl border border-green-200">
+                                <span class="unicode-icon">&#x2714;&#xFE0F;</span>
+                                <span id="onboard-connected-email">admin@acme.com</span> connected
+                            </div>
+                            <div>
+                                <label for="signup-password"
+                                    class="block text-sm font-medium text-slate-700 mb-1.5">StorX Password</label>
+                                <input type="password" id="signup-password" placeholder="Minimum 8 characters"
+                                    class="w-full px-4 py-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label for="signup-password-confirm"
+                                    class="block text-sm font-medium text-slate-700 mb-1.5">Confirm Password</label>
+                                <input type="password" id="signup-password-confirm" placeholder="Re-enter your password"
+                                    class="w-full px-4 py-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all">
+                            </div>
+                            <button onclick="completeOnboardAccountSetup()" id="auth-credentials-btn"
+                                class="w-full flex items-center justify-center px-8 py-3.5 bg-teal-600 text-white rounded-xl font-bold hover:bg-teal-700 transition-all">
+                                Continue
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- Step 2: Scope Selection -->
+                    <!-- Step 2: Services -->
                     <div id="step-2" class="step-container">
                         <h2 class="text-2xl font-bold text-slate-900 mb-2 text-center">Select Services to Protect</h2>
                         <div class="text-center mb-4"><span
-                                class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full border border-indigo-200">Corporate
-                                Tenant Found: 124 Users</span></div>
+                                class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full border border-indigo-200">124
+                                mailboxes available</span></div>
+
+                        <div id="onboard-mailbox-list" class="max-w-lg mx-auto mb-6 border border-stone-200 rounded-xl p-4 bg-stone-50 max-h-36 overflow-y-auto space-y-2">
+                            <label class="flex items-center text-sm font-bold text-slate-700 border-b border-stone-200 pb-2 mb-2">
+                                <input type="checkbox" checked onchange="toggleAllOnboardMailboxes(this)" class="w-4 h-4 text-teal-600 rounded mr-2 accent-teal-600"> Select mailboxes to protect
+                            </label>
+                            <label class="flex items-center text-sm text-slate-600"><input type="checkbox" checked class="onboard-mailbox-cb w-4 h-4 rounded mr-2 accent-teal-600"> admin@acme.com</label>
+                            <label class="flex items-center text-sm text-slate-600"><input type="checkbox" checked class="onboard-mailbox-cb w-4 h-4 rounded mr-2 accent-teal-600"> s.jenkins@acme.com</label>
+                            <label class="flex items-center text-sm text-slate-600"><input type="checkbox" checked class="onboard-mailbox-cb w-4 h-4 rounded mr-2 accent-teal-600"> j.doe@acme.com</label>
+                            <p class="text-xs text-slate-400 pt-1">+ 121 more mailboxes</p>
+                        </div>
+
                         <div class="space-y-3 max-w-lg mx-auto mt-2">
                             <label
                                 class="flex items-center p-3 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 bg-stone-50 border-teal-200">
@@ -481,45 +552,45 @@
                         </div>
                     </div>
 
-                    <!-- Step 3: Auto-Sync -->
+                    <!-- Step 3: Schedule -->
                     <div id="step-3" class="step-container">
-                        <h2 class="text-2xl font-bold text-slate-900 mb-2 text-center">Configure Auto-Sync</h2>
+                        <h2 class="text-2xl font-bold text-slate-900 mb-2 text-center">Configure Backup Schedule</h2>
+                        <p id="onboard-schedule-hint" class="text-sm text-slate-500 text-center mb-4">Applies to your default auto-sync policy.</p>
                         <div class="grid grid-cols-2 gap-4 max-w-lg mx-auto mt-6">
                             <div class="sync-option">
-                                <input type="radio" name="sync" id="sync_cdp" value="cdp">
-                                <label for="sync_cdp" class="block p-4 border-2 border-stone-200 rounded-xl relative">
+                                <input type="radio" name="sync" id="sync_3h" value="3h" checked>
+                                <label for="sync_3h" class="block p-4 border-2 border-stone-200 rounded-xl relative">
                                     <div class="absolute top-2 right-2 text-teal-500 opacity-0 check-icon"><span
                                             class="unicode-icon">&#x2714;&#xFE0F;</span></div>
-                                    <div class="font-bold text-slate-900">Real-Time</div>
-                                    <p class="text-xs text-slate-500 mt-1">Continuous protection</p>
-                                </label>
-                            </div>
-                            <div class="sync-option">
-                                <input type="radio" name="sync" id="sync_hourly" value="hourly" checked>
-                                <label for="sync_hourly"
-                                    class="block p-4 border-2 border-stone-200 rounded-xl relative">
-                                    <div class="absolute top-2 right-2 text-teal-500 opacity-0 check-icon"><span
-                                            class="unicode-icon">&#x2714;&#xFE0F;</span></div>
-                                    <div class="font-bold text-slate-900">Hourly</div>
+                                    <div class="font-bold text-slate-900">3 Hours</div>
                                     <p class="text-xs text-slate-500 mt-1">Recommended</p>
                                 </label>
                             </div>
                             <div class="sync-option">
-                                <input type="radio" name="sync" id="sync_6h" value="6h">
-                                <label for="sync_6h" class="block p-4 border-2 border-stone-200 rounded-xl relative">
+                                <input type="radio" name="sync" id="sync_12h" value="12h">
+                                <label for="sync_12h" class="block p-4 border-2 border-stone-200 rounded-xl relative">
                                     <div class="absolute top-2 right-2 text-teal-500 opacity-0 check-icon"><span
                                             class="unicode-icon">&#x2714;&#xFE0F;</span></div>
-                                    <div class="font-bold text-slate-900">6 Hours</div>
+                                    <div class="font-bold text-slate-900">12 Hours</div>
                                     <p class="text-xs text-slate-500 mt-1">Standard backup</p>
                                 </label>
                             </div>
                             <div class="sync-option">
-                                <input type="radio" name="sync" id="sync_daily" value="daily">
-                                <label for="sync_daily" class="block p-4 border-2 border-stone-200 rounded-xl relative">
+                                <input type="radio" name="sync" id="sync_24h" value="24h">
+                                <label for="sync_24h" class="block p-4 border-2 border-stone-200 rounded-xl relative">
                                     <div class="absolute top-2 right-2 text-teal-500 opacity-0 check-icon"><span
                                             class="unicode-icon">&#x2714;&#xFE0F;</span></div>
-                                    <div class="font-bold text-slate-900">Nightly</div>
+                                    <div class="font-bold text-slate-900">24 Hours</div>
                                     <p class="text-xs text-slate-500 mt-1">Once per day</p>
+                                </label>
+                            </div>
+                            <div class="sync-option">
+                                <input type="radio" name="sync" id="sync_weekly" value="weekly">
+                                <label for="sync_weekly" class="block p-4 border-2 border-stone-200 rounded-xl relative">
+                                    <div class="absolute top-2 right-2 text-teal-500 opacity-0 check-icon"><span
+                                            class="unicode-icon">&#x2714;&#xFE0F;</span></div>
+                                    <div class="font-bold text-slate-900">Weekly</div>
+                                    <p class="text-xs text-slate-500 mt-1">Low frequency</p>
                                 </label>
                             </div>
                         </div>
@@ -635,11 +706,11 @@
                     <span class="unicode-icon mr-3 text-lg">&#x1F4CA;</span><span
                         class="text-sm font-medium sidebar-text whitespace-nowrap">Dashboard</span>
                 </a>
-                <a href="#" onclick="showUsersGroups()" class="sidebar-item flex items-center px-6 py-3 mb-1"
+                <a href="#" onclick="showConnectedAccounts()" class="sidebar-item flex items-center px-6 py-3 mb-1"
                     id="nav-users">
                     <span class="unicode-icon mr-3 text-lg">&#x1F465;</span><span
-                        class="text-sm font-medium sidebar-text whitespace-nowrap">Users &
-                        Groups</span>
+                        class="text-sm font-medium sidebar-text whitespace-nowrap">Connected
+                        Accounts</span>
                 </a>
                 <a href="#" onclick="showLocalVaults()" class="sidebar-item flex items-center px-6 py-3 mb-1"
                     id="nav-local-vaults">
@@ -809,7 +880,7 @@
                         class="bg-white rounded-xl border border-stone-200 p-5 shadow-sm relative overflow-hidden group">
                         <div class="absolute right-0 top-0 h-full w-1 bg-emerald-500 group-hover:w-2 transition-all">
                         </div>
-                        <div class="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wider">Protected Users
+                        <div class="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wider">Protected Mailboxes
                         </div>
                         <div class="flex items-baseline mt-2">
                             <div class="text-3xl font-bold text-slate-900">124</div>
@@ -886,6 +957,34 @@
                     </div>
                 </div>
 
+                <!-- Action Required Alerts -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8" id="dashboard-alerts">
+                    <div class="bg-rose-50 border border-rose-200 rounded-xl p-4 flex items-start gap-3 cursor-pointer hover:bg-rose-100/50 transition-colors" onclick="showConnectedAccounts(); filterAccountsByType('auth_error')">
+                        <div class="w-10 h-10 bg-rose-100 rounded-lg flex items-center justify-center shrink-0 text-rose-600 unicode-icon text-xl">&#x26A0;&#xFE0F;</div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-bold text-rose-900 text-sm">Auth Errors</h3>
+                            <p class="text-xs text-rose-700 mt-0.5">2 mailboxes need re-authentication</p>
+                            <button class="text-xs font-bold text-rose-600 mt-2 hover:underline">Review accounts &#x2192;</button>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3 cursor-pointer hover:bg-amber-100/50 transition-colors" onclick="showConnectedAccounts(); filterAccountsByType('paused')">
+                        <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center shrink-0 text-amber-700 unicode-icon text-xl">&#x23F8;&#xFE0F;</div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-bold text-amber-900 text-sm">Paused Backups</h3>
+                            <p class="text-xs text-amber-700 mt-0.5">3 mailboxes have backup paused</p>
+                            <button class="text-xs font-bold text-amber-700 mt-2 hover:underline">View paused &#x2192;</button>
+                        </div>
+                    </div>
+                    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 flex items-start gap-3 cursor-pointer hover:bg-indigo-100/50 transition-colors" onclick="openNewMailboxQueue()">
+                        <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center shrink-0 text-indigo-600 unicode-icon text-xl">&#x1F4EC;</div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-bold text-indigo-900 text-sm">New Mailboxes Detected</h3>
+                            <p class="text-xs text-indigo-700 mt-0.5">2 new Workspace mailboxes to review</p>
+                            <button class="text-xs font-bold text-indigo-600 mt-2 hover:underline">Review queue &#x2192;</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="flex justify-between items-end mb-4">
                     <h2 class="text-lg font-bold text-slate-800">Protected Services Overview</h2>
                 </div>
@@ -896,7 +995,7 @@
                     <!-- Gmail Card -->
                     <div
                         class="bg-white rounded-xl border border-stone-200 p-0 shadow-sm service-card flex flex-col overflow-hidden">
-                        <div class="p-4 flex-1 cursor-pointer" onclick="showUsersGroups()">
+                        <div class="p-4 flex-1 cursor-pointer" onclick="showConnectedAccounts()">
                             <div class="flex justify-between items-start mb-3">
                                 <div
                                     class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center border border-red-100 text-red-500">
@@ -913,7 +1012,7 @@
                             <div class="text-xs text-slate-500 mt-1">210 GB &bull; 124 Mailboxes</div>
                         </div>
                         <div class="border-t border-stone-100 bg-stone-50/50 p-2 flex gap-2">
-                            <button onclick="showUsersGroups()"
+                            <button onclick="showConnectedAccounts()"
                                 class="flex-1 bg-white border border-stone-200 hover:border-teal-300 hover:text-teal-700 text-slate-600 text-xs font-bold py-2 rounded-lg transition-colors text-center shadow-sm">
                                 Browse & Restore
                             </button>
@@ -923,7 +1022,7 @@
                     <!-- Drive Card -->
                     <div
                         class="bg-white rounded-xl border border-stone-200 p-0 shadow-sm service-card flex flex-col overflow-hidden">
-                        <div class="p-4 flex-1 cursor-pointer" onclick="showUsersGroups()">
+                        <div class="p-4 flex-1 cursor-pointer" onclick="showConnectedAccounts()">
                             <div class="flex justify-between items-start mb-3">
                                 <div
                                     class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center border border-blue-100 text-blue-500">
@@ -940,7 +1039,7 @@
                             <div class="text-xs text-slate-500 mt-1">580 GB &bull; 124 Drives</div>
                         </div>
                         <div class="border-t border-stone-100 bg-stone-50/50 p-2 flex gap-2">
-                            <button onclick="showUsersGroups()"
+                            <button onclick="showConnectedAccounts()"
                                 class="flex-1 bg-white border border-stone-200 hover:border-teal-300 hover:text-teal-700 text-slate-600 text-xs font-bold py-2 rounded-lg transition-colors text-center shadow-sm">
                                 Browse & Restore
                             </button>
@@ -950,7 +1049,7 @@
                     <!-- Photos Card -->
                     <div
                         class="bg-white rounded-xl border border-stone-200 p-0 shadow-sm service-card flex flex-col overflow-hidden">
-                        <div class="p-4 flex-1 cursor-pointer" onclick="showUsersGroups()">
+                        <div class="p-4 flex-1 cursor-pointer" onclick="showConnectedAccounts()">
                             <div class="flex justify-between items-start mb-3">
                                 <div
                                     class="w-10 h-10 rounded-lg bg-yellow-50 flex items-center justify-center border border-yellow-100 text-yellow-500">
@@ -967,7 +1066,7 @@
                             <div class="text-xs text-slate-500 mt-1">45 GB &bull; 42 Accounts</div>
                         </div>
                         <div class="border-t border-stone-100 bg-stone-50/50 p-2 flex gap-2">
-                            <button onclick="showUsersGroups()"
+                            <button onclick="showConnectedAccounts()"
                                 class="flex-1 bg-white border border-stone-200 hover:border-teal-300 hover:text-teal-700 text-slate-600 text-xs font-bold py-2 rounded-lg transition-colors text-center shadow-sm">
                                 Browse & Restore
                             </button>
@@ -977,7 +1076,7 @@
                     <!-- Contacts Card -->
                     <div
                         class="bg-white rounded-xl border border-stone-200 p-0 shadow-sm service-card flex flex-col overflow-hidden">
-                        <div class="p-4 flex-1 cursor-pointer" onclick="showUsersGroups()">
+                        <div class="p-4 flex-1 cursor-pointer" onclick="showConnectedAccounts()">
                             <div class="flex justify-between items-start mb-3">
                                 <div
                                     class="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center border border-indigo-100 text-indigo-500">
@@ -994,7 +1093,7 @@
                             <div class="text-xs text-slate-500 mt-1">2 GB &bull; 124 Dirs</div>
                         </div>
                         <div class="border-t border-stone-100 bg-stone-50/50 p-2 flex gap-2">
-                            <button onclick="showUsersGroups()"
+                            <button onclick="showConnectedAccounts()"
                                 class="flex-1 bg-white border border-stone-200 hover:border-teal-300 hover:text-teal-700 text-slate-600 text-xs font-bold py-2 rounded-lg transition-colors text-center shadow-sm">
                                 Browse & Restore
                             </button>
@@ -1004,7 +1103,7 @@
                     <!-- Calendar Card -->
                     <div
                         class="bg-white rounded-xl border border-stone-200 p-0 shadow-sm service-card flex flex-col overflow-hidden">
-                        <div class="p-4 flex-1 cursor-pointer" onclick="showUsersGroups()">
+                        <div class="p-4 flex-1 cursor-pointer" onclick="showConnectedAccounts()">
                             <div class="flex justify-between items-start mb-3">
                                 <div
                                     class="w-10 h-10 rounded-lg bg-teal-50 flex items-center justify-center border border-teal-100 text-teal-500">
@@ -1021,7 +1120,7 @@
                             <div class="text-xs text-slate-500 mt-1">5 GB &bull; 124 Cals</div>
                         </div>
                         <div class="border-t border-stone-100 bg-stone-50/50 p-2 flex gap-2">
-                            <button onclick="showUsersGroups()"
+                            <button onclick="showConnectedAccounts()"
                                 class="flex-1 bg-white border border-stone-200 hover:border-teal-300 hover:text-teal-700 text-slate-600 text-xs font-bold py-2 rounded-lg transition-colors text-center shadow-sm">
                                 Browse & Restore
                             </button>
@@ -1121,75 +1220,79 @@
                 </div>
             </main>
 
-            <!-- Users & Groups Content -->
-            <main id="view-users" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 w-full h-full hidden bg-stone-50">
+            <!-- Connected Accounts Content -->
+            <main id="view-users" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 w-full h-full hidden bg-stone-50 relative">
                 <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center mb-6 gap-4">
                     <div>
-                        <h1 class="text-2xl font-bold text-slate-900">Corporate Users & Groups</h1>
-                        <p class="text-sm text-slate-500 mt-1">Manage backup status across your entire Google Workspace
-                            tenant.</p>
+                        <h1 class="text-2xl font-bold text-slate-900">Connected Accounts</h1>
+                        <p class="text-sm text-slate-500 mt-1">All protected Google mailboxes — corporate and individual.</p>
                     </div>
-
-                    <!-- Directory Sync, Auto-Protect, and NEW Connect Button -->
                     <div class="flex flex-wrap items-center gap-3">
-
-                        <!-- NEW: Connect Account Button -->
-                        <button onclick="connectNewAccount()" id="connect-account-btn"
+                        <div id="accounts-bulk-bar" class="hidden flex-wrap items-center gap-2">
+                            <span class="text-xs font-bold text-slate-500" id="accounts-bulk-count">0 selected</span>
+                            <button onclick="bulkAssignPolicy()"
+                                class="bg-white border border-stone-200 text-slate-700 px-3 py-2 rounded-lg text-xs font-bold hover:bg-stone-50">Assign Policy</button>
+                            <button onclick="bulkPauseAccounts()"
+                                class="bg-white border border-stone-200 text-slate-700 px-3 py-2 rounded-lg text-xs font-bold hover:bg-stone-50">Pause</button>
+                            <button onclick="bulkReauthAccounts()"
+                                class="bg-white border border-stone-200 text-slate-700 px-3 py-2 rounded-lg text-xs font-bold hover:bg-stone-50">Re-authenticate</button>
+                        </div>
+                        <button onclick="openConnectAccountModal()" id="connect-account-btn"
                             class="bg-slate-900 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md hover:bg-slate-800 flex items-center transition-all">
-                            <span class="unicode-icon mr-2">&#x2795;</span> Connect New Account
+                            <span class="unicode-icon mr-2">&#x2795;</span> Connect Account
                         </button>
                     </div>
                 </div>
 
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <button onclick="filterAccountsByType('all')" data-filter="all"
+                        class="account-filter-tab active px-4 py-2 rounded-lg text-sm border border-stone-200 bg-white transition-all">All</button>
+                    <button onclick="filterAccountsByType('corporate')" data-filter="corporate"
+                        class="account-filter-tab px-4 py-2 rounded-lg text-sm border border-stone-200 bg-white text-slate-600 transition-all">Corporate</button>
+                    <button onclick="filterAccountsByType('individual')" data-filter="individual"
+                        class="account-filter-tab px-4 py-2 rounded-lg text-sm border border-stone-200 bg-white text-slate-600 transition-all">Individual</button>
+                    <button onclick="filterAccountsByType('auth_error')" data-filter="auth_error"
+                        class="account-filter-tab px-4 py-2 rounded-lg text-sm border border-rose-200 bg-white text-rose-600 transition-all">Auth Errors</button>
+                    <button onclick="filterAccountsByType('paused')" data-filter="paused"
+                        class="account-filter-tab px-4 py-2 rounded-lg text-sm border border-amber-200 bg-white text-amber-700 transition-all">Paused</button>
+                </div>
+
                 <div class="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden mb-6">
                     <div class="p-4 border-b border-stone-100 flex flex-wrap gap-4 bg-stone-50">
-                        <input type="text"
+                        <input type="text" id="accounts-search-input"
                             class="flex-1 min-w-[200px] pl-4 pr-3 py-2 border border-stone-300 rounded-lg text-sm bg-white focus:ring-teal-500 focus:border-teal-500 shadow-inner"
-                            placeholder="Search by name, email, or group..." onkeyup="filterUsersGroups(this.value)">
-                        <select class="border border-stone-300 rounded-lg text-sm bg-white px-3 py-2 shadow-sm">
-                            <option>All Accounts/Domains</option>
-                            <option>acme.com (Current)</option>
-                            <option>Newly Connected</option>
+                            placeholder="Search by name or email..." onkeyup="filterConnectedAccounts(this.value)">
+                        <select id="accounts-domain-filter" onchange="applyAccountsFilters()"
+                            class="border border-stone-300 rounded-lg text-sm bg-white px-3 py-2 shadow-sm">
+                            <option value="">All Domains</option>
+                            <option value="acme.com">@acme.com</option>
+                            <option value="gmail.com">@gmail.com</option>
+                            <option value="globex.com">@globex.com</option>
                         </select>
                     </div>
-                    <table class="min-w-full divide-y divide-stone-200">
-                        <thead class="bg-stone-50">
-                            <tr>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase w-10 align-top">
-                                    <div class="mt-1.5">
-                                        <input type="checkbox" onchange="toggleAllCorpUsers(this)"
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-stone-200">
+                            <thead class="bg-stone-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase w-10">
+                                        <input type="checkbox" onchange="toggleAllAccounts(this)"
                                             class="w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500">
-                                    </div>
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase align-top">
-                                    <div class="mt-1.5">Entity</div>
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase align-top">
-                                    <div class="mt-1.5">Sync Services</div>
-                                </th>
-                                <th
-                                    class="hidden px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase align-top">
-                                    <div class="mt-1.5">Storage Used</div>
-                                </th>
-                                <th class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase align-top">
-                                    <div class="mt-1.5">Actions</div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="users-table-body" class="bg-white divide-y divide-stone-100">
-                            <!-- Populated dynamically by JS -->
-                        </tbody>
-                    </table>
-                    <!-- Pagination Container -->
-                    <div
-                        class="px-6 py-4 border-t border-stone-200 bg-white flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <div class="text-sm text-slate-500 font-medium" id="users-pagination-info">
-                            <!-- Populated dynamically -->
-                        </div>
-                        <div class="flex items-center gap-1.5" id="users-pagination-controls">
-                            <!-- Populated dynamically -->
-                        </div>
+                                    </th>
+                                    <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase">Account</th>
+                                    <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase">Type</th>
+                                    <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase">Services</th>
+                                    <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase">Policy / Schedule</th>
+                                    <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase">Credentials</th>
+                                    <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase">Last / Next</th>
+                                    <th class="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body" class="bg-white divide-y divide-stone-100"></tbody>
+                        </table>
+                    </div>
+                    <div class="px-6 py-4 border-t border-stone-200 bg-white flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="text-sm text-slate-500 font-medium" id="users-pagination-info"></div>
+                        <div class="flex items-center gap-1.5" id="users-pagination-controls"></div>
                     </div>
                 </div>
             </main>
@@ -1250,10 +1353,13 @@
                 <div class="flex justify-between items-center mb-6">
                     <div>
                         <h1 class="text-2xl font-bold text-slate-900">Auto-Sync Policies</h1>
-                        <p class="text-sm text-slate-500 mt-1">Configure automated backup intervals and retention rules
-                            for your corporate tenant.</p>
+                        <p class="text-sm text-slate-500 mt-1">Corporate sync templates — schedule, retention, and assignments. Manage mailboxes from Connected Accounts.</p>
                     </div>
                     <div class="flex items-center gap-3">
+                        <button onclick="openCreatePolicyModal()"
+                            class="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 flex items-center transition-colors">
+                            <span class="unicode-icon mr-2">&#x2795;</span> Create Policy
+                        </button>
                         <button onclick="openMergePoliciesModal()"
                             class="bg-white border border-stone-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-stone-50 flex items-center transition-colors">
                             <span class="unicode-icon mr-2">&#x1F500;</span> Merge Policies
@@ -1298,44 +1404,35 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" id="autosync-cards-container">
 
-                    <!-- Personal Policy Card -->
+                    <!-- Corporate Default Policy -->
                     <div data-services="Gmail,Drive,Photos,Contacts,Calendar"
                         class="policy-card bg-white border border-stone-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all relative">
-                        <h3 class="text-lg font-bold text-slate-900 mb-1">Sarah Jenkins</h3>
-                        <p class="text-xs text-slate-500 mb-4">Personal Account: s.jenkins@acme.com</p>
+                        <div class="absolute top-0 right-0 mt-4 mr-4">
+                            <div class="text-[10px] font-bold text-teal-700 bg-teal-100 px-2 py-1 rounded uppercase tracking-wider">Default</div>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-1">Corporate Default</h3>
+                        <p class="text-xs text-slate-500 mb-4">Assigned to: 98 mailboxes</p>
 
                         <div class="space-y-3 mb-6">
                             <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
-                                <span class="text-slate-500">Sync Interval</span><span
-                                    class="font-bold text-slate-800">Every 1 Hour</span>
+                                <span class="text-slate-500">Sync Interval</span><span class="font-bold text-slate-800">Every 3 Hours</span>
                             </div>
                             <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
-                                <span class="text-slate-500">Next Backup</span><span class="font-bold text-slate-800">In
-                                    42 mins</span>
+                                <span class="text-slate-500">Retention</span><span class="font-bold text-slate-800">Infinite</span>
                             </div>
                             <div class="flex justify-between text-sm">
-                                <span class="text-slate-500">Retention</span><span
-                                    class="font-bold text-slate-800">Infinite</span>
+                                <span class="text-slate-500">Services</span><span class="font-bold text-slate-800 text-xs">Gmail, Drive, Photos, Contacts, Calendar</span>
                             </div>
                         </div>
-                        <div class="flex gap-2">
-                            <button onclick="openAssignPolicyPage('Sarah Jenkins')"
-                                class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Create
-                                & Assign Policy</button>
-                            <button onclick="reconnectCorporateCard(this)" title="Reconnect Account"
-                                class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 rounded-lg transition-colors border border-rose-700 flex items-center justify-center shadow-sm shrink-0">
-                                <span class="unicode-icon">&#x1F517;</span>
-                            </button>
-                        </div>
+                        <button onclick="openAssignPolicyPage('Corporate Default')"
+                            class="w-full bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold py-2.5 rounded-lg transition-colors">Manage Policy</button>
                     </div>
 
-                    <!-- Custom Policy Group Card -->
+                    <!-- Custom Policy Card -->
                     <div data-services="Drive"
                         class="policy-card bg-white border border-stone-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all relative">
                         <div class="absolute top-0 right-0 mt-4 mr-4 flex flex-col items-end gap-2">
-                            <div
-                                class="text-[10px] font-bold text-indigo-700 bg-indigo-100 px-2 py-1 rounded uppercase tracking-wider">
-                                Custom Group</div>
+                            <div class="text-[10px] font-bold text-indigo-700 bg-indigo-100 px-2 py-1 rounded uppercase tracking-wider">Policy</div>
                         </div>
                         <h3 class="text-lg font-bold text-slate-900 mb-1">Contractors Policy</h3>
                         <p class="text-xs text-slate-500 mb-4">Applied to: 12 Users</p>
@@ -1343,7 +1440,7 @@
                         <div class="space-y-3 mb-6">
                             <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
                                 <span class="text-slate-500">Sync Interval</span><span
-                                    class="font-bold text-slate-800">Daily</span>
+                                    class="font-bold text-slate-800">Every 24 Hours</span>
                             </div>
                             <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
                                 <span class="text-slate-500">Next Backup</span><span class="font-bold text-slate-800">In
@@ -1354,18 +1451,11 @@
                                     Days</span>
                             </div>
                         </div>
-                        <div class="flex gap-2">
-                            <button onclick="openAssignPolicyPage('Contractors Policy')"
-                                class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Create
-                                & Assign Policy</button>
-                            <button onclick="reconnectCorporateCard(this)" title="Reconnect Users"
-                                class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 rounded-lg transition-colors border border-rose-700 flex items-center justify-center shadow-sm shrink-0">
-                                <span class="unicode-icon">&#x1F517;</span>
-                            </button>
-                        </div>
+                        <button onclick="openAssignPolicyPage('Contractors Policy')"
+                            class="w-full bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold py-2.5 rounded-lg transition-colors">Manage Policy</button>
                     </div>
 
-                    <!-- Compliance Policy Group Card -->
+                    <!-- Compliance Policy Card -->
                     <div data-services="Gmail,Drive"
                         class="policy-card bg-white border border-stone-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all relative">
                         <div class="absolute top-0 right-0 mt-4 mr-4 flex flex-col items-end gap-2">
@@ -1379,29 +1469,22 @@
                         <div class="space-y-3 mb-6">
                             <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
                                 <span class="text-slate-500">Sync Interval</span><span
-                                    class="font-bold text-slate-800">Real-Time (CDP)</span>
+                                    class="font-bold text-slate-800">Every 3 Hours</span>
                             </div>
                             <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
                                 <span class="text-slate-500">Next Backup</span><span
-                                    class="font-bold text-slate-800">Continuous</span>
+                                    class="font-bold text-slate-800">In 1 hr</span>
                             </div>
                             <div class="flex justify-between text-sm">
                                 <span class="text-slate-500">Retention</span><span class="font-bold text-slate-800">7
                                     Years</span>
                             </div>
                         </div>
-                        <div class="flex gap-2">
-                            <button onclick="openAssignPolicyPage('Legal Hold Policy')"
-                                class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Create
-                                & Assign Policy</button>
-                            <button onclick="reconnectCorporateCard(this)" title="Reconnect Users"
-                                class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 rounded-lg transition-colors border border-rose-700 flex items-center justify-center shadow-sm shrink-0">
-                                <span class="unicode-icon">&#x1F517;</span>
-                            </button>
-                        </div>
+                        <button onclick="openAssignPolicyPage('Legal Hold Policy')"
+                            class="w-full bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold py-2.5 rounded-lg transition-colors">Manage Policy</button>
                     </div>
 
-                    <!-- Media Policy Group Card -->
+                    <!-- Creative Assets Policy Card -->
                     <div data-services="Drive,Photos"
                         class="policy-card bg-white border border-stone-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all relative">
                         <div class="absolute top-0 right-0 mt-4 mr-4 flex flex-col items-end gap-2">
@@ -1415,7 +1498,7 @@
                         <div class="space-y-3 mb-6">
                             <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
                                 <span class="text-slate-500">Sync Interval</span><span
-                                    class="font-bold text-slate-800">Nightly</span>
+                                    class="font-bold text-slate-800">Every 24 Hours</span>
                             </div>
                             <div class="flex justify-between text-sm border-b border-stone-100 pb-2">
                                 <span class="text-slate-500">Next Backup</span><span class="font-bold text-slate-800">In
@@ -1426,15 +1509,8 @@
                                     Year</span>
                             </div>
                         </div>
-                        <div class="flex gap-2">
-                            <button onclick="openAssignPolicyPage('Creative Assets Policy')"
-                                class="flex-1 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-bold py-2 rounded-lg transition-colors border border-stone-200">Create
-                                & Assign Policy</button>
-                            <button onclick="reconnectCorporateCard(this)" title="Reconnect Users"
-                                class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 rounded-lg transition-colors border border-rose-700 flex items-center justify-center shadow-sm shrink-0">
-                                <span class="unicode-icon">&#x1F517;</span>
-                            </button>
-                        </div>
+                        <button onclick="openAssignPolicyPage('Creative Assets Policy')"
+                            class="w-full bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold py-2.5 rounded-lg transition-colors">Manage Policy</button>
                     </div>
                 </div>
 
@@ -1448,18 +1524,14 @@
                                 <span class="unicode-icon mr-1">&#x2B05;&#xFE0F;</span> Back
                             </button>
                             <div>
-                                <h2 class="text-lg font-bold text-slate-900" id="manage-users-title">Manage User
-                                    Policies
-                                </h2>
-                                <p class="text-xs text-slate-500 mt-1 hidden sm:block">Assign users to specific policy
-                                    groups or override
-                                    individual settings.</p>
+                                <h2 class="text-lg font-bold text-slate-900" id="manage-users-title">Assign Mailboxes to Policy</h2>
+                                <p class="text-xs text-slate-500 mt-1 hidden sm:block">Select mailboxes to apply this auto-sync policy.</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-3">
                             <select
                                 class="border border-stone-300 rounded-lg text-sm bg-white px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none hidden sm:block">
-                                <option>Bulk Assign to Group...</option>
+                                <option>Bulk Assign Policy...</option>
                                 <option>Corporate Default</option>
                                 <option>Contractors Policy</option>
                                 <option>Legal Hold Policy</option>
@@ -1471,11 +1543,8 @@
                         <table class="min-w-full divide-y divide-stone-200">
                             <thead class="bg-stone-50">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">User /
-                                        Group</th>
-                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Policy
-                                        Group
-                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Mailbox</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Policy</th>
                                     <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Sync
                                         Interval</th>
                                     <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Retention
@@ -1506,9 +1575,10 @@
                                     <td class="px-6 py-4">
                                         <select
                                             class="border border-stone-300 rounded text-xs bg-white px-2 py-1 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none">
-                                            <option>Real-Time (CDP)</option>
-                                            <option>Hourly</option>
-                                            <option>Daily</option>
+                                            <option>Every 3 Hours</option>
+                                            <option>Every 12 Hours</option>
+                                            <option>Every 24 Hours</option>
+                                            <option>Weekly</option>
                                         </select>
                                     </td>
                                     <td class="px-6 py-4">
@@ -1520,7 +1590,7 @@
                                         </select>
                                     </td>
                                     <td class="px-6 py-4 text-sm text-slate-600">Just now</td>
-                                    <td class="px-6 py-4 text-sm text-teal-600 font-medium">Continuous</td>
+                                    <td class="px-6 py-4 text-sm text-teal-600 font-medium">In 1 hr</td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-2">
                                             <div class="flex gap-1">
@@ -1576,9 +1646,10 @@
                                     <td class="px-6 py-4">
                                         <select
                                             class="border border-stone-300 rounded text-xs bg-white px-2 py-1 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none">
-                                            <option>Real-Time (CDP)</option>
-                                            <option selected>Hourly</option>
-                                            <option>Daily</option>
+                                            <option selected>Every 3 Hours</option>
+                                            <option>Every 12 Hours</option>
+                                            <option>Every 24 Hours</option>
+                                            <option>Weekly</option>
                                         </select>
                                     </td>
                                     <td class="px-6 py-4">
@@ -1644,9 +1715,10 @@
                                     <td class="px-6 py-4">
                                         <select
                                             class="border border-stone-300 rounded text-xs bg-white px-2 py-1 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none">
-                                            <option selected>Real-Time (CDP)</option>
-                                            <option>Hourly</option>
-                                            <option>Daily</option>
+                                            <option>Every 3 Hours</option>
+                                            <option selected>Every 12 Hours</option>
+                                            <option>Every 24 Hours</option>
+                                            <option>Weekly</option>
                                         </select>
                                     </td>
                                     <td class="px-6 py-4">
@@ -1658,7 +1730,7 @@
                                         </select>
                                     </td>
                                     <td class="px-6 py-4 text-sm text-slate-600">Just now</td>
-                                    <td class="px-6 py-4 text-sm text-teal-600 font-medium">Continuous</td>
+                                    <td class="px-6 py-4 text-sm text-teal-600 font-medium">In 1 hr</td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-2">
                                             <div class="flex gap-1">
@@ -1709,9 +1781,10 @@
                                     <td class="px-6 py-4">
                                         <select
                                             class="border border-stone-300 rounded text-xs bg-white px-2 py-1 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none">
-                                            <option>Real-Time (CDP)</option>
-                                            <option>Hourly</option>
-                                            <option selected>Nightly</option>
+                                            <option>Every 3 Hours</option>
+                                            <option>Every 12 Hours</option>
+                                            <option selected>Every 24 Hours</option>
+                                            <option>Weekly</option>
                                         </select>
                                     </td>
                                     <td class="px-6 py-4">
@@ -1817,134 +1890,107 @@
                 <!-- Assign Policy Page View (Hidden initially) -->
                 <div id="assign-policy-page"
                     class="hidden bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden">
-                    <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-stone-50">
+                    <div class="p-4 border-b border-stone-100 flex flex-wrap justify-between items-center gap-3 bg-stone-50">
                         <div class="flex items-center gap-4">
                             <button onclick="hideAssignPolicyPage()"
                                 class="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors flex items-center bg-white border border-stone-200 px-3 py-2 rounded-lg shadow-sm hover:bg-stone-50 shrink-0">
                                 <span class="unicode-icon mr-1">&#x2B05;&#xFE0F;</span> Back
                             </button>
                             <div>
-                                <h2 class="text-lg font-bold text-slate-900">Assign Policy: <span
-                                        id="assign-policy-name" class="text-teal-700"></span></h2>
-                                <p class="text-xs text-slate-500 mt-1 hidden sm:block">Select users and configure their
-                                    retention and sync
-                                    intervals directly.</p>
+                                <h2 class="text-lg font-bold text-slate-900">Policy: <span id="assign-policy-name" class="text-teal-700"></span></h2>
+                                <p class="text-xs text-slate-500 mt-1">Each email + service pair belongs to one policy. Interval and credentials are shared for all assignments in this policy.</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-3">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button onclick="openSplitPolicyModal()"
+                                class="bg-white border border-stone-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-stone-50 flex items-center transition-colors">
+                                <span class="unicode-icon mr-2">&#x2702;&#xFE0F;</span> Split Policy
+                            </button>
                             <button onclick="savePolicyAssignments(event)"
                                 class="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 flex items-center transition-colors">
-                                Create & Update Policy
+                                Save Policy
                             </button>
                         </div>
                     </div>
-                    <div class="px-4 border-b border-stone-200 bg-white flex space-x-6 shrink-0 overflow-x-auto">
-                        <button
-                            class="assign-tab active py-3 text-sm font-bold text-teal-600 border-b-2 border-teal-600 whitespace-nowrap transition-colors"
-                            data-service="Gmail" onclick="switchAssignServiceTab('Gmail')"><img
-                                src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
-                                class="w-4 h-4 mr-1.5 -ml-1 inline-block object-contain" alt="Gmail"> Gmail</button>
-                        <button
-                            class="assign-tab py-3 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent whitespace-nowrap transition-colors"
-                            data-service="Drive" onclick="switchAssignServiceTab('Drive')"><img
-                                src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg"
-                                class="w-4 h-4 mr-1.5 -ml-1 inline-block object-contain" alt="Drive"> Drive</button>
-                        <button
-                            class="assign-tab py-3 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent whitespace-nowrap transition-colors"
-                            data-service="Photos" onclick="switchAssignServiceTab('Photos')"><img
-                                src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg"
-                                class="w-4 h-4 mr-1.5 -ml-1 inline-block object-contain" alt="Photos"> Photos</button>
-                        <button
-                            class="assign-tab py-3 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent whitespace-nowrap transition-colors"
-                            data-service="Contacts" onclick="switchAssignServiceTab('Contacts')"><img
-                                src="https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg"
-                                class="w-4 h-4 mr-1.5 -ml-1 inline-block object-contain" alt="Contacts">
-                            Contacts</button>
-                        <button
-                            class="assign-tab py-3 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent whitespace-nowrap transition-colors"
-                            data-service="Calendar" onclick="switchAssignServiceTab('Calendar')"><img
-                                src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg"
-                                class="w-4 h-4 mr-1.5 -ml-1 inline-block object-contain" alt="Calendar">
-                            Calendar</button>
-                    </div>
-                    <div class="p-4 border-b border-stone-100 bg-stone-50 flex flex-col gap-3">
-                        <!-- Search and Filter Bar -->
-                        <div class="flex flex-wrap items-center gap-3">
-                            <input type="text" id="assign-policy-search"
-                                placeholder="Search accounts by name or email..." onkeyup="applyAssignPolicyFilters()"
-                                class="flex-1 min-w-[200px] bg-stone-50 border border-stone-200 rounded-lg px-3 py-2 focus:ring-teal-500 text-sm outline-none">
-                            <select id="assign-policy-filter-retention" onchange="applyAssignPolicyFilters()"
-                                class="border border-stone-200 rounded-lg text-sm bg-white px-3 py-2 focus:ring-teal-500 outline-none">
-                                <option value="">All Retentions</option>
-                                <option value="Infinite (Never Delete)">Infinite (Never Delete)</option>
-                                <option value="7 Years (Compliance)">7 Years (Compliance)</option>
-                                <option value="1 Year">1 Year</option>
-                                <option value="30 Days">30 Days</option>
-                            </select>
-                            <select id="assign-policy-filter-sync" onchange="applyAssignPolicyFilters()"
-                                class="border border-stone-200 rounded-lg text-sm bg-white px-3 py-2 focus:ring-teal-500 outline-none">
-                                <option value="">All Sync Intervals</option>
-                                <option value="Real-Time (CDP)">Real-Time (CDP)</option>
-                                <option value="Every 1 Hour">Every 1 Hour</option>
-                                <option value="Every 6 Hours">Every 6 Hours</option>
-                                <option value="Nightly">Nightly</option>
-                            </select>
+
+                    <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Policy-level settings (common for all mailboxes) -->
+                        <div class="lg:col-span-1 space-y-4">
+                            <div class="bg-stone-50 border border-stone-200 rounded-xl p-5">
+                                <h3 class="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wider">Policy Settings</h3>
+                                <p class="text-xs text-slate-500 mb-4">Applies to every email + service assignment in this policy.</p>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-1.5">Sync Interval</label>
+                                        <select id="policy-sync-interval" onchange="updatePolicySettings()"
+                                            class="w-full border border-stone-300 rounded-lg text-sm bg-white px-3 py-2.5 focus:ring-teal-500 focus:border-teal-500 outline-none">
+                                            <option>Every 3 Hours</option>
+                                            <option>Every 12 Hours</option>
+                                            <option>Every 24 Hours</option>
+                                            <option>Weekly</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-1.5">Retention</label>
+                                        <select id="policy-retention" onchange="updatePolicySettings()"
+                                            class="w-full border border-stone-300 rounded-lg text-sm bg-white px-3 py-2.5 focus:ring-teal-500 focus:border-teal-500 outline-none">
+                                            <option>Infinite (Never Delete)</option>
+                                            <option>7 Years (Compliance)</option>
+                                            <option>1 Year</option>
+                                            <option>30 Days</option>
+                                        </select>
+                                    </div>
+                                    <div class="pt-3 border-t border-stone-200">
+                                        <label class="block text-xs font-bold text-slate-600 mb-1.5">Credentials</label>
+                                        <div class="p-3 bg-white border border-stone-200 rounded-lg text-sm">
+                                            <span class="font-bold text-slate-800">Workspace admin connection</span>
+                                            <p class="text-xs text-slate-500 mt-1">Shared OAuth for all corporate mailboxes in this tenant.</p>
+                                            <span id="policy-creds-status" class="inline-block mt-2 text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">Healthy</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-teal-50 border border-teal-200 rounded-xl p-4 text-sm text-teal-900">
+                                <div><span class="font-bold" id="policy-assignment-count">0</span> service assignments</div>
+                                <div class="text-xs text-teal-700 mt-1"><span id="policy-mailbox-count">0</span> unique emails</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="overflow-x-auto max-h-[60vh] overflow-y-auto">
-                        <table class="min-w-full divide-y divide-stone-200">
-                            <thead class="bg-stone-50 sticky top-0 z-10 shadow-sm">
-                                <tr>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase w-10 align-top">
-                                        <div class="mt-1.5">
-                                            <input type="checkbox" onchange="toggleAllAssignPolicyUsers(this)"
-                                                class="w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500">
-                                        </div>
-                                    </th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase align-top">
-                                        <div class="mt-1.5">User / Mail</div>
-                                    </th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase align-top">
-                                        <div class="mt-1.5">Services</div>
-                                    </th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase align-top">
-                                        <div class="flex flex-col gap-1.5">
-                                            <span>Retention</span>
-                                            <select id="bulk-assign-retention"
-                                                onchange="applyBulkAssignOptions('retention')"
-                                                class="border border-stone-300 rounded text-xs bg-white px-1.5 py-1 shadow-sm focus:ring-teal-500 outline-none font-normal normal-case w-full max-w-[160px]">
-                                                <option value="">Bulk Update...</option>
-                                                <option>Infinite (Never Delete)</option>
-                                                <option>7 Years (Compliance)</option>
-                                                <option>1 Year</option>
-                                                <option>30 Days</option>
-                                            </select>
-                                        </div>
-                                    </th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase align-top">
-                                        <div class="flex flex-col gap-1.5">
-                                            <span>Sync Interval</span>
-                                            <select id="bulk-assign-sync" onchange="applyBulkAssignOptions('sync')"
-                                                class="border border-stone-300 rounded text-xs bg-white px-1.5 py-1 shadow-sm focus:ring-teal-500 outline-none font-normal normal-case w-full max-w-[160px]">
-                                                <option value="">Bulk Update...</option>
-                                                <option>Real-Time (CDP)</option>
-                                                <option>Every 1 Hour</option>
-                                                <option>Every 6 Hours</option>
-                                                <option>Nightly</option>
-                                            </select>
-                                        </div>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody id="assign-policy-tbody" class="bg-white divide-y divide-stone-100">
-                                <!-- Populated dynamically -->
-                            </tbody>
-                        </table>
+
+                        <!-- Mailbox list -->
+                        <div class="lg:col-span-2">
+                            <div class="flex flex-wrap items-center gap-3 mb-4">
+                                <input type="text" id="assign-policy-search" placeholder="Search by email..."
+                                    onkeyup="filterPolicyMailboxList()"
+                                    class="flex-1 min-w-[180px] bg-white border border-stone-200 rounded-lg px-3 py-2 text-sm focus:ring-teal-500 outline-none">
+                                <button onclick="openAddMailboxModal()"
+                                    class="bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-slate-800 flex items-center shrink-0">
+                                    <span class="unicode-icon mr-2">&#x2795;</span> Add Email & Services
+                                </button>
+                                <button onclick="openMoveAssignmentsModal()"
+                                    class="bg-white border border-stone-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-stone-50 shrink-0">
+                                    Move Selected
+                                </button>
+                            </div>
+                            <div class="border border-stone-200 rounded-xl overflow-hidden">
+                                <table class="min-w-full divide-y divide-stone-200">
+                                    <thead class="bg-stone-50">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left w-10">
+                                                <input type="checkbox" onchange="toggleAllPolicyMailboxes(this)"
+                                                    class="w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500">
+                                            </th>
+                                            <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase">Email</th>
+                                            <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase">Service</th>
+                                            <th class="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase w-24">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="assign-policy-tbody" class="bg-white divide-y divide-stone-100"></tbody>
+                                </table>
+                                <div id="assign-policy-empty" class="hidden p-8 text-center text-slate-500 text-sm">
+                                    No assignments in this policy. Click <strong>Add Email & Services</strong> to assign.
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -2723,7 +2769,7 @@
                                             class="bg-teal-100 text-teal-800 text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">Free
                                             Trial</span>
                                     </h3>
-                                    <p class="text-sm text-slate-500 mt-1">1 TB storage limit, continuous backup (CDP),
+                                    <p class="text-sm text-slate-500 mt-1">1 TB storage limit, flexible sync schedules,
                                         and 24/7 support.</p>
                                     <div class="mt-4 flex items-center gap-3">
                                         <div
@@ -2868,7 +2914,7 @@
                                     <span class="text-xs text-slate-400">Oct 22, 09:15 AM</span>
                                 </div>
                                 <p class="text-sm text-slate-600 mt-1">Detected 2 new Google Workspace accounts. They
-                                    have been assigned the default "Hourly" sync policy.</p>
+                                    have been assigned the default "Every 3 Hours" sync policy.</p>
                             </div>
                         </div>
                     </div>
@@ -3057,10 +3103,10 @@
                     <label class="block text-sm font-bold text-slate-700 mb-2">Sync Interval</label>
                     <select
                         class="w-full border border-stone-300 rounded-lg text-sm bg-stone-50 px-3 py-2.5 focus:ring-teal-500 focus:border-teal-500 shadow-sm">
-                        <option>Real-Time (CDP)</option>
-                        <option>Every 1 Hour</option>
-                        <option>Every 6 Hours</option>
-                        <option>Nightly</option>
+                        <option>Every 3 Hours</option>
+                        <option>Every 12 Hours</option>
+                        <option>Every 24 Hours</option>
+                        <option>Weekly</option>
                     </select>
                 </div>
                 <div>
@@ -3072,35 +3118,6 @@
                         <option>1 Year</option>
                         <option>30 Days</option>
                     </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-2">Protected Services</label>
-                    <div class="space-y-3 p-4 bg-stone-50 border border-stone-200 rounded-lg flex flex-wrap gap-4">
-                        <label
-                            class="flex items-center text-sm text-slate-700 font-medium cursor-pointer w-[45%]"><input
-                                type="checkbox" checked
-                                class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600"><img
-                                src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
-                                class="w-4 h-4 mr-2 object-contain" alt="Gmail"> Gmail</label>
-                        <label
-                            class="flex items-center text-sm text-slate-700 font-medium cursor-pointer w-[45%]"><input
-                                type="checkbox" checked
-                                class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600"><img
-                                src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg"
-                                class="w-4 h-4 mr-2 object-contain" alt="Drive"> Drive</label>
-                        <label
-                            class="flex items-center text-sm text-slate-700 font-medium cursor-pointer w-[45%]"><input
-                                type="checkbox" checked
-                                class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600"><img
-                                src="https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg"
-                                class="w-4 h-4 mr-1 object-contain" alt="Contacts"> Contacts</label>
-                        <label
-                            class="flex items-center text-sm text-slate-700 font-medium cursor-pointer w-[45%]"><input
-                                type="checkbox"
-                                class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600"><img
-                                src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg"
-                                class="w-4 h-4 mr-2 object-contain" alt="Photos"> Photos</label>
-                    </div>
                 </div>
             </div>
             <div class="p-4 border-t border-stone-100 bg-stone-50 flex justify-end gap-3">
@@ -3114,14 +3131,172 @@
         </div>
     </div>
 
-    <!-- Create Policy Group Modal -->
+    <!-- Connect Account Modal -->
+    <div id="connect-account-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeConnectAccountModal()"></div>
+        <div class="bg-white rounded-2xl shadow-2xl z-10 w-full max-w-lg overflow-hidden border border-stone-200">
+            <div class="p-5 border-b border-stone-100 bg-stone-50 flex justify-between items-center">
+                <h2 class="text-lg font-bold text-slate-900">Connect Account</h2>
+                <button onclick="closeConnectAccountModal()" class="text-slate-400 hover:text-slate-600"><span class="unicode-icon">&#x274C;</span></button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="connect-type-card">
+                    <input type="radio" name="connect_modal_type" id="modal_connect_workspace" value="corporate" checked>
+                    <label for="modal_connect_workspace" class="flex items-start p-4 border-2 border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50">
+                        <span class="unicode-icon text-2xl mr-3">&#x1F3E2;</span>
+                        <span>
+                            <span class="block font-bold text-slate-900">Google Workspace</span>
+                            <span class="block text-sm text-slate-500 mt-1">Admin OAuth — select mailboxes from your tenant</span>
+                        </span>
+                    </label>
+                </div>
+                <div class="connect-type-card">
+                    <input type="radio" name="connect_modal_type" id="modal_connect_personal" value="individual">
+                    <label for="modal_connect_personal" class="flex items-start p-4 border-2 border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50">
+                        <span class="unicode-icon text-2xl mr-3">&#x1F464;</span>
+                        <span>
+                            <span class="block font-bold text-slate-900">Personal Google Account</span>
+                            <span class="block text-sm text-slate-500 mt-1">Individual OAuth per email address</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+            <div class="p-4 border-t border-stone-100 bg-stone-50 flex justify-end gap-3">
+                <button onclick="closeConnectAccountModal()" class="px-4 py-2 border border-stone-300 rounded-lg text-sm font-bold text-slate-700 hover:bg-white">Cancel</button>
+                <button onclick="startConnectAccountFlow()" id="connect-modal-submit" class="px-5 py-2 bg-teal-600 text-white rounded-lg text-sm font-bold hover:bg-teal-700 flex items-center">
+                    <span class="unicode-icon mr-2">&#x1F1EC;</span> Continue with Google
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Mailbox Queue Modal -->
+    <div id="new-mailbox-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeNewMailboxQueue()"></div>
+        <div class="bg-white rounded-2xl shadow-2xl z-10 w-full max-w-md overflow-hidden border border-stone-200">
+            <div class="p-5 border-b border-stone-100 flex justify-between items-center">
+                <h2 class="text-lg font-bold text-slate-900">New Mailboxes Detected</h2>
+                <button onclick="closeNewMailboxQueue()" class="text-slate-400 hover:text-slate-600"><span class="unicode-icon">&#x274C;</span></button>
+            </div>
+            <div class="p-6 space-y-3">
+                <label class="flex items-center p-3 border border-stone-200 rounded-lg"><input type="checkbox" checked class="w-4 h-4 rounded mr-3 accent-teal-600"><span><span class="font-bold text-sm">a.newhire@acme.com</span><span class="block text-xs text-slate-500">Added Oct 22 — Corporate Default policy</span></span></label>
+                <label class="flex items-center p-3 border border-stone-200 rounded-lg"><input type="checkbox" checked class="w-4 h-4 rounded mr-3 accent-teal-600"><span><span class="font-bold text-sm">b.contractor@acme.com</span><span class="block text-xs text-slate-500">Added Oct 22 — Contractors Policy</span></span></label>
+            </div>
+            <div class="p-4 border-t border-stone-100 flex justify-end gap-3">
+                <button onclick="closeNewMailboxQueue()" class="px-4 py-2 border border-stone-300 rounded-lg text-sm font-bold text-slate-700">Dismiss</button>
+                <button onclick="protectNewMailboxes()" class="px-5 py-2 bg-teal-600 text-white rounded-lg text-sm font-bold hover:bg-teal-700">Start Backup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Detail Drawer -->
+    <div id="account-drawer-overlay" class="fixed inset-0 bg-slate-900/30 z-40 hidden" onclick="closeAccountDrawer()"></div>
+    <aside id="account-drawer" class="account-drawer fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 flex flex-col border-l border-stone-200">
+        <div class="p-5 border-b border-stone-100 flex justify-between items-start bg-stone-50 shrink-0">
+            <div>
+                <h2 class="text-lg font-bold text-slate-900" id="drawer-account-name">Account</h2>
+                <p class="text-sm text-slate-500" id="drawer-account-email">email@example.com</p>
+                <span id="drawer-account-type-badge" class="inline-block mt-2 text-[10px] font-bold px-2 py-0.5 rounded uppercase bg-teal-100 text-teal-800">Corporate</span>
+            </div>
+            <button onclick="closeAccountDrawer()" class="text-slate-400 hover:text-slate-600 p-1"><span class="unicode-icon">&#x274C;</span></button>
+        </div>
+        <div class="flex border-b border-stone-200 px-4 shrink-0 overflow-x-auto">
+            <button onclick="switchDrawerTab('overview')" data-drawer-tab="overview" class="drawer-tab active px-4 py-3 text-sm border-b-2 border-transparent text-slate-500 whitespace-nowrap">Overview</button>
+            <button onclick="switchDrawerTab('services')" data-drawer-tab="services" class="drawer-tab px-4 py-3 text-sm border-b-2 border-transparent text-slate-500 whitespace-nowrap">Services</button>
+            <button onclick="switchDrawerTab('schedule')" data-drawer-tab="schedule" class="drawer-tab px-4 py-3 text-sm border-b-2 border-transparent text-slate-500 whitespace-nowrap">Schedule</button>
+            <button onclick="switchDrawerTab('credentials')" data-drawer-tab="credentials" class="drawer-tab px-4 py-3 text-sm border-b-2 border-transparent text-slate-500 whitespace-nowrap">Credentials</button>
+            <button onclick="switchDrawerTab('sharing')" data-drawer-tab="sharing" class="drawer-tab px-4 py-3 text-sm border-b-2 border-transparent text-slate-500 whitespace-nowrap">Sharing</button>
+        </div>
+        <div class="flex-1 overflow-y-auto p-5">
+            <div id="drawer-panel-overview" class="drawer-panel space-y-4">
+                <div class="flex items-center justify-between p-4 bg-stone-50 rounded-xl border border-stone-200">
+                    <span class="text-sm font-medium text-slate-700">Backup status</span>
+                    <span id="drawer-backup-status" class="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-1 rounded">Active</span>
+                </div>
+                <label class="flex items-center justify-between p-4 bg-white rounded-xl border border-stone-200 cursor-pointer">
+                    <span class="text-sm font-medium text-slate-700">Pause backup</span>
+                    <input type="checkbox" id="drawer-pause-toggle" onchange="toggleDrawerPause(this)" class="w-5 h-5 accent-teal-600 rounded">
+                </label>
+                <div class="grid grid-cols-2 gap-3 text-sm">
+                    <div class="p-3 bg-stone-50 rounded-lg"><span class="text-slate-500 block text-xs">Last backup</span><span id="drawer-last-backup" class="font-bold text-slate-800">45 mins ago</span></div>
+                    <div class="p-3 bg-stone-50 rounded-lg"><span class="text-slate-500 block text-xs">Next backup</span><span id="drawer-next-backup" class="font-bold text-slate-800">In 2 hrs</span></div>
+                </div>
+                <button onclick="executeFullUserRestore(event, document.getElementById('drawer-account-name').innerText)" class="w-full bg-teal-600 text-white py-3 rounded-xl font-bold hover:bg-teal-700">Restore This Account</button>
+            </div>
+            <div id="drawer-panel-services" class="drawer-panel hidden space-y-3">
+                <p class="text-sm text-slate-500 mb-2">Enable services to backup for this mailbox.</p>
+                <label class="flex items-center p-3 border border-stone-200 rounded-xl"><input type="checkbox" checked disabled class="w-4 h-4 mr-3 accent-teal-600"><img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" class="w-5 h-5 mr-2" alt=""> Gmail <span class="ml-auto text-xs text-slate-400">Required</span></label>
+                <label class="flex items-center p-3 border border-stone-200 rounded-xl"><input type="checkbox" checked class="drawer-service-cb w-4 h-4 mr-3 accent-teal-600"><img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" class="w-5 h-5 mr-2" alt=""> Drive</label>
+                <label class="flex items-center p-3 border border-stone-200 rounded-xl"><input type="checkbox" checked class="drawer-service-cb w-4 h-4 mr-3 accent-teal-600"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg" class="w-5 h-5 mr-2" alt=""> Photos</label>
+                <label class="flex items-center p-3 border border-stone-200 rounded-xl"><input type="checkbox" checked class="drawer-service-cb w-4 h-4 mr-3 accent-teal-600"><img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg" class="w-5 h-5 mr-2" alt=""> Contacts & Calendar</label>
+                <div id="drawer-missing-scope" class="hidden p-3 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800">
+                    <span class="font-bold">Missing scope:</span> Google Photos access not granted.
+                    <button onclick="showToast('Opening Google consent...')" class="block mt-2 text-xs font-bold text-amber-700 hover:underline">Grant Photos access &#x2192;</button>
+                </div>
+            </div>
+            <div id="drawer-panel-schedule" class="drawer-panel hidden space-y-4">
+                <div id="drawer-schedule-policy" class="p-4 bg-teal-50 border border-teal-200 rounded-xl">
+                    <span class="text-xs font-bold text-teal-700 uppercase">Assigned Policy</span>
+                    <p class="font-bold text-slate-900 mt-1" id="drawer-policy-name">Corporate Default</p>
+                    <p class="text-sm text-slate-600 mt-1" id="drawer-policy-schedule">Every 3 Hours &bull; Infinite retention</p>
+                    <p class="text-xs text-slate-400 mt-2">Schedule is managed by policy.</p>
+                    <button type="button" id="drawer-policy-link" onclick="openDrawerAssignedPolicy()"
+                        class="mt-3 text-sm font-bold text-teal-700 hover:text-teal-900 hover:underline flex items-center gap-1">
+                        Open in Auto-Sync Policies <span aria-hidden="true">&#x2192;</span>
+                    </button>
+                </div>
+                <div id="drawer-schedule-individual" class="hidden space-y-3">
+                    <label class="block text-sm font-medium text-slate-700">Sync interval</label>
+                    <select class="w-full border border-stone-300 rounded-xl px-4 py-3 text-sm"><option>Every 3 Hours</option><option>Every 12 Hours</option><option>Every 24 Hours</option><option>Weekly</option></select>
+                    <label class="block text-sm font-medium text-slate-700">Retention</label>
+                    <select class="w-full border border-stone-300 rounded-xl px-4 py-3 text-sm"><option>Infinite</option><option>1 Year</option><option>30 Days</option></select>
+                </div>
+            </div>
+            <div id="drawer-panel-credentials" class="drawer-panel hidden space-y-4">
+                <div id="drawer-creds-corporate" class="p-4 bg-stone-50 border border-stone-200 rounded-xl">
+                    <span class="text-xs font-bold text-slate-500 uppercase">Credential source</span>
+                    <p class="font-bold text-slate-900 mt-1">Workspace admin connection</p>
+                    <p class="text-sm text-slate-600 mt-1">Uses tenant-wide admin OAuth. Re-authenticate from Connected Accounts bulk actions.</p>
+                    <button onclick="showToast('Opening Google admin consent...')" class="mt-3 text-sm font-bold text-teal-600 hover:underline">Re-authenticate tenant &#x2192;</button>
+                </div>
+                <div id="drawer-creds-individual" class="hidden p-4 bg-stone-50 border border-stone-200 rounded-xl">
+                    <span class="text-xs font-bold text-slate-500 uppercase">Individual OAuth</span>
+                    <p class="font-bold text-slate-900 mt-1" id="drawer-creds-status">Connected</p>
+                    <button onclick="reauthDrawerAccount()" class="mt-3 px-4 py-2 bg-teal-600 text-white rounded-lg text-sm font-bold hover:bg-teal-700">Re-authenticate</button>
+                </div>
+                <div id="drawer-creds-error" class="hidden p-4 bg-rose-50 border border-rose-200 rounded-xl">
+                    <p class="font-bold text-rose-800 text-sm">Re-auth required</p>
+                    <p class="text-sm text-rose-700 mt-1">Refresh token failed. Backup is suspended until credentials are renewed.</p>
+                    <button onclick="reauthDrawerAccount()" class="mt-3 px-4 py-2 bg-rose-600 text-white rounded-lg text-sm font-bold">Fix credentials</button>
+                </div>
+                <div id="drawer-creds-readonly" class="hidden p-4 bg-slate-100 border border-slate-200 rounded-xl text-sm text-slate-600">
+                    <span class="unicode-icon mr-1">&#x1F512;</span> Read-only access — you cannot change credentials for this mailbox.
+                </div>
+            </div>
+            <div id="drawer-panel-sharing" class="drawer-panel hidden space-y-4">
+                <p class="text-sm text-slate-500">Share backup access with the mailbox owner. They can browse and restore with read-only access.</p>
+                <div class="flex gap-2">
+                    <input type="email" id="drawer-share-email" placeholder="owner@acme.com" class="flex-1 border border-stone-300 rounded-lg px-3 py-2 text-sm">
+                    <button onclick="inviteDrawerAccess()" class="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm font-bold shrink-0">Invite</button>
+                </div>
+                <div class="space-y-2" id="drawer-share-list">
+                    <div class="flex items-center justify-between p-3 bg-stone-50 rounded-lg border border-stone-200 text-sm">
+                        <span><span class="font-bold">s.jenkins@acme.com</span><span class="block text-xs text-slate-500">Read-only restore</span></span>
+                        <button onclick="showToast('Access revoked')" class="text-xs text-rose-600 font-bold">Revoke</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Create Auto-Sync Policy Modal -->
     <div id="create-policy-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-0">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeCreatePolicyGroupModal()"></div>
         <div class="bg-white rounded-xl shadow-2xl z-10 w-full max-w-lg overflow-hidden border border-stone-200 flex flex-col transform transition-all scale-95 opacity-0"
             id="create-policy-content">
             <div class="p-5 border-b border-stone-100 bg-stone-50 flex justify-between items-center">
                 <h2 class="text-lg font-bold text-slate-900 flex items-center">
-                    <span class="unicode-icon mr-2 text-teal-600">&#x1F4CB;</span> Create Policy Group
+                    <span class="unicode-icon mr-2 text-teal-600">&#x1F4CB;</span> Create Auto-Sync Policy
                 </h2>
                 <button onclick="closeCreatePolicyGroupModal()"
                     class="text-slate-400 hover:text-slate-600 transition-colors">
@@ -3139,18 +3314,18 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-2">Group Name</label>
-                    <input type="text" placeholder="e.g., Consultants, Executive Team..."
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Policy Name</label>
+                    <input type="text" id="new-policy-name" placeholder="e.g., Contractors, Legal Hold..."
                         class="w-full border border-stone-300 rounded-lg text-sm bg-stone-50 px-3 py-2.5 focus:ring-teal-500 focus:border-teal-500 shadow-sm outline-none">
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-slate-700 mb-2">Sync Interval</label>
                     <select
                         class="w-full border border-stone-300 rounded-lg text-sm bg-stone-50 px-3 py-2.5 focus:ring-teal-500 focus:border-teal-500 shadow-sm">
-                        <option>Real-Time (CDP)</option>
-                        <option>Every 1 Hour</option>
-                        <option>Every 6 Hours</option>
-                        <option>Nightly</option>
+                        <option>Every 3 Hours</option>
+                        <option>Every 12 Hours</option>
+                        <option>Every 24 Hours</option>
+                        <option>Weekly</option>
                     </select>
                 </div>
                 <div>
@@ -3163,43 +3338,140 @@
                         <option>30 Days</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-2">Protected Services</label>
-                    <div class="space-y-3 p-4 bg-stone-50 border border-stone-200 rounded-lg flex flex-wrap gap-4">
-                        <label
-                            class="flex items-center text-sm text-slate-700 font-medium cursor-pointer w-[45%]"><input
-                                type="checkbox" checked
-                                class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600"><img
-                                src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
-                                class="w-4 h-4 mr-2 object-contain" alt="Gmail"> Gmail</label>
-                        <label
-                            class="flex items-center text-sm text-slate-700 font-medium cursor-pointer w-[45%]"><input
-                                type="checkbox" checked
-                                class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600"><img
-                                src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg"
-                                class="w-4 h-4 mr-2 object-contain" alt="Drive"> Drive</label>
-                        <label
-                            class="flex items-center text-sm text-slate-700 font-medium cursor-pointer w-[45%]"><input
-                                type="checkbox" checked
-                                class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600"><img
-                                src="https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg"
-                                class="w-4 h-4 mr-1 object-contain" alt="Contacts"> Contacts</label>
-                        <label
-                            class="flex items-center text-sm text-slate-700 font-medium cursor-pointer w-[45%]"><input
-                                type="checkbox"
-                                class="w-4 h-4 text-teal-600 bg-white border-stone-300 rounded mr-3 focus:ring-teal-500 accent-teal-600"><img
-                                src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg"
-                                class="w-4 h-4 mr-2 object-contain" alt="Photos"> Photos</label>
-                    </div>
-                </div>
             </div>
             <div class="p-4 border-t border-stone-100 bg-stone-50 flex justify-end gap-3">
                 <button onclick="closeCreatePolicyGroupModal()"
                     class="px-4 py-2 bg-white border border-stone-300 text-slate-700 rounded-lg text-sm font-bold shadow-sm hover:bg-stone-50 transition-colors">Cancel</button>
                 <button id="save-new-policy-btn" onclick="saveNewPolicyGroup()"
                     class="px-5 py-2 bg-teal-600 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-teal-700 transition-colors flex items-center">
-                    Create Group
+                    Create Policy
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Email & Services to Policy Modal -->
+    <div id="add-mailbox-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeAddMailboxModal()"></div>
+        <div class="bg-white rounded-xl shadow-2xl z-10 w-full max-w-xl overflow-hidden border border-stone-200">
+            <div class="p-5 border-b border-stone-100 bg-stone-50 flex justify-between items-center">
+                <h2 class="text-lg font-bold text-slate-900">Add Email & Services</h2>
+                <button onclick="closeAddMailboxModal()" class="text-slate-400 hover:text-slate-600"><span class="unicode-icon">&#x274C;</span></button>
+            </div>
+            <div class="p-5">
+                <p class="text-sm text-slate-500 mb-4">Select an email, then choose which services to add to this policy. A service can only belong to one policy — assigning here removes it from any other policy.</p>
+                <input type="text" id="add-mailbox-search" placeholder="Search emails..." onkeyup="renderAddMailboxList()"
+                    class="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm mb-3 focus:ring-teal-500 outline-none">
+                <div id="add-mailbox-list" class="max-h-40 overflow-y-auto space-y-1 border border-stone-200 rounded-lg p-2 mb-4"></div>
+                <div id="add-service-picker" class="hidden border border-teal-200 bg-teal-50/30 rounded-xl p-4">
+                    <p class="text-sm font-bold text-slate-800 mb-1">Select services for <span id="add-selected-email" class="text-teal-700"></span></p>
+                    <p class="text-xs text-slate-500 mb-3">Checked services will be assigned to this policy.</p>
+                    <div id="add-service-checkboxes" class="space-y-2"></div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-stone-100 flex justify-end gap-3">
+                <button onclick="closeAddMailboxModal()" class="px-4 py-2 border border-stone-300 rounded-lg text-sm font-bold text-slate-700">Cancel</button>
+                <button onclick="confirmAddServicesToPolicy()" id="add-services-confirm-btn" class="hidden px-5 py-2 bg-teal-600 text-white rounded-lg text-sm font-bold hover:bg-teal-700">Add to Policy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Move Assignments Modal -->
+    <div id="move-assignments-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeMoveAssignmentsModal()"></div>
+        <div class="bg-white rounded-xl shadow-2xl z-10 w-full max-w-lg overflow-hidden border border-stone-200">
+            <div class="p-5 border-b border-stone-100 bg-stone-50 flex justify-between items-center">
+                <h2 class="text-lg font-bold text-slate-900">Move to Policy</h2>
+                <button onclick="closeMoveAssignmentsModal()" class="text-slate-400 hover:text-slate-600"><span class="unicode-icon">&#x274C;</span></button>
+            </div>
+            <div class="p-6 space-y-4">
+                <p class="text-sm text-slate-500">Move selected assignments from <strong id="move-source-policy" class="text-slate-800"></strong> to another policy.</p>
+                <p class="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2"><span id="move-selected-count">0</span> assignment(s) selected</p>
+                <div class="flex gap-4 p-1 bg-stone-100 rounded-lg">
+                    <label class="flex-1 flex items-center justify-center gap-2 p-2 rounded-md cursor-pointer text-sm font-bold has-[:checked]:bg-white has-[:checked]:shadow-sm has-[:checked]:text-teal-700 text-slate-600">
+                        <input type="radio" name="move-dest-type" value="existing" checked class="sr-only" onchange="toggleMoveDestType()">
+                        Existing policy
+                    </label>
+                    <label class="flex-1 flex items-center justify-center gap-2 p-2 rounded-md cursor-pointer text-sm font-bold has-[:checked]:bg-white has-[:checked]:shadow-sm has-[:checked]:text-teal-700 text-slate-600">
+                        <input type="radio" name="move-dest-type" value="new" class="sr-only" onchange="toggleMoveDestType()">
+                        Create new
+                    </label>
+                </div>
+                <div id="move-existing-panel" class="space-y-2">
+                    <label class="block text-sm font-bold text-slate-700">Destination policy</label>
+                    <select id="move-dest-policy" class="w-full border border-stone-300 rounded-lg px-3 py-2.5 text-sm focus:ring-teal-500 outline-none"></select>
+                </div>
+                <div id="move-new-panel" class="hidden space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-1.5">New policy name</label>
+                        <input type="text" id="move-new-policy-name" placeholder="e.g., Executive Team Policy"
+                            class="w-full border border-stone-300 rounded-lg px-3 py-2.5 text-sm focus:ring-teal-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-1.5">Sync interval</label>
+                        <select id="move-new-policy-sync" class="w-full border border-stone-300 rounded-lg px-3 py-2.5 text-sm focus:ring-teal-500 outline-none">
+                            <option>Every 3 Hours</option>
+                            <option>Every 12 Hours</option>
+                            <option>Every 24 Hours</option>
+                            <option>Weekly</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-1.5">Retention</label>
+                        <select id="move-new-policy-retention" class="w-full border border-stone-300 rounded-lg px-3 py-2.5 text-sm focus:ring-teal-500 outline-none">
+                            <option>Infinite (Never Delete)</option>
+                            <option>7 Years (Compliance)</option>
+                            <option>1 Year</option>
+                            <option>30 Days</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-stone-100 flex justify-end gap-3">
+                <button onclick="closeMoveAssignmentsModal()" class="px-4 py-2 border border-stone-300 rounded-lg text-sm font-bold text-slate-700">Cancel</button>
+                <button onclick="executeMoveAssignments()" class="px-5 py-2 bg-teal-600 text-white rounded-lg text-sm font-bold hover:bg-teal-700">Move Assignments</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Split Policy Modal -->
+    <div id="split-policy-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeSplitPolicyModal()"></div>
+        <div class="bg-white rounded-xl shadow-2xl z-10 w-full max-w-lg overflow-hidden border border-stone-200">
+            <div class="p-5 border-b border-stone-100 bg-stone-50 flex justify-between items-center">
+                <h2 class="text-lg font-bold text-slate-900">Split Policy</h2>
+                <button onclick="closeSplitPolicyModal()" class="text-slate-400 hover:text-slate-600"><span class="unicode-icon">&#x274C;</span></button>
+            </div>
+            <div class="p-6 space-y-4">
+                <p class="text-sm text-slate-500">Move selected email + service assignments from <strong id="split-source-policy" class="text-slate-800"></strong> into a new policy with updated settings.</p>
+                <p class="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2"><span id="split-selected-count">0</span> assignment(s) selected</p>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1.5">New Policy Name</label>
+                    <input type="text" id="split-policy-name" placeholder="e.g., Executive Team Policy"
+                        class="w-full border border-stone-300 rounded-lg px-3 py-2.5 text-sm focus:ring-teal-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1.5">Sync Interval</label>
+                    <select id="split-policy-sync" class="w-full border border-stone-300 rounded-lg px-3 py-2.5 text-sm focus:ring-teal-500 outline-none">
+                        <option>Every 3 Hours</option>
+                        <option>Every 12 Hours</option>
+                        <option>Every 24 Hours</option>
+                        <option>Weekly</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1.5">Retention</label>
+                    <select id="split-policy-retention" class="w-full border border-stone-300 rounded-lg px-3 py-2.5 text-sm focus:ring-teal-500 outline-none">
+                        <option>Infinite (Never Delete)</option>
+                        <option>7 Years (Compliance)</option>
+                        <option>1 Year</option>
+                        <option>30 Days</option>
+                    </select>
+                </div>
+            </div>
+            <div class="p-4 border-t border-stone-100 flex justify-end gap-3">
+                <button onclick="closeSplitPolicyModal()" class="px-4 py-2 border border-stone-300 rounded-lg text-sm font-bold text-slate-700">Cancel</button>
+                <button onclick="executeSplitPolicy()" id="split-policy-btn" class="px-5 py-2 bg-teal-600 text-white rounded-lg text-sm font-bold hover:bg-teal-700">Create & Move Assignments</button>
             </div>
         </div>
     </div>
@@ -3370,33 +3642,59 @@
             }
         }
 
-        /* --- USERS & GROUPS LISTING LOGIC --- */
+        /* --- CONNECTED ACCOUNTS LOGIC --- */
         let isUsersListRendered = false;
         let allUsersData = [];
         let currentUsersPage = 1;
         const usersPerPage = 10;
         let filteredUsersData = [];
         let currentUsersSearchTerm = '';
+        let currentAccountFilter = 'all';
+        let currentDrawerAccount = null;
 
-        function renderUsersGroupsList() {
-            const tbody = document.getElementById('users-table-body');
-            if (!tbody) return;
-
+        function renderConnectedAccountsList() {
             const specificUsers = [
-                { name: 'Executive Team', email: 'execs@acme.com', size: '450 GB', services: ['Gmail', 'Drive', 'Contacts', 'Calendar', 'Photos'], policy: 'Legal Hold Policy' },
-                { name: 'Sarah Jenkins', email: 's.jenkins@acme.com', size: '14.2 GB', services: ['Gmail', 'Drive', 'Contacts', 'Calendar'], policy: 'Custom Override' },
-                { name: 'John Doe', email: 'j.doe@acme.com', size: '8.5 GB', services: ['Gmail', 'Drive'], policy: 'Corporate Default' }
+                { name: 'Sarah Jenkins', email: 's.jenkins@acme.com', type: 'corporate', services: ['Gmail', 'Drive', 'Contacts', 'Calendar'], policy: 'Corporate Default', schedule: null, credentialStatus: 'healthy', lastBackup: '45 mins ago', nextBackup: 'In 2 hrs', paused: false, shared: true },
+                { name: 'John Doe', email: 'j.doe@acme.com', type: 'corporate', services: ['Gmail', 'Drive'], policy: 'Corporate Default', schedule: null, credentialStatus: 'healthy', lastBackup: '1 hr ago', nextBackup: 'In 2 hrs', paused: false, shared: false },
+                { name: 'Personal Gmail', email: 'mybackup@gmail.com', type: 'individual', services: ['Gmail', 'Drive', 'Photos'], policy: null, schedule: 'Every 12 Hours', credentialStatus: 'healthy', lastBackup: '3 hrs ago', nextBackup: 'In 9 hrs', paused: false, shared: false },
+                { name: 'David Miller', email: 'd.miller@acme.com', type: 'corporate', services: ['Gmail', 'Drive'], policy: 'Contractors Policy', schedule: null, credentialStatus: 'auth_error', lastBackup: '2 days ago', nextBackup: 'Suspended', paused: false, shared: false },
+                { name: 'Jane Smith', email: 'jane.personal@gmail.com', type: 'individual', services: ['Gmail', 'Photos'], policy: null, schedule: 'Every 24 Hours', credentialStatus: 'healthy', lastBackup: '12 hrs ago', nextBackup: 'In 12 hrs', paused: true, shared: false }
             ];
-
             allUsersData = [...specificUsers];
-
-            for (let i = 1; i <= 97; i++) {
+            for (let i = 1; i <= 95; i++) {
                 const mockServices = i % 3 === 0 ? ['Gmail', 'Drive'] : i % 2 === 0 ? ['Photos', 'Contacts'] : ['Gmail', 'Drive', 'Calendar', 'Photos'];
-                const mockPolicy = i % 4 === 0 ? 'Contractors Policy' : 'Corporate Default';
-                allUsersData.push({ name: `Mock User ${i}`, email: `user${i}@acme.com`, size: '0 B', services: mockServices, policy: mockPolicy });
+                allUsersData.push({
+                    name: `User ${i}`, email: `user${i}@acme.com`, type: 'corporate',
+                    services: mockServices, policy: i % 4 === 0 ? 'Contractors Policy' : 'Corporate Default',
+                    schedule: null, credentialStatus: 'healthy', lastBackup: '2 hrs ago', nextBackup: 'In 1 hr',
+                    paused: false, shared: false
+                });
             }
+            applyAccountsFilters();
+        }
 
-            applyUsersFilters();
+        function getServiceIconsHtml(services, missingPhotos) {
+            const allServices = ['Gmail', 'Drive', 'Photos', 'Contacts', 'Calendar'];
+            let imgs = '';
+            allServices.forEach(s => {
+                let src = '';
+                if (s === 'Gmail') src = 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg';
+                if (s === 'Drive') src = 'https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg';
+                if (s === 'Photos') src = 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg';
+                if (s === 'Contacts') src = 'https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg';
+                if (s === 'Calendar') src = 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg';
+                const active = services.includes(s) || (s === 'Contacts' && services.includes('Contacts')) || (s === 'Calendar' && services.includes('Calendar'));
+                const warn = missingPhotos && s === 'Photos' ? ' ring-2 ring-amber-400 ring-offset-1' : '';
+                imgs += `<img src="${src}" class="w-4 h-4 object-contain ${active ? '' : 'opacity-25 grayscale'}${warn}" title="${s}">`;
+            });
+            return `<div class="flex gap-1 flex-wrap">${imgs}</div>`;
+        }
+
+        function getCredentialBadge(status) {
+            if (status === 'healthy') return '<span class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-200">Healthy</span>';
+            if (status === 'auth_error') return '<span class="text-[10px] font-bold text-rose-700 bg-rose-100 px-2 py-0.5 rounded border border-rose-200">Re-auth required</span>';
+            if (status === 'readonly') return '<span class="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">Read-only</span>';
+            return '<span class="text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded">Missing scope</span>';
         }
 
         function displayUsersPage(page) {
@@ -3404,65 +3702,254 @@
             const tbody = document.getElementById('users-table-body');
             if (!tbody) return;
 
-            let html = '';
-
             const startIndex = (page - 1) * usersPerPage;
             const endIndex = Math.min(startIndex + usersPerPage, filteredUsersData.length);
-
-            const getCorpServicesHtml = (services, name) => {
-                const allServices = ['Gmail', 'Drive', 'Photos', 'Contacts', 'Calendar'];
-                let imgs = '';
-                allServices.forEach(s => {
-                    let src = '';
-                    if (s === 'Gmail') src = 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg';
-                    if (s === 'Drive') src = 'https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg';
-                    if (s === 'Photos') src = 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg';
-                    if (s === 'Contacts') src = 'https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg';
-                    if (s === 'Calendar') src = 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg';
-
-                    const activeClass = services.includes(s) ? '' : 'opacity-30 grayscale';
-                    imgs += `<img src="${src}" class="w-4 h-4 object-contain transition-all ${activeClass}" title="${s}" data-service="${s}">`;
-                });
-                return `<div class="flex items-center gap-2">
-                            <div class="flex gap-1 flex-wrap max-w-[120px] corp-services-list">${imgs}</div>
-                            <button onclick="openUpdateSyncModal(event, '${name}')" class="text-xs font-bold text-teal-600 hover:underline bg-teal-50 px-2 py-1 rounded border border-teal-100 shrink-0">Update</button>
-                        </div>`;
-            };
-
-            const generateRow = (name, email, size, services) => `
-                <tr class="hover:bg-teal-50 cursor-pointer transition-colors group user-row" onclick="openUserVault('${name}', '${email}', 'Gmail')" data-name="${name.toLowerCase()}" data-email="${email.toLowerCase()}">
-                    <td class="px-6 py-4" onclick="event.stopPropagation()">
-                        <input type="checkbox" class="corp-user-cb w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500">
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="font-bold text-slate-900 text-sm group-hover:text-teal-700 flex items-center">${name}</div>
-                        <div class="text-xs text-slate-500">${email}</div>
-                    </td>
-                    <td class="px-6 py-4" onclick="event.stopPropagation()">
-                        ${getCorpServicesHtml(services, name)}
-                    </td>
-                    <td class="hidden px-6 py-4 text-right text-sm text-slate-600 font-medium">${size}</td>
-                    <td class="px-6 py-4 text-right" onclick="event.stopPropagation()">
-                        <div class="flex items-center justify-end gap-2">
-                            <button onclick="executeFullUserRestore(event, '${name}')" title="Full Restore" class="text-slate-400 hover:text-teal-600 transition-colors">
-                                <span class="unicode-icon text-lg">&#x23EA;</span>
-                            </button>
-                        </div>
-                    </td>
-                </tr>`;
+            let html = '';
 
             for (let i = startIndex; i < endIndex; i++) {
                 const u = filteredUsersData[i];
-                html += generateRow(u.name, u.email, u.size, u.services);
+                const typeBadge = u.type === 'corporate'
+                    ? '<span class="text-[10px] font-bold text-indigo-700 bg-indigo-100 px-2 py-0.5 rounded">Corporate</span>'
+                    : '<span class="text-[10px] font-bold text-teal-700 bg-teal-100 px-2 py-0.5 rounded">Individual</span>';
+                const policyOrSchedule = u.policy
+                    ? `<span class="text-xs font-bold text-slate-700">${u.policy}</span>`
+                    : `<span class="text-xs font-bold text-slate-700">${u.schedule}</span>`;
+                const rowClass = u.credentialStatus === 'auth_error' ? 'bg-rose-50/30' : u.paused ? 'bg-amber-50/20' : '';
+                const pauseIcon = u.paused ? '&#x25B6;&#xFE0F;' : '&#x23F8;&#xFE0F;';
+                const pauseTitle = u.paused ? 'Resume backup' : 'Pause backup';
+
+                html += `
+                <tr class="hover:bg-teal-50/50 transition-colors ${rowClass}" data-email="${u.email}">
+                    <td class="px-4 py-3" onclick="event.stopPropagation()">
+                        <input type="checkbox" class="account-cb w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500" onchange="updateAccountsBulkBar()">
+                    </td>
+                    <td class="px-4 py-3 cursor-pointer" onclick="openAccountDrawer('${u.email}')">
+                        <div class="font-bold text-slate-900 text-sm">${u.name}</div>
+                        <div class="text-xs text-slate-500">${u.email}</div>
+                    </td>
+                    <td class="px-4 py-3">${typeBadge}</td>
+                    <td class="px-4 py-3">${getServiceIconsHtml(u.services, u.email === 'd.miller@acme.com')}</td>
+                    <td class="px-4 py-3">${policyOrSchedule}</td>
+                    <td class="px-4 py-3">${getCredentialBadge(u.credentialStatus)}</td>
+                    <td class="px-4 py-3 text-xs text-slate-600"><div>${u.lastBackup}</div><div class="text-slate-400">${u.nextBackup}</div></td>
+                    <td class="px-4 py-3 text-right" onclick="event.stopPropagation()">
+                        <div class="flex items-center justify-end gap-1">
+                            <button onclick="toggleAccountPause('${u.email}')" title="${pauseTitle}" class="text-slate-400 hover:text-amber-500 p-1"><span class="unicode-icon">${pauseIcon}</span></button>
+                            <button onclick="reauthAccount('${u.email}')" title="Re-authenticate" class="text-slate-400 hover:text-teal-600 p-1"><span class="unicode-icon">&#x1F517;</span></button>
+                            <button onclick="executeFullUserRestore(event, '${u.name}')" title="Restore" class="text-slate-400 hover:text-teal-600 p-1"><span class="unicode-icon">&#x23EA;</span></button>
+                            <button onclick="openAccountDrawer('${u.email}')" title="Manage" class="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded border border-teal-100">Manage</button>
+                        </div>
+                    </td>
+                </tr>`;
             }
 
             if (filteredUsersData.length === 0) {
-                html = `<tr><td colspan="5" class="px-6 py-8 text-center text-slate-500 font-medium">No users or groups found.</td></tr>`;
+                html = '<tr><td colspan="8" class="px-6 py-8 text-center text-slate-500 font-medium">No connected accounts found.</td></tr>';
             }
-
             tbody.innerHTML = html;
             updateUsersPaginationInfo();
+            updateAccountsBulkBar();
         }
+
+        function applyAccountsFilters() {
+            const domain = document.getElementById('accounts-domain-filter')?.value || '';
+            filteredUsersData = allUsersData.filter(u => {
+                const matchSearch = !currentUsersSearchTerm || u.name.toLowerCase().includes(currentUsersSearchTerm) || u.email.toLowerCase().includes(currentUsersSearchTerm);
+                const matchDomain = !domain || u.email.endsWith('@' + domain);
+                let matchFilter = true;
+                if (currentAccountFilter === 'corporate') matchFilter = u.type === 'corporate';
+                if (currentAccountFilter === 'individual') matchFilter = u.type === 'individual';
+                if (currentAccountFilter === 'auth_error') matchFilter = u.credentialStatus === 'auth_error';
+                if (currentAccountFilter === 'paused') matchFilter = u.paused;
+                return matchSearch && matchDomain && matchFilter;
+            });
+            displayUsersPage(currentUsersPage);
+        }
+
+        function filterConnectedAccounts(query) {
+            currentUsersSearchTerm = query.toLowerCase();
+            currentUsersPage = 1;
+            applyAccountsFilters();
+        }
+
+        function filterAccountsByType(type) {
+            currentAccountFilter = type;
+            currentUsersPage = 1;
+            document.querySelectorAll('.account-filter-tab').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-filter') === type);
+            });
+            applyAccountsFilters();
+        }
+
+        function toggleAllAccounts(source) {
+            document.querySelectorAll('.account-cb').forEach(cb => { cb.checked = source.checked; });
+            updateAccountsBulkBar();
+        }
+
+        function updateAccountsBulkBar() {
+            const checked = document.querySelectorAll('.account-cb:checked').length;
+            const bar = document.getElementById('accounts-bulk-bar');
+            const countEl = document.getElementById('accounts-bulk-count');
+            if (bar) bar.classList.toggle('hidden', checked === 0);
+            if (countEl) countEl.innerText = `${checked} selected`;
+        }
+
+        function toggleAccountPause(email) {
+            const acc = allUsersData.find(a => a.email === email);
+            if (acc) {
+                acc.paused = !acc.paused;
+                acc.nextBackup = acc.paused ? 'Paused' : 'In 2 hrs';
+                applyAccountsFilters();
+                showToast(acc.paused ? 'Backup paused' : 'Backup resumed');
+            }
+        }
+
+        function reauthAccount(email) {
+            showToast('Opening Google re-authentication...');
+            setTimeout(() => {
+                const acc = allUsersData.find(a => a.email === email);
+                if (acc) { acc.credentialStatus = 'healthy'; acc.nextBackup = 'In 1 hr'; applyAccountsFilters(); showToast('Credentials updated'); }
+            }, 1200);
+        }
+
+        function bulkAssignPolicy() { showToast('Select a policy to assign to selected mailboxes'); showAutoSync(); }
+        function bulkPauseAccounts() { showToast('Paused selected mailboxes'); }
+        function bulkReauthAccounts() { showToast('Re-authenticating workspace admin connection...'); }
+
+        function showConnectedAccounts() {
+            document.querySelectorAll('main').forEach(m => { m.classList.remove('block'); m.classList.add('hidden'); });
+            document.getElementById('view-users').classList.remove('hidden');
+            document.getElementById('view-users').classList.add('block');
+            document.getElementById('topbar-breadcrumb').innerHTML = 'Connected Accounts';
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('nav-users').classList.add('active');
+            if (!isUsersListRendered) {
+                renderConnectedAccountsList();
+                isUsersListRendered = true;
+            }
+        }
+        function showUsersGroups() { showConnectedAccounts(); }
+
+        /* --- ACCOUNT DRAWER --- */
+        function openAccountDrawer(email) {
+            const acc = allUsersData.find(a => a.email === email);
+            if (!acc) return;
+            currentDrawerAccount = acc;
+            document.getElementById('drawer-account-name').innerText = acc.name;
+            document.getElementById('drawer-account-email').innerText = acc.email;
+            const badge = document.getElementById('drawer-account-type-badge');
+            badge.innerText = acc.type === 'corporate' ? 'Corporate' : 'Individual';
+            badge.className = acc.type === 'corporate' ? 'inline-block mt-2 text-[10px] font-bold px-2 py-0.5 rounded uppercase bg-indigo-100 text-indigo-800' : 'inline-block mt-2 text-[10px] font-bold px-2 py-0.5 rounded uppercase bg-teal-100 text-teal-800';
+            document.getElementById('drawer-last-backup').innerText = acc.lastBackup;
+            document.getElementById('drawer-next-backup').innerText = acc.nextBackup;
+            document.getElementById('drawer-pause-toggle').checked = acc.paused;
+            document.getElementById('drawer-backup-status').innerText = acc.paused ? 'Paused' : acc.credentialStatus === 'auth_error' ? 'Auth Error' : 'Active';
+            document.getElementById('drawer-policy-name').innerText = acc.policy || '—';
+            const policyScheduleEl = document.getElementById('drawer-policy-schedule');
+            const policyLinkEl = document.getElementById('drawer-policy-link');
+            if (acc.policy && typeof policySettingsStore !== 'undefined' && policySettingsStore[acc.policy]) {
+                const ps = policySettingsStore[acc.policy];
+                if (policyScheduleEl) policyScheduleEl.innerText = `${ps.sync} • ${ps.retention}`;
+            } else if (policyScheduleEl) {
+                policyScheduleEl.innerText = '—';
+            }
+            if (policyLinkEl) policyLinkEl.classList.toggle('hidden', !acc.policy);
+            document.getElementById('drawer-schedule-policy').classList.toggle('hidden', acc.type === 'individual');
+            document.getElementById('drawer-schedule-individual').classList.toggle('hidden', acc.type !== 'individual');
+            document.getElementById('drawer-creds-corporate').classList.toggle('hidden', acc.type !== 'corporate');
+            document.getElementById('drawer-creds-individual').classList.toggle('hidden', acc.type !== 'individual' || acc.credentialStatus === 'auth_error');
+            document.getElementById('drawer-creds-error').classList.toggle('hidden', acc.credentialStatus !== 'auth_error');
+            document.getElementById('drawer-missing-scope').classList.toggle('hidden', email !== 'd.miller@acme.com');
+            document.getElementById('drawer-share-list').innerHTML = acc.shared
+                ? '<div class="flex items-center justify-between p-3 bg-stone-50 rounded-lg border border-stone-200 text-sm"><span><span class="font-bold">' + acc.email + '</span><span class="block text-xs text-slate-500">Read-only restore — active</span></span><button onclick="showToast(\'Access revoked\')" class="text-xs text-rose-600 font-bold">Revoke</button></div>'
+                : '<p class="text-sm text-slate-400 italic">No delegates invited yet.</p>';
+            switchDrawerTab('overview');
+            document.getElementById('account-drawer-overlay').classList.remove('hidden');
+            document.getElementById('account-drawer').classList.add('open');
+        }
+
+        function closeAccountDrawer() {
+            document.getElementById('account-drawer-overlay').classList.add('hidden');
+            document.getElementById('account-drawer').classList.remove('open');
+            currentDrawerAccount = null;
+        }
+
+        function openDrawerAssignedPolicy() {
+            if (!currentDrawerAccount?.policy) return;
+            const policyName = currentDrawerAccount.policy;
+            closeAccountDrawer();
+            showAutoSync();
+            openAssignPolicyPage(policyName);
+        }
+
+        function switchDrawerTab(tab) {
+            document.querySelectorAll('.drawer-tab').forEach(t => {
+                const active = t.getAttribute('data-drawer-tab') === tab;
+                t.classList.toggle('active', active);
+                t.classList.toggle('text-teal-600', active);
+                t.classList.toggle('border-teal-600', active);
+            });
+            document.querySelectorAll('.drawer-panel').forEach(p => p.classList.add('hidden'));
+            document.getElementById('drawer-panel-' + tab)?.classList.remove('hidden');
+        }
+
+        function toggleDrawerPause(el) {
+            if (currentDrawerAccount) {
+                currentDrawerAccount.paused = el.checked;
+                currentDrawerAccount.nextBackup = el.checked ? 'Paused' : 'In 2 hrs';
+                applyAccountsFilters();
+            }
+        }
+
+        function reauthDrawerAccount() {
+            if (!currentDrawerAccount) return;
+            showToast('Re-authenticating...');
+            setTimeout(() => {
+                currentDrawerAccount.credentialStatus = 'healthy';
+                currentDrawerAccount.nextBackup = 'In 1 hr';
+                openAccountDrawer(currentDrawerAccount.email);
+                applyAccountsFilters();
+                showToast('Credentials restored');
+            }, 1000);
+        }
+
+        function inviteDrawerAccess() {
+            const email = document.getElementById('drawer-share-email')?.value.trim();
+            if (!email) { showToast('Enter an email address'); return; }
+            showToast('Invite sent to ' + email);
+            document.getElementById('drawer-share-list').innerHTML = `<div class="flex items-center justify-between p-3 bg-stone-50 rounded-lg border border-stone-200 text-sm"><span><span class="font-bold">${email}</span><span class="block text-xs text-slate-500">Read-only restore — pending signup</span></span><button onclick="showToast('Invite resent')" class="text-xs text-teal-600 font-bold">Resend</button></div>`;
+        }
+
+        /* --- CONNECT ACCOUNT MODAL --- */
+        function openConnectAccountModal() {
+            document.getElementById('connect-account-modal').classList.remove('hidden');
+        }
+        function closeConnectAccountModal() {
+            document.getElementById('connect-account-modal').classList.add('hidden');
+        }
+        function startConnectAccountFlow() {
+            const type = document.querySelector('input[name="connect_modal_type"]:checked')?.value || 'corporate';
+            closeConnectAccountModal();
+            showToast('Opening Google OAuth...');
+            setTimeout(() => {
+                if (type === 'individual') {
+                    allUsersData.unshift({ name: 'New Personal', email: 'new.user@gmail.com', type: 'individual', services: ['Gmail', 'Drive'], policy: null, schedule: 'Every 3 Hours', credentialStatus: 'healthy', lastBackup: 'Just now', nextBackup: 'In 3 hrs', paused: false, shared: false });
+                } else {
+                    allUsersData.unshift({ name: 'New Hire', email: 'new.hire@acme.com', type: 'corporate', services: ['Gmail', 'Drive', 'Contacts', 'Calendar'], policy: 'Corporate Default', schedule: null, credentialStatus: 'healthy', lastBackup: 'Just now', nextBackup: 'In 3 hrs', paused: false, shared: false });
+                }
+                applyAccountsFilters();
+                showToast('Account connected successfully');
+            }, 1500);
+        }
+
+        function openNewMailboxQueue() { document.getElementById('new-mailbox-modal').classList.remove('hidden'); }
+        function closeNewMailboxQueue() { document.getElementById('new-mailbox-modal').classList.add('hidden'); }
+        function protectNewMailboxes() {
+            closeNewMailboxQueue();
+            showToast('Backup started for 2 new mailboxes');
+        }
+
+        function openCreatePolicyModal() { openCreatePolicyGroupModal(); }
 
         function updateUsersPaginationInfo() {
             const infoEl = document.getElementById('users-pagination-info');
@@ -3509,28 +3996,8 @@
 
         function changeUsersPage(page) {
             displayUsersPage(page);
-            const masterCb = document.querySelector('input[onchange="toggleAllCorpUsers(this)"]');
+            const masterCb = document.querySelector('input[onchange="toggleAllAccounts(this)"]');
             if (masterCb) masterCb.checked = false;
-        }
-
-        function toggleAllCorpUsers(source) {
-            const checkboxes = document.querySelectorAll('.corp-user-cb');
-            checkboxes.forEach(cb => {
-                cb.checked = source.checked;
-            });
-        }
-
-        function filterUsersGroups(query) {
-            currentUsersSearchTerm = query.toLowerCase();
-            currentUsersPage = 1;
-            applyUsersFilters();
-        }
-
-        function applyUsersFilters() {
-            filteredUsersData = allUsersData.filter(u =>
-                u.name.toLowerCase().includes(currentUsersSearchTerm) || u.email.toLowerCase().includes(currentUsersSearchTerm)
-            );
-            displayUsersPage(currentUsersPage);
         }
 
         function showDashboard() {
@@ -3545,21 +4012,6 @@
 
             // Render Chart if not exists
             setTimeout(initDashChart, 100);
-        }
-
-        function showUsersGroups() {
-            document.querySelectorAll('main').forEach(m => { m.classList.remove('block'); m.classList.add('hidden'); });
-            document.getElementById('view-users').classList.remove('hidden');
-            document.getElementById('view-users').classList.add('block');
-            document.getElementById('topbar-breadcrumb').innerHTML = 'Users & Groups';
-
-            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
-            document.getElementById('nav-users').classList.add('active');
-
-            if (!isUsersListRendered) {
-                renderUsersGroupsList();
-                isUsersListRendered = true;
-            }
         }
 
         function showLocalVaults() {
@@ -3669,6 +4121,7 @@
             setTimeout(() => {
                 // Reset onboarding wizard
                 currentStep = 1;
+                resetOnboardingAuth();
                 updateWizardUI();
                 document.getElementById('sync-active-view').classList.remove('hidden');
                 document.getElementById('sync-success-view').classList.add('hidden');
@@ -3694,6 +4147,62 @@
         /* --- ONBOARDING WIZARD LOGIC --- */
         let currentStep = 1;
         const totalSteps = 4;
+
+        function resetOnboardingAuth() {
+            document.getElementById('onboard-google-connect')?.classList.remove('hidden');
+            document.getElementById('onboard-password-setup')?.classList.add('hidden');
+            ['signup-password', 'signup-password-confirm'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+        }
+
+        function validateOnboardPassword() {
+            const password = document.getElementById('signup-password').value;
+            const confirm = document.getElementById('signup-password-confirm').value;
+            if (password.length < 8) {
+                showToast("Password must be at least 8 characters");
+                return false;
+            }
+            if (password !== confirm) {
+                showToast("Passwords do not match");
+                return false;
+            }
+            return true;
+        }
+
+        function simulateOnboardGoogleAuth() {
+            const btn = document.getElementById('onboard-google-auth-btn');
+            if (!btn) return;
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<div class="spinner mr-3"></div> Connecting Google...';
+            btn.disabled = true;
+            setTimeout(() => {
+                btn.innerHTML = orig;
+                btn.disabled = false;
+                showToast("Google account connected");
+                document.getElementById('onboard-google-connect').classList.add('hidden');
+                document.getElementById('onboard-password-setup').classList.remove('hidden');
+            }, 1000);
+        }
+
+        function completeOnboardAccountSetup() {
+            if (!validateOnboardPassword()) return;
+            const btn = document.getElementById('auth-credentials-btn');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<div class="spinner mr-3"></div> Saving...';
+            btn.disabled = true;
+            setTimeout(() => {
+                btn.innerHTML = orig;
+                btn.disabled = false;
+                showToast("Account ready");
+                nextStep();
+            }, 800);
+        }
+
+        function toggleAllOnboardMailboxes(source) {
+            document.querySelectorAll('.onboard-mailbox-cb').forEach(cb => { cb.checked = source.checked; });
+        }
 
         function updateWizardUI() {
             document.querySelectorAll('.step-container').forEach((el, i) => {
@@ -3723,17 +4232,6 @@
 
         function nextStep() { if (currentStep < totalSteps) { currentStep++; updateWizardUI(); } }
         function prevStep() { if (currentStep > 1) { currentStep--; updateWizardUI(); } }
-
-        function simulateAuth() {
-            const btn = document.getElementById('auth-btn');
-            const orig = btn.innerHTML;
-            btn.innerHTML = '<div class="spinner mr-3"></div> Authenticating...';
-            btn.disabled = true;
-            setTimeout(() => {
-                btn.innerHTML = orig; btn.disabled = false;
-                showToast("OAuth Successful"); nextStep();
-            }, 1000);
-        }
 
         function startInitialSync() {
             nextStep();
@@ -3893,21 +4391,164 @@
 
         /* --- ASSIGN POLICY PAGE LOGIC --- */
         let currentAssignPolicy = '';
-        let isAssignPolicyListRendered = false;
-        let currentAssignServiceTab = 'Gmail';
+        let addModalSelectedEmail = '';
 
-        function switchAssignServiceTab(service) {
-            currentAssignServiceTab = service;
-            document.querySelectorAll('.assign-tab').forEach(tab => {
-                if (tab.getAttribute('data-service') === service) {
-                    tab.classList.add('active', 'text-teal-600', 'border-teal-600');
-                    tab.classList.remove('text-slate-500', 'border-transparent');
+        const POLICY_SERVICES = ['Gmail', 'Drive', 'Photos', 'Contacts', 'Calendar'];
+
+        const policySettingsStore = {
+            'Corporate Default': { sync: 'Every 3 Hours', retention: 'Infinite (Never Delete)' },
+            'Contractors Policy': { sync: 'Every 24 Hours', retention: '30 Days' },
+            'Legal Hold Policy': { sync: 'Every 3 Hours', retention: '7 Years (Compliance)' },
+            'Creative Assets Policy': { sync: 'Every 24 Hours', retention: '1 Year' }
+        };
+
+        const corporateAccountCatalog = [
+            { email: 's.jenkins@acme.com', name: 'Sarah Jenkins', services: ['Gmail', 'Drive', 'Contacts', 'Calendar'] },
+            { email: 'j.doe@acme.com', name: 'John Doe', services: ['Gmail', 'Drive'] },
+            { email: 'admin@acme.com', name: 'Admin User', services: ['Gmail', 'Drive', 'Photos', 'Contacts', 'Calendar'] },
+            { email: 'contractor1@acme.com', name: 'Contractor One', services: ['Gmail', 'Drive'] },
+            { email: 'legal1@acme.com', name: 'Legal User', services: ['Gmail', 'Drive'] },
+            { email: 'design@acme.com', name: 'Design Team', services: ['Drive', 'Photos'] },
+            { email: 'unassigned@acme.com', name: 'New Hire', services: ['Gmail', 'Drive', 'Contacts'] },
+            { email: 'marketing@acme.com', name: 'Marketing Lead', services: ['Gmail', 'Drive'] }
+        ];
+
+        // One policy per email+service pair
+        let servicePolicyAssignments = [
+            { email: 's.jenkins@acme.com', service: 'Gmail', policy: 'Corporate Default' },
+            { email: 's.jenkins@acme.com', service: 'Drive', policy: 'Creative Assets Policy' },
+            { email: 's.jenkins@acme.com', service: 'Contacts', policy: 'Corporate Default' },
+            { email: 's.jenkins@acme.com', service: 'Calendar', policy: 'Corporate Default' },
+            { email: 'j.doe@acme.com', service: 'Gmail', policy: 'Corporate Default' },
+            { email: 'j.doe@acme.com', service: 'Drive', policy: 'Corporate Default' },
+            { email: 'admin@acme.com', service: 'Gmail', policy: 'Corporate Default' },
+            { email: 'admin@acme.com', service: 'Drive', policy: 'Corporate Default' },
+            { email: 'admin@acme.com', service: 'Photos', policy: 'Corporate Default' },
+            { email: 'admin@acme.com', service: 'Contacts', policy: 'Corporate Default' },
+            { email: 'admin@acme.com', service: 'Calendar', policy: 'Corporate Default' },
+            { email: 'contractor1@acme.com', service: 'Gmail', policy: 'Contractors Policy' },
+            { email: 'contractor1@acme.com', service: 'Drive', policy: 'Contractors Policy' },
+            { email: 'legal1@acme.com', service: 'Gmail', policy: 'Legal Hold Policy' },
+            { email: 'legal1@acme.com', service: 'Drive', policy: 'Legal Hold Policy' },
+            { email: 'design@acme.com', service: 'Drive', policy: 'Creative Assets Policy' },
+            { email: 'design@acme.com', service: 'Photos', policy: 'Creative Assets Policy' },
+            { email: 'marketing@acme.com', service: 'Gmail', policy: 'Contractors Policy' },
+            { email: 'marketing@acme.com', service: 'Drive', policy: 'Contractors Policy' }
+        ];
+
+        function getAccountByEmail(email) {
+            return corporateAccountCatalog.find(a => a.email === email);
+        }
+
+        function getServicePolicy(email, service) {
+            const row = servicePolicyAssignments.find(a => a.email === email && a.service === service);
+            return row ? row.policy : null;
+        }
+
+        function setServicePolicy(email, service, policyName) {
+            const idx = servicePolicyAssignments.findIndex(a => a.email === email && a.service === service);
+            if (policyName) {
+                if (idx >= 0) {
+                    servicePolicyAssignments[idx].policy = policyName;
                 } else {
-                    tab.classList.remove('active', 'text-teal-600', 'border-teal-600');
-                    tab.classList.add('text-slate-500', 'border-transparent');
+                    servicePolicyAssignments.push({ email, service, policy: policyName });
                 }
+            } else if (idx >= 0) {
+                servicePolicyAssignments.splice(idx, 1);
+            }
+        }
+
+        function getPolicyAssignments(policyName) {
+            return servicePolicyAssignments
+                .filter(a => a.policy === policyName)
+                .map(a => {
+                    const account = getAccountByEmail(a.email);
+                    return { ...a, name: account?.name || a.email };
+                })
+                .sort((a, b) => a.email.localeCompare(b.email) || a.service.localeCompare(b.service));
+        }
+
+        function getServiceIconHtml(service) {
+            const srcMap = {
+                Gmail: 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg',
+                Drive: 'https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg',
+                Photos: 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg',
+                Contacts: 'https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg',
+                Calendar: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg'
+            };
+            const src = srcMap[service] || '';
+            return `<img src="${src}" class="w-5 h-5 object-contain" title="${service}" alt="${service}">`;
+        }
+
+        function getPolicyServiceIconsHtml(services) {
+            let imgs = '';
+            POLICY_SERVICES.forEach(s => {
+                const active = services.includes(s);
+                imgs += getServiceIconHtml(s).replace('w-5 h-5', `w-4 h-4 ${active ? '' : 'opacity-25 grayscale'}`);
             });
-            applyAssignPolicyFilters();
+            return `<div class="flex gap-1 flex-wrap">${imgs}</div>`;
+        }
+
+        function renderPolicyMailboxList() {
+            const tbody = document.getElementById('assign-policy-tbody');
+            const emptyEl = document.getElementById('assign-policy-empty');
+            if (!tbody) return;
+
+            const assignments = getPolicyAssignments(currentAssignPolicy);
+            const query = (document.getElementById('assign-policy-search')?.value || '').toLowerCase();
+            const filtered = assignments.filter(a =>
+                !query || a.email.toLowerCase().includes(query) || a.name.toLowerCase().includes(query) || a.service.toLowerCase().includes(query)
+            );
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '';
+                emptyEl?.classList.remove('hidden');
+            } else {
+                emptyEl?.classList.add('hidden');
+                tbody.innerHTML = filtered.map(a => `
+                    <tr class="policy-assignment-row" data-email="${a.email}" data-service="${a.service}">
+                        <td class="px-4 py-3">
+                            <input type="checkbox" class="policy-mailbox-cb w-4 h-4 text-teal-600 border-stone-300 rounded"
+                                data-email="${a.email}" data-service="${a.service}">
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="font-bold text-sm text-slate-800">${a.name}</div>
+                            <div class="text-xs text-slate-500">${a.email}</div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center gap-2">
+                                ${getServiceIconHtml(a.service)}
+                                <span class="text-sm font-medium text-slate-700">${a.service}</span>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 text-right">
+                            <button onclick="removeServiceFromPolicy('${a.email}', '${a.service}')" class="text-xs font-bold text-rose-600 hover:text-rose-800">Remove</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            const uniqueEmails = new Set(assignments.map(a => a.email));
+            const countEl = document.getElementById('policy-mailbox-count');
+            const assignCountEl = document.getElementById('policy-assignment-count');
+            if (countEl) countEl.innerText = uniqueEmails.size;
+            if (assignCountEl) assignCountEl.innerText = assignments.length;
+        }
+
+        function loadPolicySettingsPanel() {
+            const settings = policySettingsStore[currentAssignPolicy] || { sync: 'Every 3 Hours', retention: 'Infinite (Never Delete)' };
+            const syncEl = document.getElementById('policy-sync-interval');
+            const retEl = document.getElementById('policy-retention');
+            if (syncEl) syncEl.value = settings.sync;
+            if (retEl) retEl.value = settings.retention;
+        }
+
+        function updatePolicySettings() {
+            if (!policySettingsStore[currentAssignPolicy]) {
+                policySettingsStore[currentAssignPolicy] = { sync: 'Every 3 Hours', retention: 'Infinite (Never Delete)' };
+            }
+            policySettingsStore[currentAssignPolicy].sync = document.getElementById('policy-sync-interval')?.value || 'Every 3 Hours';
+            policySettingsStore[currentAssignPolicy].retention = document.getElementById('policy-retention')?.value || 'Infinite (Never Delete)';
         }
 
         function openAssignPolicyPage(policyName) {
@@ -3916,23 +4557,10 @@
             document.getElementById('autosync-cards-container').classList.add('hidden');
             document.getElementById('corporate-policies-table').classList.add('hidden');
             document.getElementById('assign-policy-page').classList.remove('hidden');
-
-            if (!isAssignPolicyListRendered) {
-                renderAssignPolicyList();
-                isAssignPolicyListRendered = true;
-                switchAssignServiceTab('Gmail');
-            } else {
-                // Reset inputs inside the filter toolbar
-                document.getElementById('assign-policy-search').value = "";
-                document.getElementById('assign-policy-filter-retention').value = "";
-                document.getElementById('assign-policy-filter-sync').value = "";
-                switchAssignServiceTab('Gmail'); // Resets visibility logic
-
-                // Reset selections
-                document.querySelectorAll('.assign-policy-cb').forEach(cb => cb.checked = false);
-                const selectAllCb = document.querySelector('input[onchange="toggleAllAssignPolicyUsers(this)"]');
-                if (selectAllCb) selectAllCb.checked = false;
-            }
+            const search = document.getElementById('assign-policy-search');
+            if (search) search.value = '';
+            loadPolicySettingsPanel();
+            renderPolicyMailboxList();
         }
 
         function hideAssignPolicyPage() {
@@ -3940,209 +4568,314 @@
             document.getElementById('autosync-cards-container').classList.remove('hidden');
         }
 
-        function renderAssignPolicyList() {
-            const tbody = document.getElementById('assign-policy-tbody');
-            if (!tbody) return;
-
-            let html = '';
-
-            const specificUsers = [
-                { name: 'Executive Team', email: 'execs@acme.com', initials: 'ET', color: 'stone', isGroup: false, services: ['Gmail', 'Drive', 'Contacts', 'Calendar', 'Photos'] },
-                { name: 'Sarah Jenkins', email: 's.jenkins@acme.com', initials: 'SJ', color: 'indigo', isGroup: false, services: ['Gmail', 'Drive', 'Contacts', 'Calendar'] },
-                { name: 'Marketing Shared Drive', email: 'marketing@acme.com', initials: '📁', color: 'stone', isGroup: true, services: ['Drive'] },
-                { name: 'John Doe', email: 'j.doe@acme.com', initials: 'JD', color: 'stone', isGroup: false, services: ['Gmail', 'Drive'] }
-            ];
-
-            const retentionSelect = `
-                <select onchange="applyAssignPolicyFilters()" class="assign-retention-select border border-stone-300 rounded text-xs bg-white px-2 py-1.5 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none w-full max-w-[160px]">
-                    <option>Infinite (Never Delete)</option>
-                    <option>7 Years (Compliance)</option>
-                    <option>1 Year</option>
-                    <option>30 Days</option>
-                </select>`;
-
-            const syncSelect = `
-                <select onchange="applyAssignPolicyFilters()" class="assign-sync-select border border-stone-300 rounded text-xs bg-white px-2 py-1.5 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none w-full max-w-[160px]">
-                    <option>Real-Time (CDP)</option>
-                    <option>Every 1 Hour</option>
-                    <option>Every 6 Hours</option>
-                    <option>Nightly</option>
-                </select>`;
-
-            const getAssignServicesHtml = (services) => {
-                const allServices = ['Gmail', 'Drive', 'Photos', 'Contacts', 'Calendar'];
-                let imgs = '';
-                allServices.forEach(s => {
-                    let src = '';
-                    if (s === 'Gmail') src = 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg';
-                    if (s === 'Drive') src = 'https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg';
-                    if (s === 'Photos') src = 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Google_Photos_icon_%282020%29.svg';
-                    if (s === 'Contacts') src = 'https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg';
-                    if (s === 'Calendar') src = 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg';
-
-                    const activeClass = services.includes(s) ? '' : 'opacity-30 grayscale';
-                    imgs += `<img src="${src}" class="w-4 h-4 object-contain transition-all ${activeClass}" title="${s}" data-service="${s}">`;
-                });
-                return `<div class="flex items-center gap-2">
-                            <div class="flex gap-1 flex-wrap max-w-[120px] assign-services-list">${imgs}</div>
-                        </div>`;
-            };
-
-            specificUsers.forEach(u => {
-                const avatar = u.isGroup
-                    ? `<div class="w-8 h-8 rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-lg"><span class="unicode-icon">&#x1F4C2;</span></div>`
-                    : `<div class="w-8 h-8 rounded-full bg-${u.color}-100 text-${u.color}-700 flex items-center justify-center font-bold text-xs">${u.initials}</div>`;
-
-                html += `
-                    <tr class="assign-policy-row hover:bg-stone-50 transition-colors" data-services="${u.services.join(',')}" data-name="${u.name.toLowerCase()}" data-email="${u.email.toLowerCase()}">
-                        <td class="px-6 py-4">
-                            <input type="checkbox" class="assign-policy-cb w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500">
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                ${avatar}
-                                <div>
-                                    <div class="font-bold text-sm text-slate-800">${u.name}</div>
-                                    <div class="text-xs text-slate-500 mt-0.5">${u.email}</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">${getAssignServicesHtml(u.services)}</td>
-                        <td class="px-6 py-4">${retentionSelect}</td>
-                        <td class="px-6 py-4">${syncSelect}</td>
-                    </tr>`;
-            });
-
-            for (let i = 1; i <= 20; i++) {
-                const mockServices = i % 3 === 0 ? ['Gmail', 'Drive'] : i % 2 === 0 ? ['Photos', 'Contacts'] : ['Gmail', 'Drive', 'Calendar', 'Photos'];
-                html += `
-                    <tr class="assign-policy-row hover:bg-stone-50 transition-colors" data-services="${mockServices.join(',')}" data-name="mock user ${i}" data-email="user${i}@acme.com">
-                        <td class="px-6 py-4">
-                            <input type="checkbox" class="assign-policy-cb w-4 h-4 text-teal-600 border-stone-300 rounded focus:ring-teal-500">
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-stone-100 text-stone-500 flex items-center justify-center font-bold text-xs">U${i}</div>
-                                <div>
-                                    <div class="font-bold text-sm text-slate-800">Mock User ${i}</div>
-                                    <div class="text-xs text-slate-500 mt-0.5">user${i}@acme.com</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">${getAssignServicesHtml(mockServices)}</td>
-                        <td class="px-6 py-4">${retentionSelect}</td>
-                        <td class="px-6 py-4">${syncSelect}</td>
-                    </tr>`;
-            }
-
-            tbody.innerHTML = html;
+        function filterPolicyMailboxList() {
+            renderPolicyMailboxList();
         }
 
-        function toggleAllAssignPolicyUsers(source) {
-            const checkboxes = document.querySelectorAll('.assign-policy-cb');
-            checkboxes.forEach(cb => {
-                const row = cb.closest('tr');
-                if (!row.classList.contains('hidden')) {
-                    cb.checked = source.checked;
+        function toggleAllPolicyMailboxes(source) {
+            document.querySelectorAll('.policy-mailbox-cb').forEach(cb => { cb.checked = source.checked; });
+        }
+
+        function assignServicesToPolicy(email, services, policyName, showToastMsg) {
+            const moved = [];
+            services.forEach(service => {
+                const prevPolicy = getServicePolicy(email, service);
+                if (prevPolicy === policyName) return;
+                setServicePolicy(email, service, policyName);
+                if (showToastMsg && prevPolicy && prevPolicy !== policyName) {
+                    moved.push(`${service} (from ${prevPolicy})`);
                 }
             });
-        }
-
-        function applyAssignPolicyFilters() {
-            const query = (document.getElementById('assign-policy-search').value || '').toLowerCase();
-            const retention = document.getElementById('assign-policy-filter-retention').value;
-            const sync = document.getElementById('assign-policy-filter-sync').value;
-
-            const rows = document.querySelectorAll('.assign-policy-row');
-            rows.forEach(row => {
-                const name = row.getAttribute('data-name');
-                const email = row.getAttribute('data-email');
-                const services = row.getAttribute('data-services') || '';
-
-                const retentionSelect = row.querySelector('.assign-retention-select').value;
-                const syncSelect = row.querySelector('.assign-sync-select').value;
-
-                let match = true;
-                if (query && !name.includes(query) && !email.includes(query)) match = false;
-                if (retention && retentionSelect !== retention) match = false;
-                if (sync && syncSelect !== sync) match = false;
-                if (currentAssignServiceTab && !services.includes(currentAssignServiceTab)) match = false;
-
-                if (match) {
-                    row.classList.remove('hidden');
-                    const icons = row.querySelectorAll('.assign-services-list img');
-                    icons.forEach(icon => {
-                        if (currentAssignServiceTab === '' || icon.getAttribute('data-service') === currentAssignServiceTab) {
-                            icon.style.display = '';
-                        } else {
-                            icon.style.display = 'none';
-                        }
-                    });
-                } else {
-                    row.classList.add('hidden');
-                }
-            });
-        }
-
-        function applyBulkAssignOptions(type) {
-            let val = "";
-            let selectId = "";
-
-            if (type === 'retention') {
-                selectId = 'bulk-assign-retention';
-            } else if (type === 'sync') {
-                selectId = 'bulk-assign-sync';
+            if (showToastMsg && moved.length) {
+                showToast(`${email}: ${moved.join(', ')} → "${policyName}"`);
+            } else if (showToastMsg && services.length) {
+                showToast(`Added ${services.length} service(s) for ${email} to "${policyName}"`);
             }
+            renderPolicyMailboxList();
+            if (document.getElementById('add-mailbox-modal') && !document.getElementById('add-mailbox-modal').classList.contains('hidden')) {
+                renderAddMailboxList();
+                if (addModalSelectedEmail === email) renderAddServicePicker(email);
+            }
+        }
 
-            val = document.getElementById(selectId).value;
-            if (!val) return;
+        function removeServiceFromPolicy(email, service) {
+            setServicePolicy(email, service, null);
+            showToast(`${service} for ${email} removed from policy`);
+            renderPolicyMailboxList();
+        }
 
-            const selectedRows = document.querySelectorAll('.assign-policy-cb:checked');
+        function getSelectedPolicyAssignments() {
+            return Array.from(document.querySelectorAll('.policy-mailbox-cb:checked')).map(cb => ({
+                email: cb.getAttribute('data-email'),
+                service: cb.getAttribute('data-service')
+            }));
+        }
 
-            if (selectedRows.length === 0) {
-                showToast("Please select at least one account to apply bulk settings.");
-                document.getElementById(selectId).value = "";
+        function populateMovePolicySelect() {
+            const select = document.getElementById('move-dest-policy');
+            if (!select) return;
+            const policies = Object.keys(policySettingsStore).filter(p => p !== currentAssignPolicy);
+            if (policies.length === 0) {
+                select.innerHTML = '<option value="" disabled selected>No other policies available</option>';
+                return;
+            }
+            select.innerHTML = policies.map(p => `<option value="${p}">${p}</option>`).join('');
+        }
+
+        function toggleMoveDestType() {
+            const destType = document.querySelector('input[name="move-dest-type"]:checked')?.value || 'existing';
+            document.getElementById('move-existing-panel')?.classList.toggle('hidden', destType !== 'existing');
+            document.getElementById('move-new-panel')?.classList.toggle('hidden', destType !== 'new');
+        }
+
+        function openMoveAssignmentsModal() {
+            const selected = getSelectedPolicyAssignments();
+            if (selected.length === 0) {
+                showToast('Select assignments to move');
+                return;
+            }
+            document.getElementById('move-source-policy').innerText = currentAssignPolicy;
+            document.getElementById('move-selected-count').innerText = selected.length;
+            document.querySelector('input[name="move-dest-type"][value="existing"]').checked = true;
+            toggleMoveDestType();
+            populateMovePolicySelect();
+            document.getElementById('move-new-policy-name').value = '';
+            const current = policySettingsStore[currentAssignPolicy];
+            if (current) {
+                document.getElementById('move-new-policy-sync').value = current.sync;
+                document.getElementById('move-new-policy-retention').value = current.retention;
+            }
+            document.getElementById('move-assignments-modal').classList.remove('hidden');
+        }
+
+        function closeMoveAssignmentsModal() {
+            document.getElementById('move-assignments-modal').classList.add('hidden');
+        }
+
+        function executeMoveAssignments() {
+            const selected = getSelectedPolicyAssignments();
+            if (selected.length === 0) {
+                showToast('No assignments selected');
                 return;
             }
 
-            let applied = false;
-            selectedRows.forEach(cb => {
-                const row = cb.closest('tr');
-                if (type === 'retention') {
-                    row.querySelector('.assign-retention-select').value = val;
-                    applied = true;
-                } else if (type === 'sync') {
-                    row.querySelector('.assign-sync-select').value = val;
-                    applied = true;
-                }
-            });
+            const destType = document.querySelector('input[name="move-dest-type"]:checked')?.value || 'existing';
+            let destPolicy = '';
 
-            if (applied) {
-                showToast(`Bulk settings applied to ${selectedRows.length} accounts.`);
-                applyAssignPolicyFilters();
+            if (destType === 'existing') {
+                destPolicy = document.getElementById('move-dest-policy')?.value || '';
+                if (!destPolicy) {
+                    showToast('Select a destination policy');
+                    return;
+                }
+            } else {
+                destPolicy = document.getElementById('move-new-policy-name')?.value.trim() || '';
+                if (!destPolicy) {
+                    showToast('Enter a name for the new policy');
+                    return;
+                }
+                if (policySettingsStore[destPolicy]) {
+                    showToast('A policy with that name already exists');
+                    return;
+                }
+                policySettingsStore[destPolicy] = {
+                    sync: document.getElementById('move-new-policy-sync').value,
+                    retention: document.getElementById('move-new-policy-retention').value
+                };
             }
 
-            // Reset dropdown
-            document.getElementById(selectId).value = "";
+            selected.forEach(({ email, service }) => setServicePolicy(email, service, destPolicy));
+
+            closeMoveAssignmentsModal();
+            const createdMsg = destType === 'new' ? `Created "${destPolicy}" and moved ` : 'Moved ';
+            showToast(`${createdMsg}${selected.length} assignment(s) to "${destPolicy}"`);
+            renderPolicyMailboxList();
+        }
+
+        function openAddMailboxModal() {
+            addModalSelectedEmail = '';
+            document.getElementById('add-mailbox-modal').classList.remove('hidden');
+            document.getElementById('add-mailbox-search').value = '';
+            document.getElementById('add-service-picker').classList.add('hidden');
+            document.getElementById('add-services-confirm-btn').classList.add('hidden');
+            renderAddMailboxList();
+        }
+
+        function closeAddMailboxModal() {
+            addModalSelectedEmail = '';
+            document.getElementById('add-mailbox-modal').classList.add('hidden');
+        }
+
+        function selectEmailForAddModal(email) {
+            addModalSelectedEmail = email;
+            renderAddMailboxList();
+            renderAddServicePicker(email);
+        }
+
+        function renderAddServicePicker(email) {
+            const account = getAccountByEmail(email);
+            const picker = document.getElementById('add-service-picker');
+            const confirmBtn = document.getElementById('add-services-confirm-btn');
+            const emailLabel = document.getElementById('add-selected-email');
+            const checkboxContainer = document.getElementById('add-service-checkboxes');
+            if (!account || !picker || !checkboxContainer) return;
+
+            picker.classList.remove('hidden');
+            confirmBtn?.classList.remove('hidden');
+            if (emailLabel) emailLabel.innerText = email;
+
+            checkboxContainer.innerHTML = account.services.map(service => {
+                const currentPolicy = getServicePolicy(email, service);
+                const inThisPolicy = currentPolicy === currentAssignPolicy;
+                const statusClass = inThisPolicy ? 'text-teal-700' : currentPolicy ? 'text-amber-600' : 'text-slate-400';
+                const statusText = inThisPolicy ? 'Already in this policy' : currentPolicy ? `Currently: ${currentPolicy}` : 'Unassigned';
+                return `
+                    <label class="flex items-center justify-between p-2.5 bg-white border border-stone-200 rounded-lg cursor-pointer hover:border-teal-300">
+                        <span class="flex items-center gap-2">
+                            <input type="checkbox" class="add-service-cb w-4 h-4 text-teal-600 border-stone-300 rounded" value="${service}"
+                                ${inThisPolicy ? 'checked disabled' : 'checked'}>
+                            ${getServiceIconHtml(service)}
+                            <span class="text-sm font-bold text-slate-800">${service}</span>
+                        </span>
+                        <span class="text-[10px] font-bold ${statusClass}">${statusText}</span>
+                    </label>
+                `;
+            }).join('');
+        }
+
+        function confirmAddServicesToPolicy() {
+            if (!addModalSelectedEmail) {
+                showToast('Select an email first');
+                return;
+            }
+            const account = getAccountByEmail(addModalSelectedEmail);
+            if (!account) return;
+
+            const selected = Array.from(document.querySelectorAll('.add-service-cb:checked:not(:disabled)'))
+                .map(cb => cb.value)
+                .filter(s => account.services.includes(s));
+
+            if (selected.length === 0) {
+                showToast('Select at least one service to add');
+                return;
+            }
+
+            assignServicesToPolicy(addModalSelectedEmail, selected, currentAssignPolicy, true);
+            closeAddMailboxModal();
+        }
+
+        function renderAddMailboxList() {
+            const list = document.getElementById('add-mailbox-list');
+            if (!list) return;
+            const query = (document.getElementById('add-mailbox-search')?.value || '').toLowerCase();
+            const accounts = corporateAccountCatalog.filter(a =>
+                !query || a.email.toLowerCase().includes(query) || a.name.toLowerCase().includes(query)
+            );
+
+            if (accounts.length === 0) {
+                list.innerHTML = '<p class="text-sm text-slate-500 p-3 text-center">No emails found.</p>';
+                return;
+            }
+
+            list.innerHTML = accounts.map(a => {
+                const assignedInPolicy = a.services.filter(s => getServicePolicy(a.email, s) === currentAssignPolicy).length;
+                const assignedElsewhere = a.services.filter(s => {
+                    const p = getServicePolicy(a.email, s);
+                    return p && p !== currentAssignPolicy;
+                }).length;
+                const unassigned = a.services.length - assignedInPolicy - assignedElsewhere;
+                const isSelected = addModalSelectedEmail === a.email;
+                return `
+                    <button type="button" onclick="selectEmailForAddModal('${a.email}')"
+                        class="w-full flex items-center justify-between p-2.5 border rounded-lg text-left transition-colors ${isSelected ? 'border-teal-400 bg-teal-50' : 'border-stone-200 hover:bg-stone-50'}">
+                        <span>
+                            <span class="block font-bold text-sm text-slate-800">${a.name}</span>
+                            <span class="block text-xs text-slate-500">${a.email}</span>
+                        </span>
+                        <span class="text-right shrink-0 ml-3 text-[10px] font-bold text-slate-500">
+                            ${assignedInPolicy ? `<span class="text-teal-700">${assignedInPolicy} here</span>` : ''}
+                            ${assignedElsewhere ? `<span class="text-amber-600">${assignedElsewhere} other</span>` : ''}
+                            ${unassigned ? `<span class="text-slate-400">${unassigned} free</span>` : ''}
+                        </span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function filterAddMailboxList() {
+            renderAddMailboxList();
+        }
+
+        function openSplitPolicyModal() {
+            const selected = document.querySelectorAll('.policy-mailbox-cb:checked');
+            if (selected.length === 0) {
+                showToast('Select assignments to split into a new policy');
+                return;
+            }
+            document.getElementById('split-source-policy').innerText = currentAssignPolicy;
+            document.getElementById('split-selected-count').innerText = selected.length;
+            document.getElementById('split-policy-name').value = '';
+            const current = policySettingsStore[currentAssignPolicy];
+            if (current) {
+                document.getElementById('split-policy-sync').value = current.sync;
+                document.getElementById('split-policy-retention').value = current.retention;
+            }
+            document.getElementById('split-policy-modal').classList.remove('hidden');
+        }
+
+        function closeSplitPolicyModal() {
+            document.getElementById('split-policy-modal').classList.add('hidden');
+        }
+
+        function executeSplitPolicy() {
+            const newName = document.getElementById('split-policy-name').value.trim();
+            if (!newName) {
+                showToast('Enter a name for the new policy');
+                return;
+            }
+            if (policySettingsStore[newName]) {
+                showToast('A policy with that name already exists');
+                return;
+            }
+            const selected = document.querySelectorAll('.policy-mailbox-cb:checked');
+            if (selected.length === 0) {
+                showToast('No assignments selected');
+                return;
+            }
+
+            policySettingsStore[newName] = {
+                sync: document.getElementById('split-policy-sync').value,
+                retention: document.getElementById('split-policy-retention').value
+            };
+
+            selected.forEach(cb => {
+                setServicePolicy(cb.getAttribute('data-email'), cb.getAttribute('data-service'), newName);
+            });
+
+            closeSplitPolicyModal();
+            showToast(`Created "${newName}" with ${selected.length} assignment(s)`);
+            renderPolicyMailboxList();
         }
 
         function savePolicyAssignments(event) {
-            const selected = document.querySelectorAll('.assign-policy-cb:checked');
-            if (selected.length === 0) {
-                showToast('Please select at least one account to assign the policy.');
-                return;
-            }
-            const btn = event.currentTarget;
-            const orig = btn.innerText;
-            btn.innerHTML = '<span class="unicode-icon animate-spin mr-2">&#x23F3;</span> Updating...';
-            btn.disabled = true;
-
-            setTimeout(() => {
-                btn.innerText = orig;
-                btn.disabled = false;
-                showToast(`Policy "${currentAssignPolicy}" assigned to ${selected.length} accounts.`);
+            updatePolicySettings();
+            const assignments = getPolicyAssignments(currentAssignPolicy);
+            const uniqueEmails = new Set(assignments.map(a => a.email)).size;
+            const btn = event?.currentTarget;
+            if (btn) {
+                const orig = btn.innerText;
+                btn.innerHTML = '<span class="unicode-icon animate-spin mr-2">&#x23F3;</span> Saving...';
+                btn.disabled = true;
+                setTimeout(() => {
+                    btn.innerText = orig;
+                    btn.disabled = false;
+                    showToast(`Policy "${currentAssignPolicy}" saved (${assignments.length} services, ${uniqueEmails} emails)`);
+                    hideAssignPolicyPage();
+                }, 600);
+            } else {
+                showToast(`Policy "${currentAssignPolicy}" saved (${assignments.length} services, ${uniqueEmails} emails)`);
                 hideAssignPolicyPage();
-            }, 800);
+            }
         }
 
         /* --- AUTO-SYNC POLICIES LOGIC --- */
@@ -4183,7 +4916,7 @@
             btn.disabled = true;
             setTimeout(() => {
                 closeCreatePolicyGroupModal();
-                showToast("New policy group created successfully.");
+                showToast("New auto-sync policy created successfully.");
                 btn.innerHTML = orig;
                 btn.disabled = false;
             }, 1000);
@@ -4243,7 +4976,7 @@
 
             // Example mock users list for the selected service
             const users = [
-                { name: "Executive Team", email: "execs@acme.com", status: "Success", last: "Just now", next: "Continuous", paused: false },
+                { name: "Executive Team", email: "execs@acme.com", status: "Success", last: "Just now", next: "In 1 hr", paused: false },
                 { name: "Sarah Jenkins", email: "s.jenkins@acme.com", status: "Success", last: "45 mins ago", next: "In 15 mins", paused: false },
                 { name: "Marketing Shared Drive", email: "marketing@acme.com", status: "Failed", last: "2 days ago", next: "Suspended", paused: true },
                 { name: "Design Team", email: "design@acme.com", status: "Not Syncing", last: "--", next: "--", paused: true }
@@ -4537,33 +5270,7 @@
         }
 
         /* --- CONNECT NEW ACCOUNT FLOW --- */
-        function connectNewAccount() {
-            const btn = document.getElementById('connect-account-btn');
-            const orig = btn.innerHTML;
-
-            // 1. Simulate Google Auth Loading
-            btn.innerHTML = '<span class="unicode-icon animate-spin mr-2">&#x23F3;</span> Authenticating...';
-            btn.disabled = true;
-
-            setTimeout(() => {
-                // 2. Auth successful, reset button
-                btn.innerHTML = orig;
-                btn.disabled = false;
-
-                showToast("OAuth Successful! Fetching users from @globex.com...");
-
-                // 3. Inject the new users into the table with a slight delay
-                setTimeout(() => {
-                    allUsersData.unshift(
-                        { name: 'David Miller', email: 'd.miller@globex.com', size: '0 B', services: ['Gmail', 'Drive', 'Contacts', 'Calendar', 'Photos'], isNew: true },
-                        { name: 'Globex Operations', email: 'ops@globex.com', size: '0 B', services: [], isNew: true }
-                    );
-                    applyUsersFilters();
-                    showToast("Successfully added 2 new entities from @globex.com");
-                }, 1500);
-
-            }, 1200);
-        }
+        function connectNewAccount() { openConnectAccountModal(); }
 
         /* --- LOCAL VAULTS FLOW --- */
         let vaultCount = 0;
@@ -5135,9 +5842,10 @@
                         </td>
                         <td class="px-6 py-4">
                             <select class="border border-stone-300 rounded text-xs bg-white px-2 py-1 shadow-sm focus:ring-teal-500 focus:border-teal-500 outline-none">
-                                <option>Real-Time (CDP)</option>
-                                <option selected>Hourly</option>
-                                <option>Daily</option>
+                                <option selected>Every 3 Hours</option>
+                                <option>Every 12 Hours</option>
+                                <option>Every 24 Hours</option>
+                                <option>Weekly</option>
                             </select>
                         </td>
                         <td class="px-6 py-4">
